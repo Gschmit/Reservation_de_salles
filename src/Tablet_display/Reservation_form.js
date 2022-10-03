@@ -1,3 +1,5 @@
+/* Reservation on room's tablet */
+
 import React from 'react';
 
 function setToTwoNumber(number){
@@ -7,33 +9,6 @@ function setToTwoNumber(number){
     return(number)
   }
 }
-
-/* Homepage on room's tablet */
-
-class HomepageScreen extends React.Component{
-  render(){
-    return(
-      <div>
-        <HomepageRoomNameDisplay/> <br/>
-        <HomepageRoomCalendar/>
-      </div>
-    )
-  };
-};
-
-class HomepageRoomNameDisplay extends React.Component{
-  render(){
-    return("Name")
-  };
-};
-
-class HomepageRoomCalendar extends React.Component{
-  render(){
-    return("Calendar")
-  };
-};
-
-/* Reservation on room's tablet */
 
 class Form extends React.Component {
   constructor(props) {
@@ -279,6 +254,6 @@ class CriteriaName extends React.Component {
   };
 };
 
-export {Form, HomepageScreen};
+export {Form};
 
 console.log("front_end.js")
