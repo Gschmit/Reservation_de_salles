@@ -103,7 +103,7 @@ class Form extends React.Component {
   render(){
     console.log("Form Ok");
     return(
-      <div>
+      <form>
         <Informations date={this.state.date}
         onChangeDate= {this.handleDateValueChange}
         duration= {this.state.duration}
@@ -121,7 +121,7 @@ class Form extends React.Component {
         titleMeeting= {this.state.titleMeeting}
         numberOfPresentPerson= {this.state.numberOfPresentPerson}
         />
-      </div>);
+      </form>);
   };
 };
 
@@ -213,7 +213,7 @@ class Criteria extends React.Component {
   render(){
     console.log(`${this.props.name} Criteria Ok`);
     return(
-      <div>
+      <span>
         <CriteriaName name= {this.props.name}/>
         <CriteriaData name= {this.props.name}
         data = {this.props.data}
@@ -221,7 +221,7 @@ class Criteria extends React.Component {
         onChange= {this.props.onChange}
         change={this.props.change}
         />
-      </div>
+      </span>
     );
   };
 };
