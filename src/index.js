@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {Form, HomepageScreen} from './Tablet_display/Reservation_form';
+import {Form} from './Tablet_display/Reservation_form';
+import {HomepageScreen} from './Tablet_display/Homepage';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -18,7 +19,7 @@ root.render(
 reportWebVitals();
 
 const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
-homepage.render(<HomepageScreen/>);
+homepage.render(<HomepageScreen name="a room"/>);
 
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
 tabletForm.render(<Form/>);
