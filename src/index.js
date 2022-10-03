@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {Form, HomepageScreen} from './Tablet_display/front_end';
+import {Form, HomepageScreen} from './Tablet_display/Reservation_form';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
