@@ -3,14 +3,12 @@
 import React from 'react';
 
 class HomepageScreen extends React.Component{
-    constructor(props){
-        super(props);
-    }
     render(){
       return(
         <div>
-          <HomepageRoomNameDisplay name={this.props.name} /> <br/>
-          <HomepageRoomCalendar/>
+            <h1> Homepage </h1> <br/>
+            <HomepageRoomNameDisplay name={this.props.name} /> <br/>
+            <HomepageRoomCalendar/>
         </div>
       )
     };

@@ -19,9 +19,33 @@ root.render(
 reportWebVitals();
 
 const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
-homepage.render(<HomepageScreen name="a room"/>);
-
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
+const pages = 2
 tabletForm.render(<Form/>);
+let display = 0
+
+function areaToDisplay(intDisplay){
+  if (intDisplay == 0){
+    homepage.render(<HomepageScreen name="Room name"/>);
+    tabletForm.render();
+  } else {
+    homepage.render();
+    tabletForm.render(<Form/>);
+  }
+  return(intDisplay = (intDisplay + 1) % pages)
+}
+
+const button = ReactDOM.createRoot(document.getElementById("button zone"));
+button.render(
+  React.createElement(
+    'button',
+    { onClick: () => {
+      display = areaToDisplay(display);
+      console.log(display);
+    }},
+    "switch display"
+  )
+);
+
 
 console.log("index.js")

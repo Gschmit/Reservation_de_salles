@@ -44,7 +44,7 @@ class Form extends React.Component {
   handleDurationValueChange(newDuration, typeChanged){
     if (typeChanged === "duration"){
       this.setState({
-        duration: newDuration
+        duration: 2 * newDuration
       });
     } else {
       let endDate = new Date(this.state.date)
@@ -78,25 +78,29 @@ class Form extends React.Component {
   render(){
     console.log("Form Ok");
     return(
-      <form>
-        <Informations date={this.state.date}
-        onChangeDate= {this.handleDateValueChange}
-        duration= {this.state.duration}
-        onChangeDuration= {this.handleDurationValueChange}
-        nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-        onChangeName= {this.handleNameReservingTextChange}
-        titleMeeting= {this.state.titleMeeting}
-        onChangeTitle= {this.handleTitleMeetingTextChange}
-        numberOfPresentPerson={this.state.numberOfPresentPerson}
-        onChangePresent={this.handlePresentPersonValueChange}
-        /> <br/>
-        <ButtonArea date= {this.state.date}
-        duration= {this.state.duration}
-        nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-        titleMeeting= {this.state.titleMeeting}
-        numberOfPresentPerson= {this.state.numberOfPresentPerson}
-        />
-      </form>);
+      <div>
+        <h1> Reservation form </h1>
+        <br/>
+        <form>
+          <Informations date={this.state.date}
+          onChangeDate= {this.handleDateValueChange}
+          duration= {this.state.duration}
+          onChangeDuration= {this.handleDurationValueChange}
+          nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
+          onChangeName= {this.handleNameReservingTextChange}
+          titleMeeting= {this.state.titleMeeting}
+          onChangeTitle= {this.handleTitleMeetingTextChange}
+          numberOfPresentPerson={this.state.numberOfPresentPerson}
+          onChangePresent={this.handlePresentPersonValueChange}
+          /> <br/>
+          <ButtonArea date= {this.state.date}
+          duration= {this.state.duration}
+          nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
+          titleMeeting= {this.state.titleMeeting}
+          numberOfPresentPerson= {this.state.numberOfPresentPerson}
+          />
+        </form>
+      </div>);
   };
 };
 
@@ -138,43 +142,43 @@ class Informations extends React.Component {
     console.log(`Informations Ok`);
     return(
       <div>
-        <Criteria name= "date" 
+        <Criteria name= "date : " 
         data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
         type= "date"
         onChange= {this.props.onChangeDate}
         change="date"
         /> <br/>
-        <Criteria name= "start time"
+        <Criteria name= "start time : "
         data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDate}
         change="time"
         />
-        <Criteria name= "end time"
+        <Criteria name= "end time : "
         data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDuration}
-        change="duration"
+        change="duration : "
         /> <br/>
-        <Criteria name= "duration"
-        data= {this.props.duration}
+        <Criteria name= "duration (in hours) : "
+        data= {this.props.duration / 2}
         type= "duration"
         onChange= {this.props.onChangeDuration}
         change="duration"
         /> <br/>
-        <Criteria name= "name of who is reserving"
+        <Criteria name= "name of who is reserving : "
         data= {this.props.nameOfWhoSReserving}
         type= "text"
         onChange= {this.props.onChangeName}
         change="normal"
         /> <br/>
-        <Criteria name= "title of the meeting"
+        <Criteria name= "title of the meeting : "
         data= {this.props.titleMeeting}
         type= "text"
         onChange= {this.props.onChangeTitle}
         change="normal"
         /> <br/>
-        <Criteria name= "number of physically present persons"
+        <Criteria name= "number of physically present persons : "
         data= {this.props.numberOfPresentPerson}
         type= "number"
         onChange= {this.props.onChangePresent}
@@ -216,25 +220,31 @@ handleDataChange(e) {
 }
 
   render(){
-    let data, type
+    let data, type, step
     if (this.props.type === "date"){
       data= this.props.data
       type= "date"
+      step= "any"
     } else if (this.props.type === "time"){
       data= this.props.data
       type= "time"
+      step= "any"
     } else if (this.props.type === "duration"){
       data= this.props.data
-      type= "text" // does 'duration' existe ? If not, what's the type used on teams
+      type= "number"
+      step= 1/2
     } else if (this.props.type === "text"){
       data= this.props.data
       type= "text"
+      step= "any"
     } else if (this.props.type === "number"){
       data= this.props.data
       type= "number"
+      step= 1
     } else{
       data= this.props.data
       type= this.props.type
+      step= "any"
     };
     console.log(`${this.props.name} CriteriaData Ok ${data} ${type}`);
     return (
@@ -242,6 +252,7 @@ handleDataChange(e) {
           type= {type}
           value= {data}
           onChange= {this.handleDataChange}
+          step= {step}
           />
     );
   };
@@ -256,4 +267,4 @@ class CriteriaName extends React.Component {
 
 export {Form};
 
-console.log("front_end.js")
+console.log("Reservation_form.js")
