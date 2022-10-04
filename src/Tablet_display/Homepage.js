@@ -7,8 +7,8 @@ class HomepageScreen extends React.Component{
       return(
         <div>
             <h1> Homepage </h1> <br/>
-            <HomepageRoomNameDisplay name={this.props.name} /> <br/>
-            <HomepageRoomCalendar/>
+            <HomepageRoomNameDisplay roomName={this.props.name} /> <br/>
+            <HomepageRoomCalendar roomName={this.props.name} />
         </div>
       )
     };
@@ -16,13 +16,13 @@ class HomepageScreen extends React.Component{
   
   class HomepageRoomNameDisplay extends React.Component{
     render(){
-      return(this.props.name)
+      return(this.props.roomName)
     };
   };
   
   class HomepageRoomCalendar extends React.Component{
     render(){
-      return("Calendar")
+      return(`Calendar of ${this.props.roomName}`)
     };
   };
 
