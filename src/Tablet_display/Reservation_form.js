@@ -1,5 +1,6 @@
 /* Reservation on room's tablet */
 
+import allMessages from '../Displayed_messages'; 
 import React from 'react';
 
 function setToTwoNumber(number){
@@ -14,17 +15,19 @@ class Form extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      date: new Date(), /* Give the date and the start time of the meeting */
-      duration: 2, /* in half hour */
-      nameOfWhoSReserving: "",
-      titleMeeting:"",
-      numberOfPresentPerson:1
+      date: "date" in this.props ? this.props.date : new Date(), /* Give the date and the start time of the meeting */
+      duration: "duration" in this.props ? this.props.duration : 2, /* in half hour */
+      nameOfWhoSReserving: "user" in this.props ? this.props.user : "",
+      titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
+      numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
+      roomName: "roomName" in this.props ? this.props.roomName : ""
     };
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
     this.handleDurationValueChange = this.handleDurationValueChange.bind(this);
     this.handleNameReservingTextChange = this.handleNameReservingTextChange.bind(this);
     this.handleTitleMeetingTextChange = this.handleTitleMeetingTextChange.bind(this);
     this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
+    this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
   };
 
   handleDateValueChange(newDate, typeChanged){
@@ -75,29 +78,40 @@ class Form extends React.Component {
     });
   };
 
+  handleRoomNameChange(newRoomName){
+    this.setState({
+      roomName: newRoomName
+    });
+  };
+
   render(){
     console.log("Form Ok");
+    let changeName = this.props.criteria.includes("room name") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
       <div>
-        <h1> Reservation form </h1>
+        <h1> Reservation form of {this.props.name} </h1>
         <br/>
         <form>
-          <Informations date={this.state.date}
+          <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
           onChangeDuration= {this.handleDurationValueChange}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          onChangeName= {this.handleNameReservingTextChange}
+          roomName= {this.state.roomName}
+          onChangeName= {changeName}
           titleMeeting= {this.state.titleMeeting}
           onChangeTitle= {this.handleTitleMeetingTextChange}
           numberOfPresentPerson={this.state.numberOfPresentPerson}
           onChangePresent={this.handlePresentPersonValueChange}
+          criteria= {this.props.criteria}
           /> <br/>
           <ButtonArea date= {this.state.date}
           duration= {this.state.duration}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
+          roomName= {this.state.roomName}
           titleMeeting= {this.state.titleMeeting}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
+          buttons= {this.props.buttons}
           />
         </form>
       </div>);
@@ -112,6 +126,7 @@ class ButtonArea extends React.Component{
       date= {this.props.date}
       duration= {this.props.duration}
       nameOfWhoSReserving= {this.props.nameOfWhoSReserving}
+      roomName= {this.props.roomName}
       titleMeeting= {this.props.titleMeeting}
       numberOfPresentPerson= {this.props.numberOfPresentPerson}
       />
@@ -127,8 +142,8 @@ class ActionButton extends React.Component {
       React.createElement(
         'button',
         { onClick: () => alert(`You clicked on '${this.props.name}' ${this.props.date} 
-          ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.titleMeeting}
-          ${this.props.numberOfPresentPerson}`) },
+          ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
+          ${this.props.titleMeeting} ${this.props.numberOfPresentPerson}`) },
         this.props.name
       )
     );
@@ -138,52 +153,102 @@ class ActionButton extends React.Component {
 class Informations extends React.Component {
   render(){
     let end = new Date(this.props.date.getTime() + this.props.duration * 30 * 60 * 1000)
-    // Toute les props sont des strings ;(
+    let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
+      titleMeetingData, presentPersonNumberData
     console.log(`Informations Ok`);
-    return(
-      <div>
-        <Criteria name= "date : " 
+    if (this.props.criteria.includes("date")){
+      dateData = <Criteria name= {`${allMessages.date['en']} : `}
         data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
         type= "date"
         onChange= {this.props.onChangeDate}
         change="date"
-        /> <br/>
-        <Criteria name= "start time : "
+        />
+    } else {
+      dateData = <></>
+    }
+    if (this.props.criteria.includes("start time")){
+      startTimeData = <Criteria name= "start time : "
         data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDate}
         change="time"
         />
-        <Criteria name= "end time : "
+    } else {
+      startTimeData = <></>
+    }
+    if (this.props.criteria.includes("end time")){
+      endTimeData = <Criteria name= "end time : "
         data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDuration}
         change="duration : "
-        /> <br/>
-        <Criteria name= "duration (in hours) : "
+        />
+    } else {
+      endTimeData = <></>
+    }
+    if (this.props.criteria.includes("duration")){
+      durationData = <Criteria name= "duration (in hours) : "
         data= {this.props.duration / 2}
         type= "duration"
         onChange= {this.props.onChangeDuration}
         change="duration"
-        /> <br/>
-        <Criteria name= "name of who is reserving : "
+        />
+    } else {
+      durationData = <></>
+    }
+    if (this.props.criteria.includes("room name")){    // props à mettre à jour
+      roomNameData = <Criteria name= "room : "
+        data= {this.props.roomName}
+        type= "text"  // une selection parmi les existants
+        onChange= {this.props.onChangeName}
+        change="normal"
+        />
+    } else {
+      roomNameData = <></>
+    }
+    if (this.props.criteria.includes("name of who is reserving")){
+      reservingNameData = <Criteria name= "name of who is reserving : "
         data= {this.props.nameOfWhoSReserving}
         type= "text"
         onChange= {this.props.onChangeName}
         change="normal"
-        /> <br/>
-        <Criteria name= "title of the meeting : "
+        />
+    } else {
+      reservingNameData = <></>
+    }
+    if (this.props.criteria.includes("meeting title")){
+      titleMeetingData = <Criteria name= "title of the meeting : "
         data= {this.props.titleMeeting}
         type= "text"
         onChange= {this.props.onChangeTitle}
         change="normal"
-        /> <br/>
-        <Criteria name= "number of physically present persons : "
-        data= {this.props.numberOfPresentPerson}
-        type= "number"
-        onChange= {this.props.onChangePresent}
-        change="normal"
-        /> 
+        />
+    } else {
+      titleMeetingData = <></>
+    }
+    if (this.props.criteria.includes("present person")){
+      presentPersonNumberData = <Criteria name= "number of physically present persons : "
+      data= {this.props.numberOfPresentPerson}
+      type= "number"
+      onChange= {this.props.onChangePresent}
+      change="normal"
+      /> 
+    } else {
+      presentPersonNumberData = <></>
+    }
+    return(
+      <div>
+        {dateData}
+        <br/>
+        {startTimeData} {endTimeData}
+        <br/>
+        {durationData}
+        <br/>
+        {roomNameData} {reservingNameData}
+        <br/>
+        {titleMeetingData}
+        <br/>
+        {presentPersonNumberData}
       </div>);
   };
 };
@@ -228,7 +293,7 @@ handleDataChange(e) {
     } else if (this.props.type === "time"){
       data= this.props.data
       type= "time"
-      step= "any"
+      step= 60
     } else if (this.props.type === "duration"){
       data= this.props.data
       type= "number"
@@ -266,5 +331,3 @@ class CriteriaName extends React.Component {
 };
 
 export {Form};
-
-console.log("Reservation_form.js")
