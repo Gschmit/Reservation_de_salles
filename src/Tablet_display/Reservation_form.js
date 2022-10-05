@@ -3,6 +3,8 @@
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
 
+let options = ["test1", "Second élement"]
+
 function setToTwoNumber(number){
   if (number < 10){
     return(`0${number}`)
@@ -120,7 +122,8 @@ class Form extends React.Component {
 
 class ButtonArea extends React.Component{
   render(){ 
-    console.log("ButtonArea Ok");
+    console.log("ButtonArea Ok");       // Il faut un method="get" ou "post" dans le submit
+    //       <input type="submit" value="Valider"/> dans le return
     return(<div>
       <ActionButton name="Validate"
       date= {this.props.date}
@@ -154,7 +157,7 @@ class Informations extends React.Component {
   render(){
     let end = new Date(this.props.date.getTime() + this.props.duration * 30 * 60 * 1000)
     let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
-      titleMeetingData, presentPersonNumberData
+      videoConferenceData, titleMeetingData, presentPersonNumberData
     console.log(`Informations Ok`);
     if (this.props.criteria.includes("date")){
       dateData = <Criteria name= {`${allMessages.date['en']} : `}
@@ -162,6 +165,7 @@ class Informations extends React.Component {
         type= "date"
         onChange= {this.props.onChangeDate}
         change="date"
+        required={true}
         />
     } else {
       dateData = <></>
@@ -172,6 +176,7 @@ class Informations extends React.Component {
         type= "time"
         onChange= {this.props.onChangeDate}
         change="time"
+        required={true}
         />
     } else {
       startTimeData = <></>
@@ -182,6 +187,7 @@ class Informations extends React.Component {
         type= "time"
         onChange= {this.props.onChangeDuration}
         change="duration : "
+        required={true}
         />
     } else {
       endTimeData = <></>
@@ -192,16 +198,18 @@ class Informations extends React.Component {
         type= "duration"
         onChange= {this.props.onChangeDuration}
         change="duration"
+        required={true}
         />
     } else {
       durationData = <></>
     }
-    if (this.props.criteria.includes("room name")){    // props à mettre à jour
+    if (this.props.criteria.includes("room name")){    // fait doublons avec l'élément select plus haut
       roomNameData = <Criteria name= "room : "
         data= {this.props.roomName}
-        type= "text"  // une selection parmi les existants
+        type= "select"
         onChange= {this.props.onChangeName}
         change="normal"
+        required={true}
         />
     } else {
       roomNameData = <></>
@@ -212,9 +220,21 @@ class Informations extends React.Component {
         type= "text"
         onChange= {this.props.onChangeName}
         change="normal"
+        required={true}
         />
     } else {
       reservingNameData = <></>
+    }
+    if (this.props.criteria.includes("video conference")){
+      videoConferenceData = <Criteria name= "do you need video conference ?"
+        data= {this.props.nameOfWhoSReserving}
+        type= "radio"
+        onChange= {this.props.onChangeName}
+        change="normal"
+        required={true}
+        />
+    } else {
+      videoConferenceData = <></>
     }
     if (this.props.criteria.includes("meeting title")){
       titleMeetingData = <Criteria name= "title of the meeting : "
@@ -222,6 +242,7 @@ class Informations extends React.Component {
         type= "text"
         onChange= {this.props.onChangeTitle}
         change="normal"
+        required={false}
         />
     } else {
       titleMeetingData = <></>
@@ -232,6 +253,7 @@ class Informations extends React.Component {
       type= "number"
       onChange= {this.props.onChangePresent}
       change="normal"
+      required={false}
       /> 
     } else {
       presentPersonNumberData = <></>
@@ -264,6 +286,8 @@ class Criteria extends React.Component {
         type= {this.props.type}
         onChange= {this.props.onChange}
         change={this.props.change}
+        options={options}
+        required={this.props.required}
         />
       </span>
     );
@@ -285,6 +309,12 @@ handleDataChange(e) {
 }
 
   render(){
+    if (this.props.type === "select"){
+      return(
+        <select>
+          {this.props.options.map(arrayItem => <option value={arrayItem}>{arrayItem}</option>)}
+      </select>);
+    }
     let data, type, step
     if (this.props.type === "date"){
       data= this.props.data
@@ -306,6 +336,15 @@ handleDataChange(e) {
       data= this.props.data
       type= "number"
       step= 1
+
+/* <input type="select">
+   <nom>images-type</nom>
+   <libellé>support actuel de vos images</libellé>
+   <option valeur="papier">photo papier</option>
+   <option valeur="dia">diapositives</option>
+   <option valeur="numeriques">images numériques</option>
+   <p>Si vous utilisez plusieurs formats, cochez celui qui est le plus fréquent.</p>
+</input> */
     } else{
       data= this.props.data
       type= this.props.type
@@ -318,6 +357,7 @@ handleDataChange(e) {
           value= {data}
           onChange= {this.handleDataChange}
           step= {step}
+          required={this.props.required}
           />
     );
   };
