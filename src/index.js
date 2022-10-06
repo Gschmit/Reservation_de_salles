@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Form} from './Tablet_display/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
-import allMessages from './Displayed_messages'; 
+import {TabRoomSelected} from './Internet_interface/room_asset_tab';
+import {TabRoomList} from './Internet_interface/room_list_tab';
+import allMessages from './Displayed_messages';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -28,12 +30,18 @@ reportWebVitals();
 const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
 const userForm = ReactDOM.createRoot(document.getElementById("reservation page in website"))
-const pages = 3
+const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"))
+const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"))
+const pages = 4
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
 const criteriaUser = ["date", "start time", "end time", "duration", "room name",
 "meeting title", "present person"]
-tabletForm.render(<Form criteria= {criteriaTablet} name="Room name" roomName="Room name"/>);
+const assets = ["une liste", "d'assets"]
+const roomList = ["une liste", "de salles"]
+// tabletForm.render(<Form criteria= {criteriaTablet} name="Room name" roomName="Room name"/>);
+// tabAsset.render(<TabRoomSelected assets={assets} picture="../photo.jpg"/>)
+tabRoom.render(<TabRoomList roomList={roomList}/>)
 let display = 0
 
 function areaToDisplay(intDisplay){

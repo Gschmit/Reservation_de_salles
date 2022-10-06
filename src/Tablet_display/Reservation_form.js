@@ -312,7 +312,9 @@ handleDataChange(e) {
     if (this.props.type === "select"){
       return(
         <select>
-          {this.props.options.map(arrayItem => <option value={arrayItem}>{arrayItem}</option>)}
+          {this.props.options.map(
+            (arrayItem, index) => <option key={index} value={arrayItem}>{arrayItem}</option>
+          )}
       </select>);
     }
     let data, type, step
