@@ -8,13 +8,11 @@ class BookingRoomTool extends React.Component{
         super(props)
         this.state = {
             activeRoomInList: "activeTab" in this.props ? this.props.activeTab : NaN,
-            isActiveRoomSelected: "isActiveRoomSelected" in this.props ? this.props.isActiveRoomSelected : false,
-            // Ce n'est pas vraiment un state puisqu'il est définit par le state activeRoomInList comme ceci :
-            // isActiveRoomSelected = !activeRoomInList === NaN
+            // isActiveRoomSelected: "isActiveRoomSelected" in this.props ? this.props.isActiveRoomSelected : false,
             userDisplay: "userDisplay" in this.props ? this.props.userDisplay : null,
         }
         this.handleChangeActiveRoomInList = this.handleChangeActiveRoomInList.bind(this);
-        this.handleChangeIsActiveRoomSelected = this.handleChangeIsActiveRoomSelected.bind(this);
+        // this.handleChangeIsActiveRoomSelected = this.handleChangeIsActiveRoomSelected.bind(this);
         this.handleChangeUserDisplay = this.handleChangeUserDisplay.bind(this);
     }
 
@@ -22,9 +20,9 @@ class BookingRoomTool extends React.Component{
         this.setState({activeRoomInList: newRoomActive})
     }
 
-    handleChangeIsActiveRoomSelected(newActiveRule){
+    /*handleChangeIsActiveRoomSelected(newActiveRule){
         this.setState({isActiveRoomSelected: newActiveRule})
-    }
+    }*/
 
     handleChangeUserDisplay(newUserDisplay){
         this.setState({userDisplay: newUserDisplay})
@@ -32,12 +30,12 @@ class BookingRoomTool extends React.Component{
 
     render(){
         let roomSelected
-        if (this.state.isActiveRoomSelected){
-            roomSelected = <td> 
-                <TabRoomSelected assets={this.props.assets} picture={this.props.picture} room={this.state.activeRoomInList}/>
-            </td>
-        } else {
+        if (isNaN(this.state.activeRoomInList)){
             roomSelected = <></>
+        } else {
+            roomSelected = <td> 
+            <TabRoomSelected assets={this.props.assets} picture={this.props.picture} room={this.state.activeRoomInList}/>
+        </td>
         }
         // console.log(this.state.isActiveRoomSelected, this.state.activeRoomInList)
         return(
