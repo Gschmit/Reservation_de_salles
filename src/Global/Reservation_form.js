@@ -2,6 +2,7 @@
 
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
+import './Reservation_form.css';
 
 let options = ["test1", "Second élement"]
 
@@ -101,7 +102,7 @@ class Form extends React.Component {
       <div>
         <h1> Reservation form of {this.props.name} </h1>
         <br/>
-        <form>
+        <form  className='center'>
           <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
@@ -135,7 +136,7 @@ class ButtonArea extends React.Component{
   render(){
     // Il faut un method="get" ou "post" dans le submit
     //       <input type="submit" value="Valider"/> dans le return
-    return(<div>
+    return(<div  className='space'>
       <ActionButton name= "Validate"
       date= {this.props.date}
       duration= {this.props.duration}
@@ -380,6 +381,7 @@ class CriteriaDate extends React.Component{
       <span>
         {this.props.name + " "}
         <input
+        className='shift'
         type= "date"
         value= {this.props.data}
         onChange= {this.handleDataChange}
@@ -409,6 +411,7 @@ class CriteriaTime extends React.Component{
       <span>
         {this.props.name + " "}
         <input
+        className='shift'
         type= "time"
         value= {this.props.data}
         onChange= {this.handleDataChange}

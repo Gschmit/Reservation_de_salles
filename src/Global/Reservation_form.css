@@ -1,0 +1,11 @@
+.center{
+    text-align: center;
+}
+
+.space{
+    text-align: space-between;  /* Ne fait pas ce que je souhaite ! */
+}
+
+.shift{ 
+    background-color: aquamarine;
+}
