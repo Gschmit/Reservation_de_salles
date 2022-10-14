@@ -8,8 +8,10 @@ class TabUser extends React.Component{
             tabDisplay = <Form criteria={this.props.criteria} name={this.props.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
             tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting}/>
-        } else if (this.props.typeDisplay === "calendar"){
+        } else if (this.props.typeDisplay === "user calendar"){
             tabDisplay = <UserCalendar userName={this.props.user}/>
+        } else if (this.props.typeDisplay === "room calendar"){
+            tabDisplay = <RoomCalendar roomName={this.props.room}/>
         } else {
             tabDisplay = <p> Aucun affichage particulier n'a été spécifié </p>
         }
@@ -67,7 +69,15 @@ class NextMeeting extends React.Component{
 class UserCalendar extends React.Component{
     render(){
         return(
-            <p>Calendrier de {this.props.userName}</p>
+            <p>Calendrier de <strong>{this.props.userName}</strong></p>
+        )
+    }
+};
+
+class RoomCalendar extends React.Component{
+    render(){
+        return(
+            <p>Calendrier de la salle <strong>{this.props.roomName}</strong></p>
         )
     }
 };
