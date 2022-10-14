@@ -21,13 +21,16 @@ class Form extends React.Component {
       duration: "duration" in this.props ? this.props.duration : 2, /* in half hour */
       nameOfWhoSReserving: "user" in this.props ? this.props.user : "",
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
+      videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
       roomName: "roomName" in this.props ? this.props.roomName : ""
     };
+
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
     this.handleDurationValueChange = this.handleDurationValueChange.bind(this);
     this.handleNameReservingTextChange = this.handleNameReservingTextChange.bind(this);
     this.handleTitleMeetingTextChange = this.handleTitleMeetingTextChange.bind(this);
+    this.handleVideoConferenceChange = this.handleVideoConferenceChange.bind(this);
     this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
   };
@@ -74,6 +77,12 @@ class Form extends React.Component {
     });
   };
 
+  handleVideoConferenceChange(newVideoConference){
+    this.setState({
+      videoConference: newVideoConference
+    });
+  };
+
   handlePresentPersonValueChange(newPresentPersonNumber){
     this.setState({
       numberOfPresentPerson: newPresentPersonNumber
@@ -87,7 +96,6 @@ class Form extends React.Component {
   };
 
   render(){
-    console.log("Form Ok");
     let changeName = this.props.criteria.includes("room name") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
       <div>
@@ -101,6 +109,8 @@ class Form extends React.Component {
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
           roomName= {this.state.roomName}
           onChangeName= {changeName}
+          videoConference= {this.state.videoConference}
+          onChangeVideoConference= {this.handleVideoConferenceChange}
           titleMeeting= {this.state.titleMeeting}
           onChangeTitle= {this.handleTitleMeetingTextChange}
           numberOfPresentPerson={this.state.numberOfPresentPerson}
@@ -113,6 +123,7 @@ class Form extends React.Component {
           roomName= {this.state.roomName}
           titleMeeting= {this.state.titleMeeting}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
+          videoConference= {this.state.videoConference}
           buttons= {this.props.buttons}
           />
         </form>
@@ -121,35 +132,35 @@ class Form extends React.Component {
 };
 
 class ButtonArea extends React.Component{
-  render(){ 
-    console.log("ButtonArea Ok");       // Il faut un method="get" ou "post" dans le submit
+  render(){
+    // Il faut un method="get" ou "post" dans le submit
     //       <input type="submit" value="Valider"/> dans le return
     return(<div>
-      <ActionButton name="Validate"
+      <ActionButton name= "Validate"
       date= {this.props.date}
       duration= {this.props.duration}
       nameOfWhoSReserving= {this.props.nameOfWhoSReserving}
       roomName= {this.props.roomName}
       titleMeeting= {this.props.titleMeeting}
       numberOfPresentPerson= {this.props.numberOfPresentPerson}
+      videoConference= {this.props.videoConference}
       />
       <ActionButton name="Cancel"/>
-    </div>)
+    </div>); 
   }
 };
 
 class ActionButton extends React.Component {
   render(){
-    console.log("ActionButton Ok");
     return(
       React.createElement(
         'button',
         { onClick: () => alert(`You clicked on '${this.props.name}' ${this.props.date} 
           ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
-          ${this.props.titleMeeting} ${this.props.numberOfPresentPerson}`) },
+          ${this.props.titleMeeting} ${this.props.videoConference} ${this.props.numberOfPresentPerson}`) },
         this.props.name
       )
-    );
+    ); /* date, duration, nameOfWhoSReserving, titleMeeting, videoConference, numberOfPresentPerson, roomName */
   };
 };
 
@@ -158,9 +169,8 @@ class Informations extends React.Component {
     let end = new Date(this.props.date.getTime() + this.props.duration * 30 * 60 * 1000)
     let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
       videoConferenceData, titleMeetingData, presentPersonNumberData
-    console.log(`Informations Ok`);
     if (this.props.criteria.includes("date")){
-      dateData = <Criteria name= {`${allMessages.date['en']} : `}
+      dateData = <CriteriaDate name= {`${allMessages.date['en']} : `}
         data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
         type= "date"
         onChange= {this.props.onChangeDate}
@@ -171,7 +181,7 @@ class Informations extends React.Component {
       dateData = <></>
     }
     if (this.props.criteria.includes("start time")){
-      startTimeData = <Criteria name= "start time : "
+      startTimeData = <CriteriaTime name= "start time : "
         data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDate}
@@ -182,18 +192,18 @@ class Informations extends React.Component {
       startTimeData = <></>
     }
     if (this.props.criteria.includes("end time")){
-      endTimeData = <Criteria name= "end time : "
+      endTimeData = <CriteriaTime name= "end time : "
         data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDuration}
-        change="duration : "
+        change="duration"
         required={true}
         />
     } else {
       endTimeData = <></>
     }
     if (this.props.criteria.includes("duration")){
-      durationData = <Criteria name= "duration (in hours) : "
+      durationData = <CriteriaDuration name= "duration (in hours) : "
         data= {this.props.duration / 2}
         type= "duration"
         onChange= {this.props.onChangeDuration}
@@ -203,41 +213,39 @@ class Informations extends React.Component {
     } else {
       durationData = <></>
     }
-    if (this.props.criteria.includes("room name")){    // fait doublons avec l'élément select plus haut
-      roomNameData = <Criteria name= "room : "
+    if (this.props.criteria.includes("room name")){
+      roomNameData = <CriteriaSelect name= "room : "
         data= {this.props.roomName}
         type= "select"
         onChange= {this.props.onChangeName}
-        change="normal"
+        options= {options}
         required={true}
         />
     } else {
       roomNameData = <></>
     }
     if (this.props.criteria.includes("name of who is reserving")){
-      reservingNameData = <Criteria name= "name of who is reserving : "
+      reservingNameData = <CriteriaText name= "name of who is reserving : "
         data= {this.props.nameOfWhoSReserving}
         type= "text"
         onChange= {this.props.onChangeName}
-        change="normal"
         required={true}
         />
     } else {
       reservingNameData = <></>
     }
     if (this.props.criteria.includes("video conference")){
-      videoConferenceData = <Criteria name= "do you need video conference ?"
-        data= {this.props.nameOfWhoSReserving}
+      videoConferenceData = <CriteriaRadio name= "do you need video conference ?"
+        data= {this.props.videoConference}
         type= "radio"
-        onChange= {this.props.onChangeName}
-        change="normal"
+        onChange= {this.props.onChangeVideoConference}
         required={true}
         />
     } else {
       videoConferenceData = <></>
     }
     if (this.props.criteria.includes("meeting title")){
-      titleMeetingData = <Criteria name= "title of the meeting : "
+      titleMeetingData = <CriteriaText name= "title of the meeting : "
         data= {this.props.titleMeeting}
         type= "text"
         onChange= {this.props.onChangeTitle}
@@ -248,11 +256,10 @@ class Informations extends React.Component {
       titleMeetingData = <></>
     }
     if (this.props.criteria.includes("present person")){
-      presentPersonNumberData = <Criteria name= "number of physically present persons : "
+      presentPersonNumberData = <CriteriaNumber name= "number of physically present persons : "
       data= {this.props.numberOfPresentPerson}
       type= "number"
       onChange= {this.props.onChangePresent}
-      change="normal"
       required={false}
       /> 
     } else {
@@ -268,16 +275,17 @@ class Informations extends React.Component {
         <br/>
         {roomNameData} {reservingNameData}
         <br/>
+        {videoConferenceData}
+        {this.props.criteria.includes("video conference")?<br/>:""}
         {titleMeetingData}
         <br/>
         {presentPersonNumberData}
       </div>);
   };
 };
-
+/*
 class Criteria extends React.Component {
   render(){
-    console.log(`${this.props.name} Criteria Ok`);
     return(
       <span>
         <CriteriaName name= {this.props.name}/>
@@ -309,14 +317,6 @@ handleDataChange(e) {
 }
 
   render(){
-    if (this.props.type === "select"){
-      return(
-        <select>
-          {this.props.options.map(
-            (arrayItem, index) => <option key={index} value={arrayItem}>{arrayItem}</option>
-          )}
-      </select>);
-    }
     let data, type, step
     if (this.props.type === "date"){
       data= this.props.data
@@ -338,21 +338,11 @@ handleDataChange(e) {
       data= this.props.data
       type= "number"
       step= 1
-
-/* <input type="select">
-   <nom>images-type</nom>
-   <libellé>support actuel de vos images</libellé>
-   <option valeur="papier">photo papier</option>
-   <option valeur="dia">diapositives</option>
-   <option valeur="numeriques">images numériques</option>
-   <p>Si vous utilisez plusieurs formats, cochez celui qui est le plus fréquent.</p>
-</input> */
     } else{
       data= this.props.data
       type= this.props.type
       step= "any"
     };
-    console.log(`${this.props.name} CriteriaData Ok ${data} ${type}`);
     return (
         <input
           type= {type}
@@ -367,9 +357,205 @@ handleDataChange(e) {
 
 class CriteriaName extends React.Component {
   render(){
-    console.log(`${this.props.name} CriteriaName Ok`);
     return(this.props.name + " ");
   };
 };
+*/
+class CriteriaDate extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    if (this.props.change === "normal"){
+      this.props.onChange(e.target.value);
+    } else {
+      this.props.onChange(e.target.value, this.props.type)
+    }
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "date"
+        value= {this.props.data}
+        onChange= {this.handleDataChange}
+        required={this.props.required}
+        />
+      </span>
+    )
+  }
+}
+
+class CriteriaTime extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    if (this.props.change === "normal"){
+      this.props.onChange(e.target.value);
+    } else {
+      this.props.onChange(e.target.value, this.props.type)
+    }
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "time"
+        value= {this.props.data}
+        onChange= {this.handleDataChange}
+        step= {60}
+        required={this.props.required}
+        />
+      </span>
+    )
+  }
+}
+
+class CriteriaDuration extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    if (this.props.change === "normal"){
+      this.props.onChange(e.target.value);
+    } else {
+      this.props.onChange(e.target.value, this.props.type)
+    }
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "number"
+        value= {this.props.data}
+        onChange= {this.handleDataChange}
+        step= {1/2}
+        required={this.props.required}
+        />
+      </span>
+    )
+  }
+}
+
+class CriteriaSelect extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    this.props.onChange(e.target.value);
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <select required={this.props.required}>
+          {this.props.options.map(
+            (arrayItem, index) => <option key={index} value={arrayItem}>{arrayItem}</option>
+          )}
+        </select>
+      </span>
+    )
+  }
+}
+
+class CriteriaText extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    this.props.onChange(e.target.value);
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "text"
+        value= {this.props.data}
+        onChange= {this.handleDataChange}
+        required={this.props.required}
+        />
+      </span>
+    )
+  }
+}
+
+class CriteriaRadio extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+    this.props.onChange(e.target.value === "true");
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "radio"
+        checked= {this.props.data}
+        value= {true}
+        onChange= {this.handleDataChange}
+        required={this.props.required}
+        />Yes
+        <input
+        type= "radio"
+        checked= {!this.props.data}
+        value= {false}
+        onChange= {this.handleDataChange}
+        required={this.props.required}
+        />No
+      </span>
+    )
+  }
+}
+
+class CriteriaNumber extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleDataChange = this.handleDataChange.bind(this);
+  }
+
+  handleDataChange(e) {
+      this.props.onChange(e.target.value);
+  }
+
+  render(){
+    return(
+      <span>
+        {this.props.name + " "}
+        <input
+        type= "number"
+        value= {this.props.data}
+        onChange= {this.handleDataChange}
+        step= {1}
+        required={this.props.required}
+        />
+      </span>
+    )
+  }
+}
 
 export {Form};

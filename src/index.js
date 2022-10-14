@@ -1,10 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {Form} from './Tablet_display/Reservation_form';
+import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
-import {TabRoomSelected} from './Internet_interface/room_asset_tab';
-import {TabRoomList} from './Internet_interface/room_list_tab';
+// import {TabRoomSelected} from './Internet_interface/room_asset_tab';
+// import {TabRoomList} from './Internet_interface/room_list_tab';
+import {BookingRoomTool} from './Internet_interface/main_interface';
 import allMessages from './Displayed_messages';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
@@ -29,44 +30,74 @@ reportWebVitals();
 
 const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
-const userForm = ReactDOM.createRoot(document.getElementById("reservation page in website"))
-const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"))
-const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"))
-const pages = 4
+const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"))
+// const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"))
+// const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"))
+const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"))
+const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"))
+const pages = 5
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
-const criteriaUser = ["date", "start time", "end time", "duration", "room name",
+const criteriaUser = ["date", "start time", "end time", "duration", "room name", "video conference",
 "meeting title", "present person"]
 const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
-// tabletForm.render(<Form criteria= {criteriaTablet} name="Room name" roomName="Room name"/>);
-// tabAsset.render(<TabRoomSelected assets={assets} picture="../photo.jpg"/>)
-tabRoom.render(<TabRoomList roomList={roomList}/>)
-let display = 0
+homepage.render(<HomepageScreen name="Room name (n places)"/>);
+let display = pages - 1
 
-function areaToDisplay(intDisplay){
+function areaToDisplay(next, shift){
+  let intDisplay = (next + shift) % pages
   if (intDisplay === 0){
-    homepage.render(<HomepageScreen name="Room name (n places)"/>);
-    tabletForm.render();
-    userForm.render();
-  } else if (intDisplay === 1) {
-    homepage.render();
-    tabletForm.render();
-    userForm.render(<Form criteria= {criteriaUser} name={allMessages.userInterface["en"]} user="User name"/>);
-  }
-  else {
     homepage.render();
     tabletForm.render(<Form criteria= {criteriaTablet} name={allMessages.roomName["en"]} roomName="Room name"/>);
-    userForm.render();
+    userHomepage.render();
+  } else if (intDisplay === 1) {
+    tabletForm.render();
+    userHomepage.render(
+      <BookingRoomTool assets={assets} roomList={roomList} userDisplay= "homepage" user="User name" 
+        nextMeeting="plus de rendez-vous de prévu"
+      />
+    );
+    userInterfaceFalse.render();
+  } else if (intDisplay === 2) {
+    userHomepage.render();
+    userInterfaceFalse.render(
+      <BookingRoomTool assets={assets} roomList={roomList} criteria= {criteriaUser} userDisplay= "form"
+        name={allMessages.userInterface["en"]} user="User name"
+      />
+    );
+    userInterfaceTrue.render();
+  } else if (intDisplay === 3) {
+    userInterfaceFalse.render();
+    userInterfaceTrue.render(
+      <BookingRoomTool assets={assets} roomList={roomList} picture="../photo.jpg" criteria= {criteriaUser} 
+        userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" isActiveRoomSelected={true} 
+        activeTab={1}
+      />
+    );
+    homepage.render();
+  } else {
+    userInterfaceTrue.render();
+    homepage.render(<HomepageScreen name="Room name (n places)"/>);
+    tabletForm.render();
   }
-  return(intDisplay = (intDisplay + 1) % pages)
+  // console.log(intDisplay, next)
+  return(intDisplay)
 }
 
-const button = ReactDOM.createRoot(document.getElementById("button zone"));
-button.render(
+const button1 = ReactDOM.createRoot(document.getElementById("button zone"));
+button1.render(
   React.createElement(
     'button',
-    { onClick: () => { display = areaToDisplay(display); }},
-    allMessages.switchDisplay["en"]
+    { onClick: () => { display = areaToDisplay(display,  pages - 1); }},
+    allMessages.switchDisplay["en"] + " previous"
+  )
+);
+const button2 = ReactDOM.createRoot(document.getElementById("button zone 2"));
+button2.render(
+  React.createElement(
+    'button',
+    { onClick: () => { display = areaToDisplay(display, 1); }},
+    allMessages.switchDisplay["en"] + " next"
   )
 );

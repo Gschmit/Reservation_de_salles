@@ -16,7 +16,7 @@ class RoomSelectedPicture extends React.Component {  // la prop alt dans le rend
     render(){
         return(
             <div>
-                <img src={this.props.picture} alt="l'affichage ne fonctionne pas"></img>
+                <img src={this.props.picture} alt={`l'affichage ne fonctionne pas ${this.props.picture}`}></img>
             </div>
         )
     }
