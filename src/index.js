@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import axios from 'axios';
 import './index.css';
 import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
