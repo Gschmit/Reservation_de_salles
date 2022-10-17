@@ -42,10 +42,12 @@ const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user int
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
 const pages = 7
+// const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
+const pictureURL = "../Capture.PNG"
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
 const criteriaUser = ["date", "start time", "end time", "duration", "room name", "video conference",
-"meeting title", "present person"]
+  "meeting title", "present person"]
 const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
 homepage.render(<HomepageScreen name="Room name (n places)"/>);
@@ -76,7 +78,7 @@ function areaToDisplay(next, shift){
   } else if (intDisplay === 3) {
     userInterfaceFalse.render();
     userInterfaceTrue.render(
-      <BookingRoomTool assets={assets} roomList={roomList} picture="../photo.jpg" criteria= {criteriaUser} 
+      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL}criteria= {criteriaUser} 
         userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" activeTab={1}
       />
     );
@@ -89,7 +91,7 @@ function areaToDisplay(next, shift){
   } else if (intDisplay === 5) {
     userCalendar.render();
     roomCalendar.render(
-      <BookingRoomTool assets={assets} roomList={roomList} picture="../photo.jpg" userDisplay= "room calendar" 
+      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL} userDisplay= "room calendar" 
         user="User name" activeTab={1}
       />
     );

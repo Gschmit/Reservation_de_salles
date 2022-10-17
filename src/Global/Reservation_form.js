@@ -134,7 +134,7 @@ class Form extends React.Component {
 
 class ButtonArea extends React.Component{
   render(){
-    // Il faut un method="get" ou "post" dans le submit
+    // Il faut un method="get" ou "post" dans le submit    // je sais plus pk j'ai mis ça ^^
     //       <input type="submit" value="Valider"/> dans le return
     return(<div className='space'>
       <ActionButton name= "Validate"

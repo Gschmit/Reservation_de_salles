@@ -1,5 +1,20 @@
 import React from 'react';
 import {Form} from '../Global/Reservation_form';
+import axios from 'axios';
+
+function funcTest(){
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+    .then(res=> {
+      const configName = res.config.adapter;
+      const data = res.data;
+      const headers = res.headers;
+      const request = res.request.response;
+      const status = res.status;
+      const statusText = res.statusText;
+      console.log({configName, data, headers, request, status, statusText});
+    })
+
+}
 
 class TabUser extends React.Component{
     render(){
@@ -21,7 +36,7 @@ class TabUser extends React.Component{
 };
 
 class UserHomepage extends React.Component{
-    functionForTest(functionArguments){
+    functionForTest(functionArguments){ // fonction à supprimer et modifier ce qui va avec !
         alert(`Fonction de rappel du bouton ${functionArguments} déclenchée`)
     }
 
@@ -36,8 +51,8 @@ class UserHomepage extends React.Component{
                     />
                     <BookingButtons 
                         name="Modifier / Annuler  une réunion" 
-                        callBackFunction={this.functionForTest} 
-                        arguments="Modifier/annuler"
+                        callBackFunction={funcTest} 
+                        arguments={null}
                     />
                 </div>
                 <br/>
