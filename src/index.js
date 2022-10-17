@@ -10,6 +10,9 @@ import allMessages from './Displayed_messages';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+// path :
+// cd Documents\01_Outil de gestion\1_Réservation_de_salle\Front end\room_reservation
+
 // // // // // // // // // // // // // // // // // // // // // //
 // // // // //                                     // // // // //
 // // // // //  Define somewhere the language !    // // // // //
