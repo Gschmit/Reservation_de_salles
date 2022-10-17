@@ -27,20 +27,22 @@ class UserHomepage extends React.Component{
 
     render(){
         return(
-            <span>
-                <BookingButtons 
-                    name="Réserver une salle" 
-                    callBackFunction={this.functionForTest} 
-                    arguments="Réserver"
-                />
-                <BookingButtons 
-                    name="Modifier / Annuler  une réunion" 
-                    callBackFunction={this.functionForTest} 
-                    arguments="Modifier/annuler"
-                />
+            <div className='center'>
+                <div className='space'>
+                    <BookingButtons 
+                        name="Réserver une salle" 
+                        callBackFunction={this.functionForTest} 
+                        arguments="Réserver"
+                    />
+                    <BookingButtons 
+                        name="Modifier / Annuler  une réunion" 
+                        callBackFunction={this.functionForTest} 
+                        arguments="Modifier/annuler"
+                    />
+                </div>
                 <br/>
                 <NextMeeting nextMeeting={this.props.nextMeeting}/>
-            </span>
+            </div>
         )
        
     }
@@ -51,7 +53,7 @@ class BookingButtons extends React.Component{
         return(
             React.createElement(
                 'button',
-                { onClick: () => { this.props.callBackFunction(this.props.arguments); }},
+                { className: "button", onClick: () => { this.props.callBackFunction(this.props.arguments); }},
                 this.props.name
             )
         )

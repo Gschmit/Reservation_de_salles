@@ -1,5 +1,5 @@
 import React from 'react';
-import './room_asset_tab.css';
+import './user_interface.css';
 
 class TabRoomSelected extends React.Component {  // Il faudra ajouter/ajuster les props à renseigner
     render(){

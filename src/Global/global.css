@@ -1,0 +1,14 @@
+.center{
+    text-align: center;
+}
+
+.space{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+
+.shift{ 
+    background-color: aquamarine;
+    object-position: 1px 10px;
+}

@@ -1,3 +1,23 @@
 .right{
     border-right: 1px solid black;
 }
+
+hr {
+    background-color: black;
+    border: none;
+    height: 1px;
+    width: 100%;
+} 
+
+.button{
+    display: inline-block;
+    background-color: #7b3858;
+    border-radius: 10%;
+    border: #cccc3c;
+    color: #eeeeee;
+    text-align: center;
+    padding: 5%;
+    width: 100%;
+    cursor: pointer;
+    margin: 5px;
+}

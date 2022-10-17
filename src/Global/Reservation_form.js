@@ -2,7 +2,7 @@
 
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
-import './Reservation_form.css';
+import './global.css';
 
 let options = ["test1", "Second élement"]
 
@@ -102,7 +102,7 @@ class Form extends React.Component {
       <div>
         <h1> Reservation form of {this.props.name} </h1>
         <br/>
-        <form  className='center'>
+        <form>
           <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
@@ -136,7 +136,7 @@ class ButtonArea extends React.Component{
   render(){
     // Il faut un method="get" ou "post" dans le submit
     //       <input type="submit" value="Valider"/> dans le return
-    return(<div  className='space'>
+    return(<div className='space'>
       <ActionButton name= "Validate"
       date= {this.props.date}
       duration= {this.props.duration}
@@ -159,7 +159,7 @@ class ActionButton extends React.Component {
         { onClick: () => alert(`You clicked on '${this.props.name}' ${this.props.date} 
           ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
           ${this.props.titleMeeting} ${this.props.videoConference} ${this.props.numberOfPresentPerson}`) },
-        this.props.name
+        this.props.name,
       )
     ); /* date, duration, nameOfWhoSReserving, titleMeeting, videoConference, numberOfPresentPerson, roomName */
   };
@@ -267,7 +267,7 @@ class Informations extends React.Component {
       presentPersonNumberData = <></>
     }
     return(
-      <div>
+      <div className='center'>
         {dateData}
         <br/>
         {startTimeData} {endTimeData}
@@ -284,84 +284,7 @@ class Informations extends React.Component {
       </div>);
   };
 };
-/*
-class Criteria extends React.Component {
-  render(){
-    return(
-      <span>
-        <CriteriaName name= {this.props.name}/>
-        <CriteriaData name= {this.props.name}
-        data = {this.props.data}
-        type= {this.props.type}
-        onChange= {this.props.onChange}
-        change={this.props.change}
-        options={options}
-        required={this.props.required}
-        />
-      </span>
-    );
-  };
-};
 
-class CriteriaData extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleDataChange = this.handleDataChange.bind(this);
-  }
-
-handleDataChange(e) {
-  if (this.props.change === "normal"){
-    this.props.onChange(e.target.value);
-  } else {
-    this.props.onChange(e.target.value, this.props.type)
-  }
-}
-
-  render(){
-    let data, type, step
-    if (this.props.type === "date"){
-      data= this.props.data
-      type= "date"
-      step= "any"
-    } else if (this.props.type === "time"){
-      data= this.props.data
-      type= "time"
-      step= 60
-    } else if (this.props.type === "duration"){
-      data= this.props.data
-      type= "number"
-      step= 1/2
-    } else if (this.props.type === "text"){
-      data= this.props.data
-      type= "text"
-      step= "any"
-    } else if (this.props.type === "number"){
-      data= this.props.data
-      type= "number"
-      step= 1
-    } else{
-      data= this.props.data
-      type= this.props.type
-      step= "any"
-    };
-    return (
-        <input
-          type= {type}
-          value= {data}
-          onChange= {this.handleDataChange}
-          step= {step}
-          required={this.props.required}
-          />
-    );
-  };
-};
-
-class CriteriaName extends React.Component {
-  render(){
-    return(this.props.name + " ");
-  };
-};
-*/
 class CriteriaDate extends React.Component{
   constructor(props) {
     super(props);
