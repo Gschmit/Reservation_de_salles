@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Room</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <p>
+            The room {{ room.name }} is located at the {{ room.location }} floor. <br>
+            It can house {{ room.capacity }} persons.
+            Its asset are :
+        </p>
+        <ul>
+            {% if room.computer %}
+                <li>
+                    computer
+                </li>
+            {% endif %}
+            {% if room.paperboard %}
+                <li>
+                    paperboard
+                </li>
+            {% endif %}
+            {% if room.projector %}
+                <li>
+                    projector
+                </li>
+            {% endif %}
+            {% if room.television_screen %}
+                <li>
+                    television screen
+                </li>
+            {% endif %}
+            {% if room.videoconference %}
+                <li>
+                    videoconference
+                </li>
+            {% endif %}
+            {% if room.wall_whiteboard %}
+                <li>
+                    wall whiteboard
+                </li>
+            {% endif %}
+            {% if room.whiteboard %}
+                <li>
+                    whiteboard
+                </li>
+            {% endif %}
+        </ul>
+    </body>
+</html>

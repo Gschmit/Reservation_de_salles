@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>List of meetings</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        {% if latest_meeting_list %}
+            <ul>
+            {% for meeting in latest_meeting_list %}
+                <li>
+                    <a href="{% url 'booking_meeting_room:meeting_view' meeting.id %}">{{ meeting.title }}</a>
+                    at {{meeting.start_timestamps}} in the room {{meeting.room}} created by {{meeting.user}}
+                </li>
+                <br>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>There is no meeting available.</p>
+        {% endif %}
+    </body>
+</html>

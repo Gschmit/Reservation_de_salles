@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <title>Homepage</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <br>
+        <form action="{% url 'booking_meeting_room:meeting_list_view' %}" method="get">
+            <input type="submit" value="See the meetings"> <br>
+        </form>
+        <br>
+        <form action="{% url 'booking_meeting_room:user_view' 2 %}" method="get">
+            <input type="submit" value="See User 2"> <br>
+        </form>
+        <br>
+        <form action="{% url 'booking_meeting_room:room_view' 2 %}" method="get">
+            <input type="submit" value="See Room 2"> <br>
+        </form>
+        <br>
+        <form method="get"> 
+            <!--
+            {% csrf_token %}    
+            <p>
+                Date of the meeting : 
+                <input type="date" name="date" id="input_date" value="2022-09-22">
+            </p>
+            <p>Start time of the meeting : <input type="time" name="time start" value="09:22"> </p>
+            <p>
+                Duration (in hours) : <input type="number" name="duration" value=0.5> -->
+                <input type="submit" 
+                value="See if room is free" 
+                formaction="{% url 'booking_meeting_room:is_free_room_view' 2 2022 10 2 17 46 %}">
+            <!-- </p> -->
+        </form>
+        <br>
+        <form action="{% url 'booking_meeting_room:new_meeting_view' %}" method="get">
+            <input type="submit" value="Create a new meeting"> <br>
+        </form>
+        <br>
+        <!-- <form action="{% url 'booking_meeting_room:meeting_view' 3 %}" method="get">
+            <fieldset>
+                <legend><h1>{{ meeting.title }}</h1></legend>
+                {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+                <input type="radio" name="choice" id="choice1" value="Test input">
+                <label for="choice1">test dans label</label><br>
+            </fieldset>
+            <input type="submit" value="Test">
+        </form>
+        -->
+    </body>
+</html>
+
+
