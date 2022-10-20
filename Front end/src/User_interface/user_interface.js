@@ -53,6 +53,7 @@ class BookingRoomTool extends React.Component{
                                 nextMeeting={this.props.nextMeeting}
                                 user={this.props.user}
                                 room={nameRoomSelected}
+                                root={this.root}
                             />
                         </td>
                     </tr>

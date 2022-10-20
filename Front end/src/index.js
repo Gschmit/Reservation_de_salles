@@ -11,8 +11,9 @@ import allMessages from './Displayed_messages';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-// path :
-// cd Documents\01_Outil de gestion\1_Réservation_de_salle\Front end\room_reservation
+// paths :
+// cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Front end
+// cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Back end\database
 
 // // // // // // // // // // // // // // // // // // // // // //
 // // // // //                                     // // // // //
@@ -63,7 +64,7 @@ function areaToDisplay(next, shift){
     tabletForm.render();
     userHomepage.render(
       <BookingRoomTool roomList={roomList} userDisplay= "homepage" user="User name" 
-        nextMeeting="plus de rendez-vous de prévu"
+        nextMeeting="plus de rendez-vous de prévu" root={homepage}
       />
     );
     userInterfaceFalse.render();

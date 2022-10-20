@@ -1,6 +1,8 @@
 """ In charge of the views """
 
 import datetime
+import json
+import xmltojson
 
 from django.shortcuts import render, get_object_or_404
 from .models import Meeting, Room, User
@@ -136,7 +138,33 @@ class MeetingListView(APIView):
         context = {
             'latest_meeting_list': latest_meeting_list,
         }
-        return render(request, 'booking_meeting_room/meeting_list.html', context)
+        a = render(request, 'booking_meeting_room/meeting_list.html', context)
+        start = 130
+        end = 1219
+        # start = 190
+        # end = 1170
+        # print(a.content)
+        print(a.content[start:end])
+        print(a._content_type_for_repr)
+        print(xmltojson.parse(a.content[start:end]))
+        # print(xmltojson.parse(a.content))
+        # print(json.loads(a.content[start:end]))
+        # json_ = xmltojson.parse(a.content)
+        """
+        # Save the page content as sample.html
+        with open("sample.html", "w") as html_file:
+            html_file.write(html_response.text)
+              
+        with open("sample.html", "r") as html_file:
+            html = html_file.read()
+            json_ = xmltojson.parse(html)
+              
+        with open("data.json", "w") as file:
+            json.dump(json_, file)
+              
+        print(json_)"""
+
+        return a
 
 
 def new_meeting_view(request):
