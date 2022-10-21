@@ -10,7 +10,7 @@ const MyCalendar = props => (
   <div>
     <Calendar
       localizer={localizer}
-      events={myEventsList}
+      events={props.eventsList}
       startAccessor="start"
       endAccessor="end"
       style={{ height: 500 }}
@@ -32,3 +32,4 @@ class Calendar extends React.Component{
 } */
 
 export default MyCalendar
+

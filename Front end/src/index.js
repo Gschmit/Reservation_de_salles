@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import axios from 'axios';
+// import axios from 'axios';
 import './index.css';
 import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
@@ -8,6 +8,7 @@ import {HomepageScreen} from './Tablet_display/Homepage';
 // import {TabRoomList} from './Internet_interface/room_list_tab';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
+import MyCalendar from './Global/calendar';
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -42,6 +43,7 @@ const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"
 const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
+const testCal = ReactDOM.createRoot(document.getElementById("root"))
 const pages = 7
 // const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
 const pictureURL = "../Capture.PNG"
@@ -51,7 +53,10 @@ const criteriaUser = ["date", "start time", "end time", "duration", "room name",
   "meeting title", "present person"]
 const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
-homepage.render(<HomepageScreen name="Room name (n places)"/>);
+// homepage.render(<HomepageScreen name="Room name (n places)"/>);
+console.log("before")
+testCal.render(MyCalendar ({eventsList: []}))
+console.log("after")
 let display = pages - 1
 
 function areaToDisplay(next, shift){

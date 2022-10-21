@@ -12,3 +12,1049 @@
     background-color: aquamarine;
     object-position: 1px 10px;
 }
+
+/* For the calendar : */
+
+.rbc-calendar{
+    background-color: brown;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-header{
+    background-color: red;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-toolbar{
+    background-color: aqua;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-toolbar-label{
+    background-color: blueviolet;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-btn-group{
+    background-color: blue;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-button-link{
+    background-color: bisque;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-active{
+    background-color: chartreuse;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-timeslot-group{
+  background-color: black;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-slot{
+  background-color: darkred;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-view{
+    background-color: coral;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-content{
+  background-color: greenyellow;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-gutter{
+  background-color: lightseagreen;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-column{
+  background-color: darkorange;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-header{
+    background-color:antiquewhite;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-header-gutter{
+    background-color: darkgreen;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-header-content{
+    background-color: cornflowerblue;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-header-cell{
+    background-color: deeppink;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-label{
+    background-color: aquamarine;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-row{
+    background-color: cyan;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-row-bg{
+    background-color: cadetblue;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-row-content{
+  background-color: gold;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-allday-cell{
+    background-color: dimgray;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-day-bg{
+  background-color: darkmagenta;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-day-slot{
+  background-color:fuchsia;
+  margin: 1mm;
+  padding: 1mm;
+}
+
+
+
+/*
+<div>
+  <div class="rbc-calendar" style="height: 500px;">
+    <div class="rbc-toolbar">
+      <span class="rbc-btn-group">
+        <button type="button">Today</button>
+        <button type="button">Back</button>
+        <button type="button">Next</button>
+      </span>
+      <span class="rbc-toolbar-label">Sep 25 – Oct 01</span>
+      <span class="rbc-btn-group">
+        <button type="button" class="">Month</button>
+        <button type="button" class="rbc-active">Week</button>
+        <button type="button" class="">Day</button>
+        <button type="button" class="">Agenda</button>
+      </span>
+    </div>
+    <div class="rbc-time-view">
+      <div class="rbc-time-header">
+        <div class="rbc-label rbc-time-header-gutter" style="width: 1263.33px; min-width: 1263.33px; max-width: 1263.33px;">
+        </div>
+        <div class="rbc-time-header-content">
+          <div class="rbc-row rbc-time-header-cell">
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Sun 25/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Mon 26/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Tue 27/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Wed 28/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Thu 29/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Fri 30/09</span>
+              </button>
+            </div>
+            <div class="rbc-header">
+              <button type="button" class="rbc-button-link">
+                <span role="columnheader" aria-sort="none">Sat 01/10</span>
+              </button>
+            </div>
+          </div>
+          <div class="rbc-allday-cell" role="rowgroup">
+            <div class="rbc-row-bg">
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+              <div class="rbc-day-bg"></div>
+            </div>
+            <div class="rbc-row-content" role="row">
+              <div class="rbc-row"></div>
+              <div class="rbc-row"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rbc-time-content">
+        <div class="rbc-time-gutter rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">12:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">1:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">2:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">3:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">4:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">5:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">6:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">7:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">8:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">9:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">10:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">11:00 AM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">12:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">1:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">2:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">3:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">4:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">5:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">6:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">7:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">8:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">9:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">10:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot">
+              <span class="rbc-label">11:00 PM</span>
+            </div>
+            <div class="rbc-time-slot"></div>
+          </div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">                 <------
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+        <div class="rbc-day-slot rbc-time-column">
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-timeslot-group">
+            <div class="rbc-time-slot"></div>
+            <div class="rbc-time-slot"></div>
+          </div>
+          <div class="rbc-events-container"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> */
