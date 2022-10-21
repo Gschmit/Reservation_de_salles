@@ -129,5 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_CROSS_ORIGIN_OPENER_POLICY = None  # Warning ! is it a really good idea ?
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    "http://10.103.0.50:3000"
 ]
+
+# CORS_ALLOW_ALL_ORIGINS = True

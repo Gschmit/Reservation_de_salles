@@ -4,8 +4,8 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
-// import {TabRoomSelected} from './Internet_interface/room_asset_tab';
-// import {TabRoomList} from './Internet_interface/room_list_tab';
+// import {TabRoomSelected} from './Internet_interface/room_asset_tab';  // Ne sera plus jamais utiliser normalement
+// import {TabRoomList} from './Internet_interface/room_list_tab';       // Ne sera plus jamais utiliser normalement
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import MyCalendar from './Global/calendar';
@@ -38,26 +38,26 @@ const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
-// const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"));
-// const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"));
+// const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"));      // Ne sera plus jamais utiliser normalement
+// const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"));   // Ne sera plus jamais utiliser normalement
 const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
 const testCal = ReactDOM.createRoot(document.getElementById("root"))
 const pages = 7
-// const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
 const pictureURL = "../Capture.PNG"
+// const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
+// pictureURL = pictureTest
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
 const criteriaUser = ["date", "start time", "end time", "duration", "room name", "video conference",
   "meeting title", "present person"]
 const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
-// homepage.render(<HomepageScreen name="Room name (n places)"/>);
-console.log("before")
-testCal.render(MyCalendar ({eventsList: []}))
-console.log("after")
-let display = pages - 1
+homepage.render(<HomepageScreen name="Room name (n places)"/>);
+// testCal.render(<MyCalendar eventsList= {[]}/>);
+// let display = pages - 1
+let display = 0
 
 function areaToDisplay(next, shift){
   let intDisplay = (next + shift) % pages
@@ -69,7 +69,7 @@ function areaToDisplay(next, shift){
     tabletForm.render();
     userHomepage.render(
       <BookingRoomTool roomList={roomList} userDisplay= "homepage" user="User name" 
-        nextMeeting="plus de rendez-vous de prévu" root={homepage}
+        nextMeeting="plus de rendez-vous de prévu"
       />
     );
     userInterfaceFalse.render();
@@ -107,6 +107,10 @@ function areaToDisplay(next, shift){
     homepage.render(<HomepageScreen name="Room name (n places)"/>);
     tabletForm.render();
   }
+  if (intDisplay === pages){
+    testCal.render(<MyCalendar eventsList= {[]}/>)
+  }
+  testCal.render();
   return(intDisplay)
 }
 

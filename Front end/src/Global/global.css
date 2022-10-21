@@ -15,23 +15,15 @@
 
 /* For the calendar : */
 
+/* à retravailler !! */
+
 .rbc-calendar{
     background-color: brown;
     margin: 1mm;
     padding: 1mm;
 }
-.rbc-header{
-    background-color: red;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-toolbar{
-    background-color: aqua;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-toolbar-label{
-    background-color: blueviolet;
+.rbc-active{
+    background-color: chartreuse;
     margin: 1mm;
     padding: 1mm;
 }
@@ -45,58 +37,13 @@
     margin: 1mm;
     padding: 1mm;
 }
-.rbc-active{
-    background-color: chartreuse;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-timeslot-group{
-  background-color: black;
+.rbc-events-container{
+  background-color: dimgray;
   margin: 1mm;
   padding: 1mm;
 }
-.rbc-time-slot{
-  background-color: darkred;
-  margin: 1mm;
-  padding: 1mm;
-}
-.rbc-time-view{
-    background-color: coral;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-time-content{
-  background-color: greenyellow;
-  margin: 1mm;
-  padding: 1mm;
-}
-.rbc-time-gutter{
-  background-color: lightseagreen;
-  margin: 1mm;
-  padding: 1mm;
-}
-.rbc-time-column{
-  background-color: darkorange;
-  margin: 1mm;
-  padding: 1mm;
-}
-.rbc-time-header{
-    background-color:antiquewhite;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-time-header-gutter{
-    background-color: darkgreen;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-time-header-content{
-    background-color: cornflowerblue;
-    margin: 1mm;
-    padding: 1mm;
-}
-.rbc-time-header-cell{
-    background-color: deeppink;
+.rbc-header{
+    background-color: red;
     margin: 1mm;
     padding: 1mm;
 }
@@ -120,11 +67,67 @@
   margin: 1mm;
   padding: 1mm;
 }
-.rbc-allday-cell{
-    background-color: dimgray;
+.rbc-time-column{
+  background-color: darkorange;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-content{
+  background-color: greenyellow;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-gutter{
+  background-color: lightseagreen;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-header{
+    background-color:antiquewhite;
     margin: 1mm;
     padding: 1mm;
 }
+.rbc-time-header-gutter{
+    background-color: darkgreen;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-header-content{
+    background-color: cornflowerblue;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-header-cell{
+    background-color: deeppink;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-time-slot{
+  background-color: darkred;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-timeslot-group{
+  background-color: black;
+  margin: 1mm;
+  padding: 1mm;
+}
+.rbc-time-view{
+    background-color: coral;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-toolbar{
+    background-color: aqua;
+    margin: 1mm;
+    padding: 1mm;
+}
+.rbc-toolbar-label{
+    background-color: blueviolet;
+    margin: 1mm;
+    padding: 1mm;
+}
+
 .rbc-day-bg{
   background-color: darkmagenta;
   margin: 1mm;
@@ -134,6 +137,11 @@
   background-color:fuchsia;
   margin: 1mm;
   padding: 1mm;
+}
+.rbc-allday-cell{
+    background-color: dimgray;
+    margin: 1mm;
+    padding: 1mm;
 }
 
 
@@ -361,7 +369,7 @@
             <div class="rbc-time-slot"></div>
           </div>
         </div>
-        <div class="rbc-day-slot rbc-time-column">                 <------
+        <div class="rbc-day-slot rbc-time-column">
           <div class="rbc-timeslot-group">
             <div class="rbc-time-slot"></div>
             <div class="rbc-time-slot"></div>

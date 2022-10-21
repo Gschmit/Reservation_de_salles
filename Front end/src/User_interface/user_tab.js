@@ -3,24 +3,13 @@ import {Form} from '../Global/Reservation_form';
 import axios from 'axios';
 
 
-async function funcTest(root){
-    const req = axios.get('http://127.0.0.1:8000/booking_meeting_room/new_meeting');
-    const res = await req;
-    //console.log(res.data);
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+function funcTest(){
+    // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2")
     .then(res=> {
-        const configName = res.config;
         const data = res.data;
-        const headers = res.headers.getContentType();
-        const request = res.request.response;
-        const status = res.status;
-        const statusText = res.statusText;
-        //console.log({"configName" : typeof configName, "data" : typeof data, "headers" : typeof headers, 
-        //    "request" : typeof request, "status" : typeof status, "statusText" : typeof statusText     
-        // });
-        console.log({configName, data, headers, request, status, statusText});
-        // root.render();
-        console.log(headers)
+        console.log({data});
+        console.log(data);
     })
 
 }
@@ -31,7 +20,7 @@ class TabUser extends React.Component{
         if (this.props.typeDisplay === "form"){
             tabDisplay = <Form criteria={this.props.criteria} name={this.props.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
-            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting} root={this.root}/>
+            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting}/>
         } else if (this.props.typeDisplay === "user calendar"){
             tabDisplay = <UserCalendar userName={this.props.user}/>
         } else if (this.props.typeDisplay === "room calendar"){
@@ -61,7 +50,7 @@ class UserHomepage extends React.Component{
                     <BookingButtons 
                         name="Modifier / Annuler  une réunion" 
                         callBackFunction={funcTest} 
-                        arguments={this.root}
+                        arguments={null}
                     />
                 </div>
                 <br/>

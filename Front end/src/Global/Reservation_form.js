@@ -128,7 +128,8 @@ class Form extends React.Component {
           buttons= {this.props.buttons}
           />
         </form>
-      </div>);
+      </div>
+    );
   };
 };
 

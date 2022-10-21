@@ -1,6 +1,21 @@
 """ Models """
 
 from django.db import models
+from json import dumps
+import datetime
+
+
+def json_default(value):
+    """
+    To serialize datetime.datetime objects et all objects define here
+    """
+    if isinstance(value, datetime.datetime):
+        return dict(year=value.year, month=value.month, day=value.day, hour=value.hour,
+                    minute=value.minute)
+    # elif isinstance(value, Room or User or Meeting):
+    #     return value.toJSON()
+    else:
+        return value.__dict__
 
 
 class Room(models.Model):
@@ -37,6 +52,12 @@ class Room(models.Model):
                 "wall_whiteboard": self.wall_whiteboard,
                 "computer": self.computer}
 
+    def toJSON(self):
+        """
+        To serialize the class
+        """
+        return dumps(self, default=lambda o: json_default(o), sort_keys=True, indent=4)
+
 
 class User(models.Model):
     """
@@ -47,6 +68,12 @@ class User(models.Model):
 
     def __str__(self):
         return self.name
+
+    def toJSON(self):
+        """
+        To serialize the class
+        """
+        return dumps(self, default=lambda o: json_default(o), sort_keys=True, indent=4)
 
 
 class Meeting(models.Model):
@@ -102,3 +129,9 @@ class Meeting(models.Model):
         if other_persons:
             self.__setattr__("other_persons", None)
         self.save()
+
+    def toJSON(self):
+        """
+        To serialize the class
+        """
+        return dumps(self, default=lambda o: json_default(o), sort_keys=True, indent=4)

@@ -1,16 +1,16 @@
 """ In charge of the views """
 
 import datetime
-import json
-import xmltojson
 
 from django.shortcuts import render, get_object_or_404
+
+
 from .models import Meeting, Room, User
 
 # from rest_framework import serializers, status
 # from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
-# from rest_framework.response import Response
+from rest_framework.response import Response
 # from rest_framework import status
 
 from booking_meeting_room.functions import shift_date
@@ -29,7 +29,7 @@ class IndexView(APIView):
         """
         context = {
         }
-        return render(request, 'booking_meeting_room/index.html', context)
+        return Response(data=context)
 
 
 class RoomView(APIView):
@@ -42,8 +42,8 @@ class RoomView(APIView):
         View of the room 'room_id'
         """                            # (voir fichier test.py pour plus de détail)
         room = get_object_or_404(Room, pk=room_id)
-        context = {'room': room}
-        return render(request, 'booking_meeting_room/room.html', context)
+        context = {'room': room.toJSON()}
+        return Response(data=context)
 
 
 class UserView(APIView):
@@ -56,8 +56,8 @@ class UserView(APIView):
         View of the user 'user_id'
         """
         user = get_object_or_404(User, pk=user_id)
-        context = {'user': user}
-        return render(request, 'booking_meeting_room/user.html', context)
+        context = {'user': user.toJSON()}
+        return Response(data=context)
 
 
 class MeetingView(APIView):
@@ -70,10 +70,10 @@ class MeetingView(APIView):
         View of the meeting 'meeting_id'
         """
         meeting = get_object_or_404(Meeting, pk=meeting_id)
-        context = {'meeting': meeting}
-        return render(request, f'booking_meeting_room/meeting.html', context)
+        context = {'meeting': meeting.toJSON()}
+        return Response(data=context)
 
-    @staticmethod   # utiliser un 'post' ici serait vraiment intéressant
+    @staticmethod   # utiliser un 'post' ici serait vraiment intéressant # 21/10: Il faut VRAIMENT tester avec un post
     def is_free_room_view(request, room_id, year, month, day, hour, minute):
         """
         View for knowing if a room is free or not at the date wanted
@@ -136,35 +136,9 @@ class MeetingListView(APIView):
         latest_meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
         latest_meeting_list.reverse()
         context = {
-            'latest_meeting_list': latest_meeting_list,
+            'latest_meeting_list': {f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)},
         }
-        a = render(request, 'booking_meeting_room/meeting_list.html', context)
-        start = 130
-        end = 1219
-        # start = 190
-        # end = 1170
-        # print(a.content)
-        print(a.content[start:end])
-        print(a._content_type_for_repr)
-        print(xmltojson.parse(a.content[start:end]))
-        # print(xmltojson.parse(a.content))
-        # print(json.loads(a.content[start:end]))
-        # json_ = xmltojson.parse(a.content)
-        """
-        # Save the page content as sample.html
-        with open("sample.html", "w") as html_file:
-            html_file.write(html_response.text)
-              
-        with open("sample.html", "r") as html_file:
-            html = html_file.read()
-            json_ = xmltojson.parse(html)
-              
-        with open("data.json", "w") as file:
-            json.dump(json_, file)
-              
-        print(json_)"""
-
-        return a
+        return Response(data=context)
 
 
 def new_meeting_view(request):

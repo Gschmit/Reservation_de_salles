@@ -346,16 +346,21 @@ class RoomViewTests(TestCase):
         # AssertionError: 405 != 404
 
     def test_existent_room_id(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_view", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
         # en cas de 'post' au lieu de 'get', on a l'erreur suivante :
         # AssertionError: 405 != 200
-        # Les autres tests retourne cette même erreur
-        self.assertContains(response, "videoconference")
-        self.assertContains(response, "computer")
-        self.assertContains(response, "whiteboard")
+        # Les autres tests 'self.assertEqual' retournent cette même erreur
+        assert '"computer": true' in response.data["room"]
+        assert '"lab_validation": false' in response.data["room"]
+        assert '"paperboard": false' in response.data["room"]
+        assert '"projector": false' in response.data["room"]
+        assert '"television_screen": false' in response.data["room"]
+        assert '"videoconference": true' in response.data["room"]
+        assert '"wall_whiteboard": false' in response.data["room"]
+        assert '"whiteboard": true' in response.data["room"]
         self.assertContains(response, room.name)
         self.assertContains(response, room.capacity)
         self.assertContains(response, room.location)
@@ -378,9 +383,8 @@ class UserViewTests(TestCase):
         user = create_user("a user", "staff")
         response = self.client.get(reverse(f"booking_meeting_room:user_view", args=(user.id,)))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "has the status")
-        self.assertContains(response, user.name)
-        self.assertContains(response, user.status)
+        assert f'"name": "{user.name}"' in response.data["user"]
+        assert f'"status": "{user.status}"' in response.data["user"]
 
 
 class MeetingViewTests(TestCase):
@@ -396,12 +400,15 @@ class MeetingViewTests(TestCase):
                                  "a meeting")
         response = self.client.get(reverse(f"booking_meeting_room:meeting_view", args=(meeting.id,)))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "will take place")
-        self.assertContains(response, meeting.title)
-        self.assertContains(response, "Sept. 23, 2022, 2:45 a.m.")
-        self.assertContains(response, meeting.room)
-        self.assertContains(response, meeting.user)
-        self.assertContains(response, meeting.duration)
+        assert f'"title": "{meeting.title}"' in response.data["meeting"]
+        assert f'"room_id": {room.id}' in response.data["meeting"]
+        assert f'"user_id": {user.id}' in response.data["meeting"]
+        assert f'"duration": {meeting.duration}' in response.data["meeting"]
+        assert '"year": 2022' in response.data["meeting"]
+        assert '"day": 23' in response.data["meeting"]
+        assert '"month": 9' in response.data["meeting"]
+        assert '"hour": 2' in response.data["meeting"]
+        assert '"minute": 45' in response.data["meeting"]
 
 
 class IsFreeRoomViewTests(TestCase):
@@ -410,6 +417,7 @@ class IsFreeRoomViewTests(TestCase):
                            False, True)
         response = self.client.get(
             reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 12, 29, 23, 56)))
+        # print("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEE", response.data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "free")
         self.assertNotContains(response, "occupied")
@@ -449,10 +457,10 @@ class MeetingListViewTests(TestCase):
     def test_no_meeting_existent(self):
         response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "There is no meeting available.")
+        assert len(response.data["latest_meeting_list"]) == 0
 
     def test_with_meeting(self):
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         meeting1 = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
@@ -465,11 +473,12 @@ class MeetingListViewTests(TestCase):
                                   "fourth meeting")
         response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "first meeting")
-        self.assertContains(response, "second meeting")
-        self.assertContains(response, meeting3.title)
-        self.assertContains(response, meeting4.title)
-        self.assertContains(response, "Sept. 14, 2022, 10:45 a.m.")
-        self.assertContains(response, "created by ")
-        self.assertContains(response, meeting1.user)
-        self.assertContains(response, meeting2.room)
+        assert f'"title": "{meeting4.title}"' in response.data["latest_meeting_list"]["meeting0"]
+        assert '"title": "first meeting"' in response.data["latest_meeting_list"]["meeting1"]
+        assert '"title": "second meeting"' in response.data["latest_meeting_list"]["meeting2"]
+        assert f'"title": "{meeting3.title}"' in response.data["latest_meeting_list"]["meeting3"]
+        assert '"start_timestamps": {\n        "day": 14,\n        "hour": 10,\n' \
+               '        "minute": 45,\n        "month": 9,\n' \
+               '        "year": 2022\n    }' in response.data["latest_meeting_list"]["meeting0"]
+        assert f'"user_id": {meeting1.user.id}' in response.data["latest_meeting_list"]["meeting1"]
+        assert f'"room_id": {meeting2.room.id}' in response.data["latest_meeting_list"]["meeting2"]
