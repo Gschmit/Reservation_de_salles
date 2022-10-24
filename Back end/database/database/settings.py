@@ -132,7 +132,4 @@ CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',
     "http://10.103.0.50:3000"
 ]
-print(CORS_ALLOWED_ORIGINS)
-print("OORRIIGGIINNSS")
 
-# CORS_ALLOW_ALL_ORIGINS = True
