@@ -65,8 +65,8 @@ const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
 homepage.render(<HomepageScreen name="Room name (n places)"/>);
 // testCal.render(<MyCalendar eventsList= {[]}/>);
-// let display = pages - 1
-let display = 0
+let display = pages - 1
+//let display = 0
 
 function areaToDisplay(next, shift){
   let intDisplay = (next + shift) % pages
@@ -118,8 +118,9 @@ function areaToDisplay(next, shift){
   }
   if (intDisplay === pages){
     testCal.render(<MyCalendar eventsList= {[]}/>)
+  } else {
+    testCal.render();
   }
-  testCal.render();
   return(intDisplay)
 }
 

@@ -5,14 +5,10 @@ import MyCalendar from '../Global/calendar';
 
 
 function funcTest(){
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/")
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting/5")
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_3_10_50")
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_28_14_45")
     .then(res=> {
         const data = res.data
-        document.getElementById("user homepage").innerHTML = null
+        /* document.getElementById("user homepage").innerHTML = null
         Object.keys(data).forEach(function(key) {
             let a = JSON.parse(res.data[key])
             document.getElementById("user homepage").innerHTML += a.title
@@ -21,7 +17,8 @@ function funcTest(){
             Object.keys(a).forEach(function(key2){
                 console.log(key2, a[key2])
             });
-        });
+        }); */
+        console.log(data)
     })
 }
 
@@ -95,7 +92,7 @@ class NextMeeting extends React.Component{
 class UserCalendar extends React.Component{
     render(){
         return(
-            <p>Calendrier de <strong>{this.props.userName}</strong></p>
+            <MyCalendar eventslist={[]} />
         )
     }
 };
@@ -103,7 +100,7 @@ class UserCalendar extends React.Component{
 class RoomCalendar extends React.Component{
     render(){
         return(
-            <MyCalendar/>
+            <MyCalendar eventslist={[]} />
         )
     }
 };

@@ -73,8 +73,13 @@ class MeetingView(APIView):
         context = {'meeting': meeting.toJSON()}
         return Response(data=context)
 
-    @staticmethod   # utiliser un 'post' ici serait vraiment intéressant # 21/10: Il faut VRAIMENT tester avec un post
-    def is_free_room_view(request, room_id, year, month, day, hour, minute):
+
+class IsRoomFreeView(APIView):
+    """
+    To know if a room is free or not
+    """
+    @staticmethod
+    def get(request, room_id, year, month, day, hour, minute):
         """
         View for knowing if a room is free or not at the date wanted
         """
@@ -113,15 +118,16 @@ class MeetingView(APIView):
                 time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
         if (not free) and (time_start > date):
             free = True
-        context = {'room': room,
+        context = {'room': room.toJSON(),
                    "free": free,
-                   "meeting": meeting,
+                   "meeting": meeting.toJSON(),
                    "bool_meeting": bool_meeting,
                    "date": date,
                    "day_name": date.strftime("%A"),
                    "month_name": date.strftime("%B")
                    }
-        return render(request, 'booking_meeting_room/is_free_room.html', context)
+        return Response(data=context)
+# render(request, 'booking_meeting_room/is_free_room.html', context)
 
 
 class MeetingListView(APIView):
