@@ -9,7 +9,7 @@ import {HomepageScreen} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import MyCalendar from './Global/calendar';
-import image from "./Capture.PNG"
+import image from "./photo.PNG";
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
