@@ -1,3 +1,13 @@
+.ikos{
+  --main-colour: rgb(10, 131, 175);
+  --main-dark-blue: rgb(32, 59, 87);
+  --secondary-magenta: rgb(160,32,101);
+  --secondary-pantone: rgb(92,38,126);
+  --secondary-pantone-contrast: rgb(116,78,154);
+  --short-stroke-red: rgb(246,0,33);
+  --short-stroke-contrast-salmon: rgb(255,157,130);
+}
+
 .center{
     text-align: center;
 }
