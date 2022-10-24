@@ -9,6 +9,7 @@ import {HomepageScreen} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import MyCalendar from './Global/calendar';
+import image from "./Capture.PNG"
 // import App from './App';
 import reportWebVitals from './reportWebVitals';
 
@@ -45,7 +46,7 @@ const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user inte
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
 const testCal = ReactDOM.createRoot(document.getElementById("root"))
 const pages = 7
-const pictureURL = "../Capture.PNG"
+const pictureURL = image
 // const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
 // pictureURL = pictureTest
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
