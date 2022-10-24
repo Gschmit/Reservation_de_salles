@@ -53,6 +53,7 @@ class BookingRoomTool extends React.Component{
             });
 
         }); */
+        // Here, we just want to access to the next meeting of the user --> create a python view to do this
         return(
             <table>
                 <tbody>
