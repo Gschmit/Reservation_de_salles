@@ -5,7 +5,9 @@ import MyCalendar from '../Global/calendar';
 
 
 function funcTest(){
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_28_14_45")
+    //axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_28_14_45")
+    axios.post("http://127.0.0.1:8000/booking_meeting_room/room/2/", {year: 2022, month:9, day: 28, hour: 14,
+        minute: 45})
     .then(res=> {
         const data = res.data
         /* document.getElementById("user homepage").innerHTML = null
@@ -84,7 +86,19 @@ class BookingButtons extends React.Component{
 class NextMeeting extends React.Component{
     render(){
         return(
-            <p>{this.props.nextMeeting}</p>
+            <p>
+                TO DO : <br/>
+                - mettre le fichier test de django à jour suite au "post" mis en places <br/>
+                - supprimer le "get" inutile que l'on vient de remplacer- ainsi <br/> 
+                - dans le front, définir toutes les fonctions (args et responses) dont on va avoir besoin <br/>
+                - dans le back : <br/>
+                -- créer les tests pour nos fonctions <br/>
+                -- créer les fonctions adéquats, passant tous les tests <br/>
+                - remplacer dans le front les fonctions voulues par leur response <br/>
+                - vérifier que ça fonctionne comme voulue <br/>
+                - le CSS
+                {this.props.nextMeeting}
+            </p>
         )
     }
 };
@@ -92,7 +106,7 @@ class NextMeeting extends React.Component{
 class UserCalendar extends React.Component{
     render(){
         return(
-            <MyCalendar eventslist={[]} />
+            <MyCalendar eventslist={[]} height={500} width={700}/>
         )
     }
 };
@@ -100,7 +114,7 @@ class UserCalendar extends React.Component{
 class RoomCalendar extends React.Component{
     render(){
         return(
-            <MyCalendar eventslist={[]} />
+            <MyCalendar eventslist={[]} height={500} width={700}/>
         )
     }
 };

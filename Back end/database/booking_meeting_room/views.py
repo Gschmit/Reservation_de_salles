@@ -2,7 +2,7 @@
 
 import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 
 
 from .models import Meeting, Room, User
@@ -25,7 +25,7 @@ class IndexView(APIView):
     @staticmethod
     def get(request):           # post ne fonctionne pas
         """
-        For posting the view
+        For getting the view
         """
         context = {
         }
@@ -43,6 +43,59 @@ class RoomView(APIView):
         """                            # (voir fichier test.py pour plus de détail)
         room = get_object_or_404(Room, pk=room_id)
         context = {'room': room.toJSON()}
+        return Response(data=context)
+
+    @staticmethod
+    def post(request, room_id):
+        """
+        View for knowing if a room is free or not at the date wanted
+        """
+        room = get_object_or_404(Room, pk=room_id)
+        meeting_list = list(Meeting.objects.order_by('-start_timestamps'))
+        date = datetime.datetime(request.data["year"], request.data["month"], request.data["day"],
+                                 request.data["hour"], request.data["minute"])
+        if meeting_list:
+            count = 0
+            meeting = meeting_list[count]
+            time_start = datetime.datetime(meeting.start_timestamps.year, meeting.start_timestamps.month,
+                                           meeting.start_timestamps.day, meeting.start_timestamps.hour,
+                                           meeting.start_timestamps.minute)
+            duration = meeting.duration * 30
+            end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+            time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
+            bool_meeting = True
+        else:
+            count = -1
+            time_start = "useless"
+            time_end = date
+            meeting = "No meeting scheduled"
+            bool_meeting = False
+        free = False
+        while time_end <= date:
+            count += 1
+            if count == len(meeting_list):
+                free = True
+                break
+            else:
+                meeting = meeting_list[count]
+                time_start = datetime.datetime(meeting.start_timestamps.year, meeting.start_timestamps.month,
+                                               meeting.start_timestamps.day, meeting.start_timestamps.hour,
+                                               meeting.start_timestamps.minute)
+                duration = meeting.duration * 30
+                end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+                time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
+        if (not free) and (time_start > date):
+            free = True
+        if bool_meeting:
+            meeting = meeting.toJSON()
+        context = {'room': room.toJSON(),
+                   "free": free,
+                   "meeting": meeting,
+                   "bool_meeting": bool_meeting,
+                   "date": date,
+                   "day_name": date.strftime("%A"),
+                   "month_name": date.strftime("%B")
+                   }
         return Response(data=context)
 
 
@@ -118,9 +171,11 @@ class IsRoomFreeView(APIView):
                 time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
         if (not free) and (time_start > date):
             free = True
+        if bool_meeting:
+            meeting = meeting.toJSON()
         context = {'room': room.toJSON(),
                    "free": free,
-                   "meeting": meeting.toJSON(),
+                   "meeting": meeting,
                    "bool_meeting": bool_meeting,
                    "date": date,
                    "day_name": date.strftime("%A"),
@@ -145,7 +200,7 @@ class MeetingListView(APIView):
         #     'latest_meeting_list': {f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)},
         # }
         context = {
-            f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)
+            f"meeting {index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)
         }
         return Response(data=context)
 

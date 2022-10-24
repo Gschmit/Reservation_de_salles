@@ -350,9 +350,6 @@ class RoomViewTests(TestCase):
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_view", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
-        # en cas de 'post' au lieu de 'get', on a l'erreur suivante :
-        # AssertionError: 405 != 200
-        # Les autres tests 'self.assertEqual' retournent cette même erreur
         assert '"computer": true' in response.data["room"]
         assert '"lab_validation": false' in response.data["room"]
         assert '"paperboard": false' in response.data["room"]
@@ -364,14 +361,6 @@ class RoomViewTests(TestCase):
         self.assertContains(response, room.name)
         self.assertContains(response, room.capacity)
         self.assertContains(response, room.location)
-
-    @staticmethod
-    def more_detail_about_error405():
-        """
-        Le code de statut de réponse HTTP 405 Method Not Allowed indique que la méthode utilisée pour
-        la requête est connue du serveur mais qu'elle n'est pas supportée par la ressource ciblée.
-        """
-        pass
 
 
 class UserViewTests(TestCase):
@@ -417,12 +406,10 @@ class IsFreeRoomViewTests(TestCase):
                            False, True)
         response = self.client.get(
             reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 12, 29, 23, 56)))
-        # print("HEEEEEEEEEEERRRRRRRRRRRRREEEEEEEEEEE", response.data)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "free")
-        self.assertNotContains(response, "occupied")
-        self.assertContains(response, "It can house")
-        self.assertContains(response, "a room")
+        self.assertEqual(response.data["meeting"], "No meeting scheduled")
+        self.assertEqual(response.data["free"], True)
+        assert '"name": "a room"' in response.data["room"]
 
     def test_occupied_room(self):
         room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
@@ -432,10 +419,9 @@ class IsFreeRoomViewTests(TestCase):
         response = self.client.get(
             reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 9, 12, 15, 56)))
         self.assertEqual(response.status_code, 200)
-        self.assertNotContains(response, "free")
-        self.assertContains(response, "occupied")
-        self.assertNotContains(response, "It can house")
-        self.assertContains(response, "a room")
+        assert '"title": "a meeting"' in response.data["meeting"]
+        self.assertEqual(response.data["free"], False)
+        assert '"name": "a room"' in response.data["room"]
 
     def test_free_room(self):
         room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
@@ -447,17 +433,16 @@ class IsFreeRoomViewTests(TestCase):
         response = self.client.get(
             reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 9, 12, 15, 59)))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "free")
-        self.assertNotContains(response, "occupied")
-        self.assertContains(response, "It can house")
-        self.assertContains(response, "a room")
+        assert '"title": "a meeting"' in response.data["meeting"]
+        self.assertEqual(response.data["free"], True)
+        assert '"name": "a room"' in response.data["room"]
 
 
 class MeetingListViewTests(TestCase):
     def test_no_meeting_existent(self):
         response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
         self.assertEqual(response.status_code, 200)
-        assert len(response.data["latest_meeting_list"]) == 0
+        assert len(response.data) == 0
 
     def test_with_meeting(self):
         room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
@@ -473,12 +458,12 @@ class MeetingListViewTests(TestCase):
                                   "fourth meeting")
         response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
         self.assertEqual(response.status_code, 200)
-        assert f'"title": "{meeting4.title}"' in response.data["latest_meeting_list"]["meeting0"]
-        assert '"title": "first meeting"' in response.data["latest_meeting_list"]["meeting1"]
-        assert '"title": "second meeting"' in response.data["latest_meeting_list"]["meeting2"]
-        assert f'"title": "{meeting3.title}"' in response.data["latest_meeting_list"]["meeting3"]
+        assert f'"title": "{meeting4.title}"' in response.data["meeting 0"]
+        assert '"title": "first meeting"' in response.data["meeting 1"]
+        assert '"title": "second meeting"' in response.data["meeting 2"]
+        assert f'"title": "{meeting3.title}"' in response.data["meeting 3"]
         assert '"start_timestamps": {\n        "day": 14,\n        "hour": 10,\n' \
                '        "minute": 45,\n        "month": 9,\n' \
-               '        "year": 2022\n    }' in response.data["latest_meeting_list"]["meeting0"]
-        assert f'"user_id": {meeting1.user.id}' in response.data["latest_meeting_list"]["meeting1"]
-        assert f'"room_id": {meeting2.room.id}' in response.data["latest_meeting_list"]["meeting2"]
+               '        "year": 2022\n    }' in response.data["meeting 0"]
+        assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
+        assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]

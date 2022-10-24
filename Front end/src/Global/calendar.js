@@ -26,7 +26,7 @@ class MyCalendar extends React.Component{
                 events={this.props.eventsList}
                 startAccessor="start"
                 endAccessor="end"
-                style={{ height: 500 }}
+                style={{ height: this.props.height, width: this.props.width}}
                 />
             </div>
         )

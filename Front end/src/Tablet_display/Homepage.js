@@ -1,6 +1,7 @@
 /* Homepage on room's tablet */
 
 import React from 'react';
+import MyCalendar from '../Global/calendar';
 
 class HomepageScreen extends React.Component{
     render(){
@@ -22,7 +23,12 @@ class HomepageScreen extends React.Component{
   
   class HomepageRoomCalendar extends React.Component{
     render(){
-      return(`Calendar of ${this.props.roomName}`)
+      return(
+        <div>
+          <p>Calendar of {this.props.roomName}</p>
+          <MyCalendar eventslist={[]} height={300} width={400}/>
+        </div>
+      )
     };
   };
 
