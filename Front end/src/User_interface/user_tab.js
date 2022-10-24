@@ -1,10 +1,14 @@
 import React from 'react';
 import {Form} from '../Global/Reservation_form';
 import axios from 'axios';
+import MyCalendar from '../Global/calendar';
 
 
 function funcTest(){
-    // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting/5")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_3_10_50")
     axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/")
     .then(res=> {
         const data = res.data
@@ -99,7 +103,7 @@ class UserCalendar extends React.Component{
 class RoomCalendar extends React.Component{
     render(){
         return(
-            <p>Calendrier de la salle <strong>{this.props.roomName}</strong></p>
+            <MyCalendar/>
         )
     }
 };

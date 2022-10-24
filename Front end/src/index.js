@@ -17,6 +17,14 @@ import reportWebVitals from './reportWebVitals';
 // cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Front end
 // cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Back end\database
 
+// url reachable :
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/user/<int:user_id>/")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting/<int:meeting_id>")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/<int:year>_<int:month>_<int:day>_<int:hour>_<int:minute>")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+
 // // // // // // // // // // // // // // // // // // // // // //
 // // // // //                                     // // // // //
 // // // // //  Define somewhere the language !    // // // // //

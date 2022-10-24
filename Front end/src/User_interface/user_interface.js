@@ -36,21 +36,23 @@ class BookingRoomTool extends React.Component{
         </td>
             nameRoomSelected = this.props.roomList[this.state.activeRoomInList]
         };
-        let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")
+        /* let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")
         userId = promiseUser.then(res=> {
             const data = JSON.parse(res.data.user).id
             return(data)
         });
-        console.log(userId)
-        console.log(typeof userId)
+        // console.log(userId)
+        // console.log(typeof userId)
         let promiseMeeting = axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
         promiseMeeting.then(res=> {
             const data = res.data
             Object.keys(data).forEach(function(key) {
                 let a = JSON.parse(res.data[key])
-                console.log(a)
+                console.log(a.start_timestamps)
+                console.log(typeof a.start_timestamps)
             });
-        });
+
+        }); */
         return(
             <table>
                 <tbody>
