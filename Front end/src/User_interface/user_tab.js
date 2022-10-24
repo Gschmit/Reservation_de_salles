@@ -5,13 +5,20 @@ import axios from 'axios';
 
 function funcTest(){
     // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
-    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2")
+    axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/")
     .then(res=> {
-        const data = res.data;
-        console.log({data});
-        console.log(data);
+        const data = res.data
+        document.getElementById("user homepage").innerHTML = null
+        Object.keys(data).forEach(function(key) {
+            let a = JSON.parse(res.data[key])
+            document.getElementById("user homepage").innerHTML += a.title
+            document.getElementById("user homepage").innerHTML += "\n \t"
+            console.log(key)
+            Object.keys(a).forEach(function(key2){
+                console.log(key2, a[key2])
+            });
+        });
     })
-
 }
 
 class TabUser extends React.Component{
@@ -40,7 +47,7 @@ class UserHomepage extends React.Component{
 
     render(){
         return(
-            <div className='center'>
+            <div id="user homepage" className='center'>
                 <div className='space'>
                     <BookingButtons 
                         name="Réserver une salle" 

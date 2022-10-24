@@ -135,16 +135,22 @@ class MeetingListView(APIView):
         """
         latest_meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
         latest_meeting_list.reverse()
+        # context = {
+        #     'latest_meeting_list': {f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)},
+        # }
         context = {
-            'latest_meeting_list': {f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)},
+            f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)
         }
         return Response(data=context)
 
 
-def new_meeting_view(request):
+''' def new_meeting_view(request):
     """
     View for creating a new meeting
     """
     context = {
     }
     return render(request, 'booking_meeting_room/new_meeting.html', context)
+
+# utilité de la fonction ci-dessus ?
+'''

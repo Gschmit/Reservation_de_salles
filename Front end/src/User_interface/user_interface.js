@@ -2,7 +2,9 @@ import React from 'react';
 import {TabRoomSelected} from './room_asset_tab';
 import {TabRoomList} from './room_list_tab';
 import {TabUser} from './user_tab'
-import './user_interface.css'
+import './user_interface.css';
+import axios from 'axios';
+
 
 class BookingRoomTool extends React.Component{
     constructor(props){
@@ -24,7 +26,7 @@ class BookingRoomTool extends React.Component{
     }
 
     render(){
-        let roomSelected, nameRoomSelected
+        let roomSelected, nameRoomSelected, userId, nextMeeting
         if (isNaN(this.state.activeRoomInList)){
             roomSelected = <></>
             nameRoomSelected = ""
@@ -33,7 +35,22 @@ class BookingRoomTool extends React.Component{
             <TabRoomSelected assets={this.props.assets} picture={this.props.picture} room={this.state.activeRoomInList}/>
         </td>
             nameRoomSelected = this.props.roomList[this.state.activeRoomInList]
-        }
+        };
+        let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")
+        userId = promiseUser.then(res=> {
+            const data = JSON.parse(res.data.user).id
+            return(data)
+        });
+        console.log(userId)
+        console.log(typeof userId)
+        let promiseMeeting = axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+        promiseMeeting.then(res=> {
+            const data = res.data
+            Object.keys(data).forEach(function(key) {
+                let a = JSON.parse(res.data[key])
+                console.log(a)
+            });
+        });
         return(
             <table>
                 <tbody>
