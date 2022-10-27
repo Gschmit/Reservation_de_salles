@@ -126,7 +126,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SECURE_CROSS_ORIGIN_OPENER_POLICY = None  # Warning ! is it a really good idea ?
+# SECURE_CROSS_ORIGIN_OPENER_POLICY = None  # Warning ! is it really a good idea ?
+# It seems to work without this setting
+
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',

@@ -2,32 +2,59 @@
 
 import React from 'react';
 import MyCalendar from '../Global/calendar';
+import axios from 'axios';
 
 class HomepageScreen extends React.Component{
+    state = {
+      room : {capacity:0, name:""}
+    }
+
+    componentDidMount(){
+      axios.get(`http://127.0.0.1:8000/booking_meeting_room/room/${this.props.roomId}/`)
+      .then(res => {
+        this.setState({room : JSON.parse(res.data.room)})
+      });
+    }
+
     render(){
+      console.log(this.state.room)
+      let name = `${this.state.room.name} (${this.state.room.capacity} places)`
+      // remplacer ensuite this.props.name par le nom de salle + le nombre de places pour le HomepageRoomNameDisplay
+      // et l'attribut roomName de HomepageRoomCalendar par juste room, pour pouvoir accéder aux infos nécessaires.
       return(
         <div>
             <h1> Homepage </h1> <br/>
-            <HomepageRoomNameDisplay roomName={this.props.name} /> <br/>
-            <HomepageRoomCalendar roomName={this.props.name} />
+            <HomepageRoomNameDisplay roomName={name} /> <br/>
+            <HomepageRoomCalendar roomId={this.props.roomId} />
         </div>
       )
     };
   };
   
   class HomepageRoomNameDisplay extends React.Component{
-    render(){
+    render(){ // éventuellement un formatage en gras ou autre de l'écriture
       return(this.props.roomName)
     };
   };
   
   class HomepageRoomCalendar extends React.Component{
+    state = {
+      meetings: [] // formatage nécessaire ?
+    };
+
+    componentDidMount(){
+      // adresse à modifier, mais on n'a besoin que de l'id de la salle
+      /* axios.get(`http://127.0.0.1:8000/booking_meeting_room/{partie à voir}/${this.props.roomId}/`)
+      .then(res => {
+        this.setState({meetings : JSON.parse(res.data.à_voir)}) // JSON.parse peut être à enlever
+      }); */
+    };
+
     render(){
-      return(
-        <div>
-          <p>Calendar of {this.props.roomName}</p>
-          <MyCalendar eventslist={[]} height={300} width={400}/>
-        </div>
+      // aller chercher dans la liste des réunions les réunions de la salle actuelle (componentDidMount)
+
+      return( // height et width à régler en fonction des dimensions de l'écran d'affichage
+          <MyCalendar eventslist={this.state.meetings} height={300} width={600}/>
       )
     };
   };

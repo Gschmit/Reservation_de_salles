@@ -26,6 +26,8 @@ import reportWebVitals from './reportWebVitals';
 // axios.post("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/", {year: <int>, month:<int>, day: <int>, hour: <int>, minute: <int>})
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
 
+// set somewhere an url variable !!! (but not in this file)
+
 // // // // // // // // // // // // // // // // // // // // // //
 // // // // //                                     // // // // //
 // // // // //  Define somewhere the language !    // // // // //
@@ -64,7 +66,7 @@ const criteriaUser = ["date", "start time", "end time", "duration", "room name",
   "meeting title", "present person"]
 const assets = ["une liste", "d'assets"]
 const roomList = ["une liste", "de salles"]
-homepage.render(<HomepageScreen name="Room name (n places)"/>);
+homepage.render(<HomepageScreen name="Room name (n places)" roomId={2}/>);
 // testCal.render(<MyCalendar eventsList= {[]}/>);
 let display = pages - 1
 //let display = 0
@@ -114,7 +116,7 @@ function areaToDisplay(next, shift){
     homepage.render();
   } else {
     roomCalendar.render();
-    homepage.render(<HomepageScreen name="Room name (n places)"/>);
+    homepage.render(<HomepageScreen name="Room name (n places)" roomId={2}/>);
     tabletForm.render();
   }
   if (intDisplay === pages){

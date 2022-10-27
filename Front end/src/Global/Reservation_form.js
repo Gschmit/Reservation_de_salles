@@ -2,6 +2,7 @@
 
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
+import axios from 'axios';
 import './global.css';
 
 let options = ["test1", "Second élement"]
@@ -24,7 +25,9 @@ class Form extends React.Component {
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
-      roomName: "roomName" in this.props ? this.props.roomName : ""
+      roomName: "roomName" in this.props ? this.props.roomName : "",
+      roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
+      meetings: [],
     };
 
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
@@ -96,6 +99,37 @@ class Form extends React.Component {
     });
   };
 
+  componentDidMount(){
+    if (this.state.roomName === ""){ // le test semble bon, peut-être l'optimiser plus tard ?
+      /* axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list") // éventuellement rajouter un '/' à la fin
+      .then(res => {
+        this.setState({roomList : JSON.parse(res.data.à_voir)})
+      }); */
+      
+      // Pour un utilisateur, on a besoin de la liste de toutes les réunions  (plus éventuellement un filtre 
+      // sur celle de celui-ci) !!! Mettre à jour ce besoin, à faire si possible sur python !!!
+      // Pour une salle, il faut limiter la durée de la réunion ainsi que les horaires disponibles.
+      /* axios.get(`http://127.0.0.1:8000/booking_meeting_room/{partie à voir}/${roomId à récupérer qqpart}/`)
+      .then(res => {
+        // set here the max value of duration depending on the start time value.
+        // and set first and last start time possible.
+      }); */
+      console.log("axios")
+    } else {
+      axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+      .then(res => {
+        let meet = {}
+        for (const meeting in res.data) {
+          meet[meeting] = JSON.parse(res.data[meeting])
+        };
+        console.log("meet :", meet)
+        this.setState({meetings : meet})
+      });
+      console.log("no axios")
+    };
+
+  };
+
   render(){
     let changeName = this.props.criteria.includes("room name") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
@@ -114,9 +148,10 @@ class Form extends React.Component {
           onChangeVideoConference= {this.handleVideoConferenceChange}
           titleMeeting= {this.state.titleMeeting}
           onChangeTitle= {this.handleTitleMeetingTextChange}
-          numberOfPresentPerson={this.state.numberOfPresentPerson}
-          onChangePresent={this.handlePresentPersonValueChange}
+          numberOfPresentPerson= {this.state.numberOfPresentPerson}
+          onChangePresent= {this.handlePresentPersonValueChange}
           criteria= {this.props.criteria}
+          roomList= {this.state.roomList}
           /> <br/>
           <ButtonArea date= {this.state.date}
           duration= {this.state.duration}
@@ -129,7 +164,8 @@ class Form extends React.Component {
           />
         </form>
       </div>
-    );
+    ); // à quoi sert la props buttons ?? (elle remonte jsuqu'au composant "BookingRoomTool", mais n'est pas 
+    // renseigné dans le fichier "index") (pas utiliser dans le composant "ButtonArea")
   };
 };
 
@@ -220,7 +256,7 @@ class Informations extends React.Component {
         data= {this.props.roomName}
         type= "select"
         onChange= {this.props.onChangeName}
-        options= {options}
+        roomList= {this.props.roomList}
         required={true}
         />
     } else {
@@ -392,7 +428,7 @@ class CriteriaSelect extends React.Component{
       <span>
         {this.props.name + " "}
         <select required={this.props.required}>
-          {this.props.options.map(
+          {this.props.roomList.map(
             (arrayItem, index) => <option key={index} value={arrayItem}>{arrayItem}</option>
           )}
         </select>
