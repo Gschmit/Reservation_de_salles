@@ -2,7 +2,7 @@
 
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
-import axios from 'axios';
+//import axios from 'axios';
 import './global.css';
 
 let options = ["test1", "Second élement"]
