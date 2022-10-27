@@ -191,7 +191,7 @@ class MeetingListView(APIView):
     @staticmethod
     def get(request):
         """
-        For posting the view
+        For getting the view
         """
         latest_meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
         latest_meeting_list.reverse()
@@ -200,6 +200,23 @@ class MeetingListView(APIView):
         # }
         context = {
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)
+        }
+        return Response(data=context)
+
+
+class RoomListView(APIView):
+    """
+    View of the room list
+    """
+
+    @staticmethod
+    def get(request):
+        """
+        For getting the view
+        """
+        room_list: list[Room] = list(Room.objects.order_by('-name')[:])
+        context = {
+            f"room {index}": room.toJSON() for index, room in enumerate(room_list)
         }
         return Response(data=context)
 

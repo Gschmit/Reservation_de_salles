@@ -116,7 +116,7 @@ class Form extends React.Component {
       }); */
       console.log("axios")
     } else {
-      axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+      /* axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
       .then(res => {
         let meet = {}
         for (const meeting in res.data) {
@@ -124,7 +124,7 @@ class Form extends React.Component {
         };
         console.log("meet :", meet)
         this.setState({meetings : meet})
-      });
+      });*/
       console.log("no axios")
     };
 
@@ -170,9 +170,8 @@ class Form extends React.Component {
 };
 
 class ButtonArea extends React.Component{
-  render(){
-    // Il faut un method="get" ou "post" dans le submit    // je sais plus pk j'ai mis ça ^^
-    //       <input type="submit" value="Valider"/> dans le return
+  render(){ // Pour le bouton Validate, on veux créer la réunion (faire ça sur python, à la main ou directement 
+    // à l'aide d'un post ou d'une autre fonction déjà pré-existente)
     return(<div className='space'>
       <ActionButton name= "Validate"
       date= {this.props.date}
@@ -182,9 +181,13 @@ class ButtonArea extends React.Component{
       titleMeeting= {this.props.titleMeeting}
       numberOfPresentPerson= {this.props.numberOfPresentPerson}
       videoConference= {this.props.videoConference}
+      callback= {() => alert(`You clicked on 'Validate' ${this.props.date} 
+      ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
+      ${this.props.titleMeeting} ${this.props.videoConference} ${this.props.numberOfPresentPerson}`)}
       />
-      <ActionButton name="Cancel"/>
-    </div>); 
+      <ActionButton name="Cancel" callback= {() => alert("You clicked on 'Cancel'")}/>
+    </div>); // Pour le bouton Cancel, la fonction callback doit juste ramener à l'écran précédent (mettre ça
+    // en props/state qqpart ?)
   }
 };
 
@@ -193,9 +196,7 @@ class ActionButton extends React.Component {
     return(
       React.createElement(
         'button',
-        { onClick: () => alert(`You clicked on '${this.props.name}' ${this.props.date} 
-          ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
-          ${this.props.titleMeeting} ${this.props.videoConference} ${this.props.numberOfPresentPerson}`) },
+        { onClick: this.props.callback },
         this.props.name,
       )
     ); /* date, duration, nameOfWhoSReserving, titleMeeting, videoConference, numberOfPresentPerson, roomName */

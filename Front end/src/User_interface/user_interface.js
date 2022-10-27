@@ -12,6 +12,7 @@ class BookingRoomTool extends React.Component{
         this.state = {
             activeRoomInList: "activeTab" in this.props ? this.props.activeTab : NaN,
             userDisplay: "userDisplay" in this.props ? this.props.userDisplay : null,
+            roomList: [],
         }
         this.handleChangeActiveRoomInList = this.handleChangeActiveRoomInList.bind(this);
         this.handleChangeUserDisplay = this.handleChangeUserDisplay.bind(this);
@@ -25,6 +26,13 @@ class BookingRoomTool extends React.Component{
         this.setState({userDisplay: newUserDisplay})
     }
 
+    componentDidMount(){
+          /* axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list") // éventuellement rajouter un '/' à la fin
+          .then(res => {
+            this.setState({roomList : JSON.parse(res.data.à_voir)})
+          }); */ // la liste des salles, peut être triée d'une certaine manière ?
+        };
+
     render(){
         let roomSelected, nameRoomSelected//, userId, nextMeeting
         if (isNaN(this.state.activeRoomInList)){
@@ -33,8 +41,9 @@ class BookingRoomTool extends React.Component{
         } else {
             roomSelected = <td className="right"> 
             <TabRoomSelected assets={this.props.assets} picture={this.props.picture} room={this.state.activeRoomInList}/>
-        </td>
-            nameRoomSelected = this.props.roomList[this.state.activeRoomInList]
+            </td> // this.props.picture à remplacer par this.state.roomList[this.state.activeRoomInList]
+            nameRoomSelected = this.props.roomList[this.state.activeRoomInList] // remplacer props.roomList par 
+        // state.roomList
         };
         /* let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")
         userId = promiseUser.then(res=> {
@@ -54,7 +63,8 @@ class BookingRoomTool extends React.Component{
 
         }); */
         // Here, we just want to access to the next meeting of the user --> create a python view to do this
-        return(
+        
+        return( // remplacer props.roomList par state.roomList
             <table>
                 <tbody>
                     <tr>

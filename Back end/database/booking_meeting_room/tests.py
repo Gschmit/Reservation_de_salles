@@ -468,3 +468,29 @@ class MeetingListViewTests(TestCase):
                '        "year": 2022\n    }' in response.data["meeting 0"]
         assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
         assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]
+
+
+class RoomListViewTests(TestCase):
+    def test_no_room_existent(self):
+        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert len(response.data) == 0
+
+    def test_with_room(self):
+        room1 = create_room(2, "a room", "9eme etage", "an image 1", False, False, False, False, False,
+                            False, True, False)
+        room2 = create_room(2, "another room", "9eme etage", "an image 2", False, False, True, False, False,
+                            False, True, False)
+        room3 = create_room(6, "a third room", "8eme etage", "an image 3", False, True, False, True, False,
+                            True, False, False)
+        room4 = create_room(8, "huge room", "9eme etage", "an image 4", True, True, False, False, False,
+                            False, False, True)
+        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert f'"name": "{room4.name}"' in response.data["room 0"]
+        assert '"name": "another room"' in response.data["room 1"]
+        assert '"name": "a third room"' in response.data["room 2"]
+        assert f'"name": "{room1.name}"' in response.data["room 3"]
+        assert '"location": "9eme etage"' in response.data["room 0"]
+        assert f'"computer": {str(room2.computer).lower()}' in response.data["room 1"]
+        assert f'"paperboard": {str(room3.paperboard).lower()}' in response.data["room 2"]
