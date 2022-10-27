@@ -210,6 +210,22 @@ class RoomListView(APIView):
     """
 
     @staticmethod
+    def get(request, room_id):
+        """
+        For getting the view
+        """
+        meeting_list: list[Meeting] = list(Meeting.objects.all().filter(room=room_id))
+        context = {
+            f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
+        }
+        return Response(data=context)
+
+
+class RoomMeetings(APIView):
+    """
+    View for the meetings of room
+    """
+    @staticmethod
     def get(request):
         """
         For getting the view

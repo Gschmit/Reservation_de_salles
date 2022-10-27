@@ -342,8 +342,6 @@ class RoomViewTests(TestCase):
     def test_nonexistent_room_id(self):
         response = self.client.get(reverse("booking_meeting_room:room_view", args=(1, )))
         self.assertEqual(response.status_code, 404)
-        # en cas de 'post' au lieu de 'get', on a l'erreur suivante :
-        # AssertionError: 405 != 404
 
     def test_existent_room_id(self):
         room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
@@ -494,3 +492,29 @@ class RoomListViewTests(TestCase):
         assert '"location": "9eme etage"' in response.data["room 0"]
         assert f'"computer": {str(room2.computer).lower()}' in response.data["room 1"]
         assert f'"paperboard": {str(room3.paperboard).lower()}' in response.data["room 2"]
+
+
+class RoomMeetingsViewTests(TestCase):
+    def test_nonexistent_room_id(self):
+        response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
+        self.assertEqual(response.status_code, 404)
+
+    def test_existent_room_id_but_no_meeting(self):
+        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
+                           False, True)
+        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
+
+    def test_existent_room_id_with_meetings(self):
+        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
+                           False, True)
+        user = create_user("a user", "staff")
+        meeting0 = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
+                                  "a meeting")
+        meeting1 = create_meeting(room, user, make_aware(datetime.datetime(2022, 12, 30, 2, 45)), 2,
+                                  "another meeting")
+        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response.data, meeting0)
+        self.assertContains(response.data, meeting1)
