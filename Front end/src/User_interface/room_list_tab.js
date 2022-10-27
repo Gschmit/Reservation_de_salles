@@ -7,7 +7,7 @@ class TabRoomList extends React.Component {
                 {this.props.roomList.map(
                     (roomItem, index) => 
                     <RoomFromTab key={index} 
-                        roomName={roomItem} 
+                        room={roomItem}
                         isActive={index === this.props.activeTab}
                     />
                 )}
@@ -21,29 +21,24 @@ class RoomFromTab extends React.Component {
         let active, videoConference // videoConference est un attribut de la props room
         if (this.props.isActive){
             // mis en bleu sur la maquette --> surtout un code (une classe par exemple) pour le CSS ?
-            active = `${this.props.roomName} is active`
+            active = "is active"
         } else {
             // on laisse normal
-            active = `${this.props.roomName} is not active`
+            active = "is not active"
         }
-        if (this.props.videoConference /* this.props.room.videoConference */){ //(le nom est peut-être différent)
+        if (this.props.room.videoconference){
             videoConference = <p>image pour la visio</p> // créer un widget/image/photo pour ça 
         } else {
             videoConference = <p> Non actif </p> // <></>
         }
         return( 
-            /*
             <div>
-                <p>{this.room.name}</p>
-                {videoConference} // à positionner correctement (faire un Tableau serait peut-etre judicieux !)
+                <p>{this.props.room.name} ({this.props.room.capacity} places) {active}</p>
+                {videoConference} 
                 <br/>
             </div>
-            */
-            <div>
-                <p>{active}</p>
-                {videoConference}
-                <br/>
-            </div>
+            // à positionner correctement (faire un Tableau serait peut-etre judicieux !)
+
         )
     }
 };

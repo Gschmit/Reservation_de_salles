@@ -1,9 +1,23 @@
 import React from 'react';
+import axios from 'axios';
 import {TabRoomSelected} from './room_asset_tab';
 import {TabRoomList} from './room_list_tab';
 import {TabUser} from './user_tab'
 import './user_interface.css';
 // import axios from 'axios';
+
+function assetsList(aRoom){
+    let out = []
+    let computer, paperboard, projector, televisionScreen, videoConference, wallWhiteboard, whiteboard
+        computer = aRoom.computer ? out.push("computer") : null
+        paperboard = aRoom.paperboard ? out.push("paperboard") : null
+        projector = aRoom.projector ? out.push("projector") : null
+        televisionScreen = aRoom.television_screen ? out.push("television screen") : null
+        videoConference = aRoom.videoconference ? out.push("videoconference") : null
+        wallWhiteboard = aRoom.wall_whiteboard ? out.push("wall whiteboard") : null
+        whiteboard = aRoom.whiteboard ? out.push("whiteboard") : null
+        return out
+    };
 
 
 class BookingRoomTool extends React.Component{
@@ -27,10 +41,14 @@ class BookingRoomTool extends React.Component{
     }
 
     componentDidMount(){
-          /* axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list") // éventuellement rajouter un '/' à la fin
+          axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
           .then(res => {
-            this.setState({roomList : JSON.parse(res.data.à_voir)})
-          }); */ // la liste des salles, peut être triée d'une certaine manière ?
+            let rooms = []
+            for (const room in res.data) {
+              rooms.push(JSON.parse(res.data[room]))
+            };
+            this.setState({roomList : rooms})
+          });  // la liste des salles, peut être triée d'une certaine manière ?
         };
 
     render(){
@@ -39,11 +57,16 @@ class BookingRoomTool extends React.Component{
             roomSelected = <></>
             nameRoomSelected = ""
         } else {
+            let picture = typeof this.state.roomList[this.state.activeRoomInList] != "undefined" ? this.state.roomList[this.state.activeRoomInList].picture : null
+            let name = typeof this.state.roomList[this.state.activeRoomInList] != "undefined" ? this.state.roomList[this.state.activeRoomInList].picture : "name"
+            let assets = []
+            if (typeof this.state.roomList[this.state.activeRoomInList] != "undefined"){
+                assets = assetsList(this.state.roomList[this.state.activeRoomInList])
+            }
             roomSelected = <td className="right"> 
-            <TabRoomSelected assets={this.props.assets} picture={this.props.picture} room={this.state.activeRoomInList}/>
-            </td> // this.props.picture à remplacer par this.state.roomList[this.state.activeRoomInList]
-            nameRoomSelected = this.props.roomList[this.state.activeRoomInList] // remplacer props.roomList par 
-        // state.roomList
+                <TabRoomSelected assets={assets} picture={picture} room={this.state.activeRoomInList}/>
+            </td> 
+            nameRoomSelected = name
         };
         /* let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")
         userId = promiseUser.then(res=> {
@@ -69,7 +92,7 @@ class BookingRoomTool extends React.Component{
                 <tbody>
                     <tr>
                         <td className="right">
-                            <TabRoomList roomList={this.props.roomList} 
+                            <TabRoomList roomList={this.state.roomList} 
                                 activeTab={this.state.activeRoomInList} 
                                 onChange={this.handleChangeActiveRoomInList}
                             />

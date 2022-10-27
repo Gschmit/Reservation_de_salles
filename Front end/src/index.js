@@ -4,8 +4,6 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
-// import {TabRoomSelected} from './Internet_interface/room_asset_tab';  // Ne sera plus jamais utiliser normalement
-// import {TabRoomList} from './Internet_interface/room_list_tab';       // Ne sera plus jamais utiliser normalement
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import MyCalendar from './Global/calendar';
@@ -96,8 +94,8 @@ function areaToDisplay(next, shift){
   } else if (intDisplay === 3) {
     userInterfaceFalse.render();
     userInterfaceTrue.render(
-      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL}criteria= {criteriaUser} 
-        userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" activeTab={1}
+      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL} criteria= {criteriaUser} 
+        userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" activeTab={0}
       />
     );
     userCalendar.render();
@@ -110,7 +108,7 @@ function areaToDisplay(next, shift){
     userCalendar.render();
     roomCalendar.render(
       <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL} userDisplay= "room calendar" 
-        user="User name" activeTab={1}
+        user="User name" activeTab={0}
       />
     );
     homepage.render();

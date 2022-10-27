@@ -26,8 +26,8 @@ class Form extends React.Component {
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
       roomName: "roomName" in this.props ? this.props.roomName : "",
-      roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
-      meetings: [],
+      roomList: options, // {}, // supprimer la variable "options" une fois que le lien avec le back end sera ok
+      meetings: {},
     };
 
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
