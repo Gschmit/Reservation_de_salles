@@ -126,7 +126,7 @@ class MeetingView(APIView):
         context = {'meeting': meeting.toJSON()}
         return Response(data=context)
 
-
+'''
 class IsRoomFreeView(APIView):
     """
     To know if a room is free or not
@@ -181,8 +181,7 @@ class IsRoomFreeView(APIView):
                    "day_name": date.strftime("%A"),
                    "month_name": date.strftime("%B")
                    }
-        return Response(data=context)
-# render(request, 'booking_meeting_room/is_free_room.html', context)
+        return Response(data=context)'''
 
 
 class MeetingListView(APIView):

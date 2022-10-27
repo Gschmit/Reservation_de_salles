@@ -88,8 +88,8 @@ class NextMeeting extends React.Component{
         return(
             <p>
                 TO DO : <br/>
-                - mettre le fichier test de django à jour suite au "post" mis en places <br/>
-                - supprimer le "get" inutile que l'on vient de remplacer ainsi <br/> 
+                - mettre le fichier test de django à jour suite au "post" mis en places <span style={{color:"limegreen"}}>done</span> <br/>
+                - supprimer le "get" inutile que l'on vient de remplacer ainsi <span style={{color:"limegreen"}}>done</span> <br/> 
                 - dans le front, définir toutes les fonctions (args et responses) dont on va avoir besoin <br/>
                 - dans le back : <br/>
                 -- créer les tests pour nos fonctions <br/>

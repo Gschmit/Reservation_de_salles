@@ -399,7 +399,7 @@ class MeetingViewTests(TestCase):
         assert '"hour": 2' in response.data["meeting"]
         assert '"minute": 45' in response.data["meeting"]
 
-
+'''
 class IsFreeRoomViewTests(TestCase):
     def test_no_meeting(self):
         room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
@@ -436,6 +436,7 @@ class IsFreeRoomViewTests(TestCase):
         assert '"title": "a meeting"' in response.data["meeting"]
         self.assertEqual(response.data["free"], True)
         assert '"name": "a room"' in response.data["room"]
+'''
 
 
 class MeetingListViewTests(TestCase):
