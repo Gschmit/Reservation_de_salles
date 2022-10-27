@@ -96,7 +96,7 @@ class NextMeeting extends React.Component{
                 -- créer les fonctions adéquats, passant tous les tests <br/>
                 - remplacer dans le front les fonctions voulues par leur response <br/>
                 - vérifier que ça fonctionne comme voulue <br/>
-                - le CSS
+                - le CSS <br/>
                 {this.props.nextMeeting}
             </p>
         )
