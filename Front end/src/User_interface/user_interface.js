@@ -7,16 +7,15 @@ import './user_interface.css';
 // import axios from 'axios';
 
 function assetsList(aRoom){
-    let out = []
-    let computer, paperboard, projector, televisionScreen, videoConference, wallWhiteboard, whiteboard
-        computer = aRoom.computer ? out.push("computer") : null
-        paperboard = aRoom.paperboard ? out.push("paperboard") : null
-        projector = aRoom.projector ? out.push("projector") : null
-        televisionScreen = aRoom.television_screen ? out.push("television screen") : null
-        videoConference = aRoom.videoconference ? out.push("videoconference") : null
-        wallWhiteboard = aRoom.wall_whiteboard ? out.push("wall whiteboard") : null
-        whiteboard = aRoom.whiteboard ? out.push("whiteboard") : null
-        return out
+    let out = [[], null] 
+    out[1] = aRoom.computer ? out[0].push("computer") : null
+    out[1] += aRoom.paperboard ? out[0].push("paperboard") : null
+    out[1] += aRoom.projector ? out[0].push("projector") : null
+    out[1] += aRoom.television_screen ? out[0].push("television screen") : null
+    out[1] += aRoom.videoconference ? out[0].push("videoconference") : null
+    out[1] += aRoom.wall_whiteboard ? out[0].push("wall whiteboard") : null
+    out[1] += aRoom.whiteboard ? out[0].push("whiteboard") : null
+    return out[0]       // the second element is just to make the code working, without creating a useless variable
     };
 
 
