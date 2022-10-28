@@ -1,12 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// import axios from 'axios';
 import './index.css';
 import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
-import MyCalendar from './Global/calendar';
+import {MyCalendar} from './Global/calendar';
 import image from "./photo.PNG";
 // import App from './App';
 import reportWebVitals from './reportWebVitals';

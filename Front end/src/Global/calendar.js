@@ -2,11 +2,26 @@ import React from 'react';
 import './global.css';
 
 import { Calendar, globalizeLocalizer } from 'react-big-calendar';
-// import '../../node_modules/react-big-calendar/lib/sass/styles';
+// import '../../node_modules/react-big-calendar/lib/sass/styles';  // kécécé ?
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css'
 import globalize from 'globalize';
 
 const localizer = globalizeLocalizer(globalize)
+
+function meetingsToEvents(meetingList){
+    let events = []
+        meetingList.forEach(element => {
+            let startDate = new Date(
+                element.start_timestamps.year, element.start_timestamps.month - 1,
+                element.start_timestamps.day, element.start_timestamps.hour,
+                element.start_timestamps.minute
+                );
+            events.push({start : startDate, end : new Date(startDate.getTime() + element.duration * 30 * 60 * 1000),
+                title: element.title
+            });
+        });
+    return events
+}
 
 class MyCalendar extends React.Component{
     /*constructor(props){
@@ -19,11 +34,12 @@ class MyCalendar extends React.Component{
     } */
 
     render(){
+        let events = meetingsToEvents(this.props.eventsList)
         return(
             <div>
                 <Calendar
                 localizer={localizer}
-                events={this.props.eventsList}
+                events={events}
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: this.props.height, width: this.props.width}}
@@ -33,4 +49,4 @@ class MyCalendar extends React.Component{
     }
 };
 
-export default MyCalendar;
+export {MyCalendar, meetingsToEvents};

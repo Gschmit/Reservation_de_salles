@@ -57,7 +57,7 @@ class BookingRoomTool extends React.Component{
             nameRoomSelected = ""
         } else {
             let picture = typeof this.state.roomList[this.state.activeRoomInList] != "undefined" ? this.state.roomList[this.state.activeRoomInList].picture : null
-            let name = typeof this.state.roomList[this.state.activeRoomInList] != "undefined" ? this.state.roomList[this.state.activeRoomInList].picture : "name"
+            let name = typeof this.state.roomList[this.state.activeRoomInList] != "undefined" ? this.state.roomList[this.state.activeRoomInList].name : "name"
             let assets = []
             if (typeof this.state.roomList[this.state.activeRoomInList] != "undefined"){
                 assets = assetsList(this.state.roomList[this.state.activeRoomInList])

@@ -1,7 +1,7 @@
 /* Homepage on room's tablet */
 
 import React from 'react';
-import MyCalendar from '../Global/calendar';
+import {MyCalendar} from '../Global/calendar';
 import axios from 'axios';
 import {url} from '../Global/Reservation_form';
 
@@ -37,22 +37,24 @@ class HomepageScreen extends React.Component{
   
   class HomepageRoomCalendar extends React.Component{
     state = {
-      meetings: [] // formatage nécessaire ?
+      meetings: []
     };
 
     componentDidMount(){
-      // adresse à modifier, mais on n'a besoin que de l'id de la salle
-      /* axios.get(`http://127.0.0.1:8000/booking_meeting_room/{partie à voir}/${this.props.roomId}/`)
+      axios.get(url + `room_meetings/${this.props.roomId}`)
       .then(res => {
-        this.setState({meetings : JSON.parse(res.data.à_voir)}) // JSON.parse peut être à enlever
-      }); */
+        let meetingList = []
+        for (const meet in res.data){
+          meetingList.push(JSON.parse(res.data[meet]))
+        };
+        this.setState({meetings : meetingList});
+      });
     };
 
     render(){
       // aller chercher dans la liste des réunions les réunions de la salle actuelle (componentDidMount)
-
       return( // height et width à régler en fonction des dimensions de l'écran d'affichage
-          <MyCalendar eventslist={this.state.meetings} height={300} width={600}/>
+          <MyCalendar eventsList={this.state.meetings} height={300} width={600}/>
       )
     };
   };

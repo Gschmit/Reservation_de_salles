@@ -1,7 +1,7 @@
 import React from 'react';
-import {Form, url} from '../Global/Reservation_form';
 import axios from 'axios';
-import MyCalendar from '../Global/calendar';
+import {Form, url} from '../Global/Reservation_form';
+import {MyCalendar, meetingsToEvents} from '../Global/calendar';
 
 
 function funcTest(){
@@ -96,6 +96,8 @@ class NextMeeting extends React.Component{
                 -- créer les fonctions adéquats, passant tous les tests <br/>
                 - remplacer dans le front les fonctions voulues par leur response <br/>
                 - vérifier que ça fonctionne comme voulue <br/>
+                <span style={{color:"limegreen"}}>done for tablet view</span> ={'>'} plus que les actions des 
+                boutons à faire<br/> 
                 - le CSS <br/>
                 {this.props.nextMeeting}
             </p>
@@ -104,17 +106,49 @@ class NextMeeting extends React.Component{
 };
 
 class UserCalendar extends React.Component{
+    state = {
+        meetings: []
+      };
+
+    componentDidMount(){
+        /*axios.get(url + `user_meetings/${this.props.user.id}`)
+        .then(res => {
+          let meetingList = []
+          for (const meet in res.data){
+            meetingList.push(JSON.parse(res.data[meet]))
+          };
+          this.setState({meetings : meetingList});
+        });*/
+      };
+    
     render(){
+        let events = meetingsToEvents(this.state.meetings)
         return(
-            <MyCalendar eventslist={[]} height={500} width={700}/>
+            <MyCalendar eventsList={events} height={500} width={700}/>
         )
     }
 };
 
 class RoomCalendar extends React.Component{
+    state = {
+        meetings: []
+      };
+    
+    componentDidMount(){
+        /*axios.get(url + `room_meetings/${this.props.room.id}`)
+        .then(res => {
+          let meetingList = []
+          for (const meet in res.data){
+            meetingList.push(JSON.parse(res.data[meet]))
+          };
+          this.setState({meetings : meetingList});
+        });*/
+      };
+    
     render(){
+        let events = meetingsToEvents(this.state.meetings)
         return(
-            <MyCalendar eventslist={[]} height={500} width={700}/>
+            <MyCalendar eventsList={events} height={500} width={700}/>
         )
     }
 };
