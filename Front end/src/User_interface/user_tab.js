@@ -21,6 +21,7 @@ function funcTest(){
             });
         }); */
         console.log(data)
+        console.log(new Date(data.date))
     })
 }
 
@@ -84,6 +85,17 @@ class BookingButtons extends React.Component{
 };
 
 class NextMeeting extends React.Component{
+    state = {
+        nextMeeting: ""
+      };
+
+    componentDidMount(){
+        /*axios.get(url + `user_next_meeting/${this.props.user.id}`)
+        .then(res => {
+          this.setState({nextMeeting : res.data.next_meeting}); // res.data.next_meeting ou res.data[next_meeting]
+        });*/
+      };
+    
     render(){
         return(
             <p>

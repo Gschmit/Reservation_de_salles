@@ -1,7 +1,7 @@
 import React from 'react';
 
 class TabRoomList extends React.Component {
-    render(){ // roomName={roomItem} à remplacer par room={roomItem}
+    render(){
         return(
             <div>
                 {this.props.roomList.map(
