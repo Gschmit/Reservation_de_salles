@@ -18,8 +18,6 @@ class HomepageScreen extends React.Component{
 
     render(){
       let name = `${this.state.room.name} (${this.state.room.capacity} places)`
-      // remplacer ensuite this.props.name par le nom de salle + le nombre de places pour le HomepageRoomNameDisplay
-      // et l'attribut roomName de HomepageRoomCalendar par juste room, pour pouvoir accéder aux infos nécessaires.
       return(
         <div>
             <h1> Homepage </h1> <br/>
