@@ -7,7 +7,6 @@ import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import {MyCalendar} from './Global/calendar';
 import image from "./photo.PNG";
-// import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // paths :
