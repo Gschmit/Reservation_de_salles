@@ -6,6 +6,7 @@ import React from 'react';
 import './global.css';
 
 let options = ["test1", "Second élement"]
+const url = "http://127.0.0.1:8000/booking_meeting_room/"
 
 function setToTwoNumber(number){
   if (number < 10){
@@ -522,4 +523,4 @@ class CriteriaNumber extends React.Component{
   }
 }
 
-export {Form};
+export {Form, url};

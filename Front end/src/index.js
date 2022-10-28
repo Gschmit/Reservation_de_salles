@@ -18,11 +18,11 @@ import reportWebVitals from './reportWebVitals';
 // url reachable :
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/")
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/")
+// axios.post("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/", {year: <int>, month:<int>, day: <int>, hour: <int>, minute: <int>})
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/user/<int:user_id>/")
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting/<int:meeting_id>")
-// axios.get("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/<int:year>_<int:month>_<int:day>_<int:hour>_<int:minute>")
-// axios.post("http://127.0.0.1:8000/booking_meeting_room/room/<int:room_id>/", {year: <int>, month:<int>, day: <int>, hour: <int>, minute: <int>})
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/room_meetings/<int:room_id>")
 
 // set somewhere an url variable !!! (but not in this file)
 

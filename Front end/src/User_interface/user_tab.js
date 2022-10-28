@@ -1,12 +1,12 @@
 import React from 'react';
-import {Form} from '../Global/Reservation_form';
+import {Form, url} from '../Global/Reservation_form';
 import axios from 'axios';
 import MyCalendar from '../Global/calendar';
 
 
 function funcTest(){
     //axios.get("http://127.0.0.1:8000/booking_meeting_room/room/2/2022_9_28_14_45")
-    axios.post("http://127.0.0.1:8000/booking_meeting_room/room/2/", {year: 2022, month:9, day: 28, hour: 14,
+    axios.post(url + "room/2/", {year: 2022, month:9, day: 28, hour: 14,
         minute: 45})
     .then(res=> {
         const data = res.data

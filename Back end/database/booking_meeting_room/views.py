@@ -210,13 +210,13 @@ class RoomListView(APIView):
     """
 
     @staticmethod
-    def get(request, room_id):
+    def get(request):
         """
         For getting the view
         """
-        meeting_list: list[Meeting] = list(Meeting.objects.all().filter(room=room_id))
+        room_list: list[Room] = list(Room.objects.order_by('-name')[:])
         context = {
-            f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
+            f"room {index}": room.toJSON() for index, room in enumerate(room_list)
         }
         return Response(data=context)
 
@@ -226,13 +226,13 @@ class RoomMeetings(APIView):
     View for the meetings of room
     """
     @staticmethod
-    def get(request):
+    def get(request, room_id):
         """
         For getting the view
         """
-        room_list: list[Room] = list(Room.objects.order_by('-name')[:])
+        meeting_list: list[Meeting] = list(Meeting.objects.all().filter(room=room_id))
         context = {
-            f"room {index}": room.toJSON() for index, room in enumerate(room_list)
+            f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
         return Response(data=context)
 

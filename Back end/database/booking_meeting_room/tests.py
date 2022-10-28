@@ -497,7 +497,8 @@ class RoomListViewTests(TestCase):
 class RoomMeetingsViewTests(TestCase):
     def test_nonexistent_room_id(self):
         response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {})
 
     def test_existent_room_id_but_no_meeting(self):
         room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
@@ -515,6 +516,9 @@ class RoomMeetingsViewTests(TestCase):
         meeting1 = create_meeting(room, user, make_aware(datetime.datetime(2022, 12, 30, 2, 45)), 2,
                                   "another meeting")
         response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
+        print("en bas", type(response))
+        print(response)
+        print(response.data)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response.data, meeting0)
-        self.assertContains(response.data, meeting1)
+        self.assertContains(response, meeting0.duration)
+        self.assertContains(response, meeting1.title)

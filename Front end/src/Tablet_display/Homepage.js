@@ -3,6 +3,7 @@
 import React from 'react';
 import MyCalendar from '../Global/calendar';
 import axios from 'axios';
+import {url} from '../Global/Reservation_form';
 
 class HomepageScreen extends React.Component{
     state = {
@@ -10,7 +11,7 @@ class HomepageScreen extends React.Component{
     }
 
     componentDidMount(){
-      axios.get(`http://127.0.0.1:8000/booking_meeting_room/room/${this.props.roomId}/`)
+      axios.get(url + `room/${this.props.roomId}/`)
       .then(res => {
         this.setState({room : JSON.parse(res.data.room)})
       });

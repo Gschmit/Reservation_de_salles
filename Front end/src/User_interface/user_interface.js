@@ -1,10 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import {url} from '../Global/Reservation_form';
 import {TabRoomSelected} from './room_asset_tab';
 import {TabRoomList} from './room_list_tab';
 import {TabUser} from './user_tab'
 import './user_interface.css';
-// import axios from 'axios';
 
 function assetsList(aRoom){
     let out = [[], null] 
@@ -40,15 +40,15 @@ class BookingRoomTool extends React.Component{
     }
 
     componentDidMount(){
-          axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
-          .then(res => {
-            let rooms = []
-            for (const room in res.data) {
-              rooms.push(JSON.parse(res.data[room]))
-            };
-            this.setState({roomList : rooms})
-          });  // la liste des salles, peut être triée d'une certaine manière ?
+        axios.get(url + "room_list")
+        .then(res => {
+        let rooms = []
+        for (const room in res.data) {
+            rooms.push(JSON.parse(res.data[room]))
         };
+        this.setState({roomList : rooms})
+        });  // la liste des salles, peut être triée d'une certaine manière ?
+    };
 
     render(){
         let roomSelected, nameRoomSelected//, userId, nextMeeting
