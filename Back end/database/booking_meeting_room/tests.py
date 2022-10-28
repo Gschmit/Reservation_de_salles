@@ -1,6 +1,7 @@
 """ Tests file """
 
 import datetime
+
 from django.test import TestCase
 from django.urls import reverse
 from django.utils.timezone import make_aware
@@ -339,11 +340,11 @@ class IndexViewTests(TestCase):
 
 
 class RoomViewTests(TestCase):
-    def test_nonexistent_room_id(self):
+    def test_get_nonexistent_room_id(self):
         response = self.client.get(reverse("booking_meeting_room:room_view", args=(1, )))
         self.assertEqual(response.status_code, 404)
 
-    def test_existent_room_id(self):
+    def test_get_existent_room_id(self):
         room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_view", args=(room.pk, )))
@@ -359,6 +360,45 @@ class RoomViewTests(TestCase):
         self.assertContains(response, room.name)
         self.assertContains(response, room.capacity)
         self.assertContains(response, room.location)
+
+    def test_post_no_meeting(self):
+        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+                           False, True)
+        response = self.client.post(
+            reverse("booking_meeting_room:room_view", args=(room.id, )),
+            {"year": 2022, "month": 12, "day": 29, "hour": 23, "minute": 56})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["meeting"], "No meeting scheduled")
+        self.assertEqual(response.data["free"], True)
+        assert '"name": "a room"' in response.data["room"]
+
+    def test_post_occupied_room(self):
+        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+                           False, True)
+        create_meeting(room, create_user("user", "staff"),
+                       make_aware(datetime.datetime(2022, 9, 12, 15, 10)), 2, "a meeting")
+        response = self.client.post(
+            reverse("booking_meeting_room:room_view", args=(room.id, )),
+            {"year": 2022, "month": 9, "day": 12, "hour": 15, "minute": 56})
+        self.assertEqual(response.status_code, 200)
+        assert '"title": "a meeting"' in response.data["meeting"]
+        self.assertEqual(response.data["free"], False)
+        assert '"name": "a room"' in response.data["room"]
+
+    def test_post_free_room(self):
+        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+                           False, True)
+        create_meeting(room, create_user("user", "staff"),
+                       make_aware(datetime.datetime(2022, 9, 10, 15, 10)), 2, "a meeting")
+        create_meeting(room, create_user("user", "staff"),
+                       make_aware(datetime.datetime(2022, 9, 12, 16, 0)), 2, "a meeting")
+        response = self.client.post(
+            reverse("booking_meeting_room:room_view", args=(room.id, )),
+            {"year": 2022, "month": 9, "day": 12, "hour": 15, "minute": 59})
+        self.assertEqual(response.status_code, 200)
+        assert '"title": "a meeting"' in response.data["meeting"]
+        self.assertEqual(response.data["free"], True)
+        assert '"name": "a room"' in response.data["room"]
 
 
 class UserViewTests(TestCase):
@@ -397,44 +437,34 @@ class MeetingViewTests(TestCase):
         assert '"hour": 2' in response.data["meeting"]
         assert '"minute": 45' in response.data["meeting"]
 
-'''
-class IsFreeRoomViewTests(TestCase):
-    def test_no_meeting(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
-                           False, True)
-        response = self.client.get(
-            reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 12, 29, 23, 56)))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data["meeting"], "No meeting scheduled")
-        self.assertEqual(response.data["free"], True)
-        assert '"name": "a room"' in response.data["room"]
 
-    def test_occupied_room(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
-                           False, True)
-        create_meeting(room, create_user("user", "staff"),
-                       make_aware(datetime.datetime(2022, 9, 12, 15, 10)), 2, "a meeting")
-        response = self.client.get(
-            reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 9, 12, 15, 56)))
+class HandleMeetingViewTests(TestCase):
+    def test_create_a_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
+        title = "a title"
+        assert not Meeting.objects.all()
+        response = self.client.put(reverse("booking_meeting_room:handle_meeting_view"),
+                                   {"room": room.id, "user": user.id, "duration": 2,
+                                    "title": title, "physically_present_person": None,
+                                    "start_timestamps": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
+                                    "other_persons": None}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        assert '"title": "a meeting"' in response.data["meeting"]
-        self.assertEqual(response.data["free"], False)
-        assert '"name": "a room"' in response.data["room"]
+        assert Meeting.objects.all()
+        assert type(Meeting.objects.all()[0]) == Meeting
+        assert str(Meeting.objects.all()[0]) == f"{title} in {room.name}, by {user.name}"
 
-    def test_free_room(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
-                           False, True)
-        create_meeting(room, create_user("user", "staff"),
-                       make_aware(datetime.datetime(2022, 9, 10, 15, 10)), 2, "a meeting")
-        create_meeting(room, create_user("user", "staff"),
-                       make_aware(datetime.datetime(2022, 9, 12, 16, 0)), 2, "a meeting")
-        response = self.client.get(
-            reverse("booking_meeting_room:is_free_room_view", args=(room.id, 2022, 9, 12, 15, 59)))
+    def test_delete_a_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
+        meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
+                                 "a meeting")
+        response = self.client.delete(reverse("booking_meeting_room:handle_meeting_view"),
+                                   {"meeting": meeting.id}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
-        assert '"title": "a meeting"' in response.data["meeting"]
-        self.assertEqual(response.data["free"], True)
-        assert '"name": "a room"' in response.data["room"]
-'''
+        assert not Meeting.objects.all()
 
 
 class MeetingListViewTests(TestCase):
@@ -516,9 +546,6 @@ class RoomMeetingsViewTests(TestCase):
         meeting1 = create_meeting(room, user, make_aware(datetime.datetime(2022, 12, 30, 2, 45)), 2,
                                   "another meeting")
         response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
-        print("en bas", type(response))
-        print(response)
-        print(response.data)
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, meeting0.duration)
         self.assertContains(response, meeting1.title)

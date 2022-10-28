@@ -13,7 +13,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 # from rest_framework import status
 
-from booking_meeting_room.functions import shift_date
+import booking_meeting_room.functions as func
 
 # TO DO : Make classes for grouping the views.
 
@@ -23,7 +23,7 @@ class IndexView(APIView):
     For the first view of the app
     """
     @staticmethod
-    def get(request):           # post ne fonctionne pas
+    def get(request):
         """
         For getting the view
         """
@@ -37,10 +37,10 @@ class RoomView(APIView):
     View of a room
     """
     @staticmethod
-    def get(request, room_id):              # mettre un "post" au lieu de "get" retourne une erreur
+    def get(request, room_id):
         """
         View of the room 'room_id'
-        """                            # (voir fichier test.py pour plus de détail)
+        """
         room = get_object_or_404(Room, pk=room_id)
         context = {'room': room.toJSON()}
         return Response(data=context)
@@ -52,8 +52,9 @@ class RoomView(APIView):
         """
         room = get_object_or_404(Room, pk=room_id)
         meeting_list = list(Meeting.objects.order_by('-start_timestamps'))
-        date = datetime.datetime(request.data["year"], request.data["month"], request.data["day"],
-                                 request.data["hour"], request.data["minute"])
+        date = datetime.datetime(int(request.data["year"]), int(request.data["month"]),
+                                 int(request.data["day"]), int(request.data["hour"]),
+                                 int(request.data["minute"]))
         if meeting_list:
             count = 0
             meeting = meeting_list[count]
@@ -61,7 +62,7 @@ class RoomView(APIView):
                                            meeting.start_timestamps.day, meeting.start_timestamps.hour,
                                            meeting.start_timestamps.minute)
             duration = meeting.duration * 30
-            end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+            end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
             time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
             bool_meeting = True
         else:
@@ -82,7 +83,7 @@ class RoomView(APIView):
                                                meeting.start_timestamps.day, meeting.start_timestamps.hour,
                                                meeting.start_timestamps.minute)
                 duration = meeting.duration * 30
-                end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+                end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
                 time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
         if (not free) and (time_start > date):
             free = True
@@ -126,6 +127,41 @@ class MeetingView(APIView):
         context = {'meeting': meeting.toJSON()}
         return Response(data=context)
 
+
+class HandleMeetingView(APIView):
+    """
+    Meeting handler
+    """
+    @staticmethod
+    def put(request):
+        """
+        to create a meeting
+        """
+        data = request.data
+        if "physically_present_person" in data.keys():
+            physically_present_person = data["physically_present_person"]
+        else:
+            physically_present_person = None
+        if "other_persons" in data.keys():
+            other_persons = data["other_persons"]
+        else:
+            other_persons = None
+        room = get_object_or_404(Room, pk=data["room"])
+        user = get_object_or_404(User, pk=data["user"])
+        func.create_a_new_meeting(room, user, data["start_timestamps"], data["title"],
+                                  data["duration"], physically_present_person, other_persons)
+        return Response(data=None)
+
+    @staticmethod
+    def delete(request):
+        """
+        to delete a meeting
+        """
+        meet = get_object_or_404(Meeting, pk=request.data["meeting"])
+        meet.delete_meeting()
+        return Response(data=None)
+
+
 '''
 class IsRoomFreeView(APIView):
     """
@@ -146,7 +182,7 @@ class IsRoomFreeView(APIView):
                                            meeting.start_timestamps.day, meeting.start_timestamps.hour,
                                            meeting.start_timestamps.minute)
             duration = meeting.duration * 30
-            end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+            end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
             time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
             bool_meeting = True
         else:
@@ -167,7 +203,7 @@ class IsRoomFreeView(APIView):
                                                meeting.start_timestamps.day, meeting.start_timestamps.hour,
                                                meeting.start_timestamps.minute)
                 duration = meeting.duration * 30
-                end_y, end_mo, end_d, end_h, end_mi = shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
+                end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
                 time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
         if (not free) and (time_start > date):
             free = True

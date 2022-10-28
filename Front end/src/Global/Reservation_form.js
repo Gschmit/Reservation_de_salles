@@ -2,7 +2,7 @@
 
 import allMessages from '../Displayed_messages'; 
 import React from 'react';
-//import axios from 'axios';
+import axios from 'axios';
 import './global.css';
 
 let options = ["test1", "Second élement"]
@@ -27,7 +27,7 @@ class Form extends React.Component {
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
       roomName: "roomName" in this.props ? this.props.roomName : "",
-      roomList: options, // {}, // supprimer la variable "options" une fois que le lien avec le back end sera ok
+      roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
       meetings: {},
     };
 
@@ -102,10 +102,15 @@ class Form extends React.Component {
 
   componentDidMount(){
     if (this.state.roomName === ""){ // le test semble bon, peut-être l'optimiser plus tard ?
-      /* axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list") // éventuellement rajouter un '/' à la fin
+      axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
       .then(res => {
-        this.setState({roomList : JSON.parse(res.data.à_voir)})
-      }); */
+        let rooms = []
+        
+        for (const room in res.data) {
+          rooms.push(JSON.parse(res.data[room]))
+        };
+        this.setState({roomList : rooms})
+      });
       
       // Pour un utilisateur, on a besoin de la liste de toutes les réunions  (plus éventuellement un filtre 
       // sur celle de celui-ci) !!! Mettre à jour ce besoin, à faire si possible sur python !!!
@@ -115,7 +120,6 @@ class Form extends React.Component {
         // set here the max value of duration depending on the start time value.
         // and set first and last start time possible.
       }); */
-      console.log("axios")
     } else {
       /* axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
       .then(res => {
@@ -126,7 +130,6 @@ class Form extends React.Component {
         console.log("meet :", meet)
         this.setState({meetings : meet})
       });*/
-      console.log("no axios")
     };
 
   };
@@ -172,7 +175,7 @@ class Form extends React.Component {
 
 class ButtonArea extends React.Component{
   render(){ // Pour le bouton Validate, on veux créer la réunion (faire ça sur python, à la main ou directement 
-    // à l'aide d'un post ou d'une autre fonction déjà pré-existente)
+    // à l'aide d'un put ou d'une autre fonction déjà pré-existente)
     return(<div className='space'>
       <ActionButton name= "Validate"
       date= {this.props.date}
@@ -182,9 +185,12 @@ class ButtonArea extends React.Component{
       titleMeeting= {this.props.titleMeeting}
       numberOfPresentPerson= {this.props.numberOfPresentPerson}
       videoConference= {this.props.videoConference}
-      callback= {() => alert(`You clicked on 'Validate' ${this.props.date} 
-      ${this.props.duration} ${this.props.nameOfWhoSReserving} ${this.props.roomName}
-      ${this.props.titleMeeting} ${this.props.videoConference} ${this.props.numberOfPresentPerson}`)}
+      /*callback= {() => {
+        axios.put(url + "meeting", {})
+      }}*/
+      callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
+      duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.roomName}
+      title:${this.props.titleMeeting} visio:${this.props.videoConference} number:${this.props.numberOfPresentPerson}`)}
       />
       <ActionButton name="Cancel" callback= {() => alert("You clicked on 'Cancel'")}/>
     </div>); // Pour le bouton Cancel, la fonction callback doit juste ramener à l'écran précédent (mettre ça
@@ -258,7 +264,7 @@ class Informations extends React.Component {
         data= {this.props.roomName}
         type= "select"
         onChange= {this.props.onChangeName}
-        roomList= {this.props.roomList}
+        list= {this.props.roomList}
         required={true}
         />
     } else {
@@ -430,8 +436,9 @@ class CriteriaSelect extends React.Component{
       <span>
         {this.props.name + " "}
         <select required={this.props.required}>
-          {this.props.roomList.map(
-            (arrayItem, index) => <option key={index} value={arrayItem}>{arrayItem}</option>
+          <option key={-1} value={"empty"}>-- Select one --</option>
+          {this.props.list.map(
+            (arrayItem, index) => <option key={index} value={arrayItem.name}>{arrayItem.name}</option>
           )}
         </select>
       </span>

@@ -22,7 +22,7 @@ import reportWebVitals from './reportWebVitals';
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/room_meetings/<int:room_id>")
 
-// set somewhere an url variable !!! (but not in this file)
+// a url variable is defined in the file Reservation_form
 
 // // // // // // // // // // // // // // // // // // // // // //
 // // // // //                                     // // // // //
