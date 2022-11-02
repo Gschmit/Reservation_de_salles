@@ -462,9 +462,31 @@ class HandleMeetingViewTests(TestCase):
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
                                  "a meeting")
         response = self.client.delete(reverse("booking_meeting_room:handle_meeting_view"),
-                                   {"meeting": meeting.id}, content_type="application/json")
+                                      {"meeting": meeting.id}, content_type="application/json")
         self.assertEqual(response.status_code, 200)
         assert not Meeting.objects.all()
+
+    def test_patch_a_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
+        title = "new title"
+        meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
+                                 "a meeting")
+        response = self.client.patch(reverse("booking_meeting_room:handle_meeting_view"),
+                                     {"duration": 3, "title": title, "physically_present_person": 2,
+                                      "start_timestamps": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
+                                      "other_persons": "Jean", "meeting": meeting.id},
+                                     content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        new_meeting: Meeting = Meeting.objects.all()[0]
+        assert str(new_meeting) == f"{title} in {room.name}, by {user.name}"
+        assert new_meeting.room.id == room.id
+        assert new_meeting.user.id == user.id
+        assert new_meeting.duration == 3
+        assert new_meeting.start_timestamps == make_aware(datetime.datetime(2022, 10, 15, 9, 30))
+        assert new_meeting.other_persons == "Jean"
+        assert new_meeting.physically_present_person == 2
 
 
 class MeetingListViewTests(TestCase):

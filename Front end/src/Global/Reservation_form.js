@@ -26,7 +26,7 @@ class Form extends React.Component {
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
-      roomName: "roomName" in this.props ? this.props.roomName : "",
+      roomName: "roomName" in this.props ? this.props.roomName : "défaut", // ne se met pas à jour dans le bouton 'Validate' ...
       roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
       meetings: {},
     };
@@ -101,7 +101,7 @@ class Form extends React.Component {
   };
 
   componentDidMount(){
-    if (this.state.roomName === ""){ // le test semble bon, peut-être l'optimiser plus tard ?
+    if (this.state.roomName === "défaut"){ // le test semble bon, peut-être l'optimiser plus tard ?
       axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
       .then(res => {
         let rooms = []
@@ -432,6 +432,9 @@ class CriteriaSelect extends React.Component{
   }
 
   render(){
+    {this.props.list.map(
+      (arrayItem, index) => console.log(index, arrayItem.name, arrayItem.id)
+    )}
     return(
       <span>
         {this.props.name + " "}

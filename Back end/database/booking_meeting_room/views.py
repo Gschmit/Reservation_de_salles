@@ -15,10 +15,8 @@ from rest_framework.response import Response
 
 import booking_meeting_room.functions as func
 
-# TO DO : Make classes for grouping the views.
 
-
-class IndexView(APIView):
+class IndexView(APIView):               # useless ?
     """
     For the first view of the app
     """
@@ -161,63 +159,34 @@ class HandleMeetingView(APIView):
         meet.delete_meeting()
         return Response(data=None)
 
-
-'''
-class IsRoomFreeView(APIView):
-    """
-    To know if a room is free or not
-    """
     @staticmethod
-    def get(request, room_id, year, month, day, hour, minute):
+    def patch(request):
         """
-        View for knowing if a room is free or not at the date wanted
+        To modify a meeting
         """
-        room = get_object_or_404(Room, pk=room_id)
-        meeting_list = list(Meeting.objects.order_by('-start_timestamps'))
-        date = datetime.datetime(year, month, day, hour, minute)
-        if meeting_list:
-            count = 0
-            meeting = meeting_list[count]
-            time_start = datetime.datetime(meeting.start_timestamps.year, meeting.start_timestamps.month,
-                                           meeting.start_timestamps.day, meeting.start_timestamps.hour,
-                                           meeting.start_timestamps.minute)
-            duration = meeting.duration * 30
-            end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
-            time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
-            bool_meeting = True
-        else:
-            count = -1
-            time_start = "useless"
-            time_end = date
-            meeting = "No meeting scheduled"
-            bool_meeting = False
-        free = False
-        while time_end <= date:
-            count += 1
-            if count == len(meeting_list):
-                free = True
-                break
+        meet = get_object_or_404(Meeting, pk=request.data["meeting"])
+        arguments = {}
+        for key in ["start_timestamps", "title", "duration", "physically_present_person",
+                    "other_persons", "remove_physically_present_person", "remove_other_persons"]:
+            if key in request.data.keys():
+                arguments[key] = request.data[key]
             else:
-                meeting = meeting_list[count]
-                time_start = datetime.datetime(meeting.start_timestamps.year, meeting.start_timestamps.month,
-                                               meeting.start_timestamps.day, meeting.start_timestamps.hour,
-                                               meeting.start_timestamps.minute)
-                duration = meeting.duration * 30
-                end_y, end_mo, end_d, end_h, end_mi = func.shift_date(time_start.year, time_start.month, time_start.day, time_start.hour, time_start.minute, duration)
-                time_end = datetime.datetime(end_y, end_mo, end_d, end_h, end_mi)
-        if (not free) and (time_start > date):
-            free = True
-        if bool_meeting:
-            meeting = meeting.toJSON()
-        context = {'room': room.toJSON(),
-                   "free": free,
-                   "meeting": meeting,
-                   "bool_meeting": bool_meeting,
-                   "date": date,
-                   "day_name": date.strftime("%A"),
-                   "month_name": date.strftime("%B")
-                   }
-        return Response(data=context)'''
+                arguments[key] = None
+        if "room" in request.data.keys():
+            room = get_object_or_404(Room, pk=request.data["room"])
+        else:
+            room = None
+        if "user" in request.data.keys():
+            user = get_object_or_404(User, pk=request.data["user"])
+        else:
+            user = None
+        func.modify_a_meeting(meeting=meet, room=room, user=user,
+                              start_timestamps=arguments["start_timestamps"], title=arguments["title"],
+                              duration=arguments["duration"], other_persons=arguments["other_persons"],
+                              physically_present_person=arguments["physically_present_person"],
+                              remove_physically_present_person=arguments["remove_physically_present_person"],
+                              remove_other_persons=arguments["remove_other_persons"])
+        return Response(data=None)
 
 
 class MeetingListView(APIView):
@@ -229,13 +198,10 @@ class MeetingListView(APIView):
         """
         For getting the view
         """
-        latest_meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
-        latest_meeting_list.reverse()
-        # context = {
-        #     'latest_meeting_list': {f"meeting{index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)},
-        # }
+        meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
+        meeting_list.reverse()
         context = {
-            f"meeting {index}": meet.toJSON() for index, meet in enumerate(latest_meeting_list)
+            f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
         return Response(data=context)
 
@@ -271,15 +237,3 @@ class RoomMeetings(APIView):
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
         return Response(data=context)
-
-
-''' def new_meeting_view(request):
-    """
-    View for creating a new meeting
-    """
-    context = {
-    }
-    return render(request, 'booking_meeting_room/new_meeting.html', context)
-
-# utilité de la fonction ci-dessus ?
-'''
