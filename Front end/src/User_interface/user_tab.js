@@ -31,7 +31,7 @@ class TabUser extends React.Component{
         if (this.props.typeDisplay === "form"){
             tabDisplay = <Form criteria={this.props.criteria} name={this.props.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
-            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting}/>
+            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting}/> // à supprimer, un state est mis dans NextMeeting
         } else if (this.props.typeDisplay === "user calendar"){
             tabDisplay = <UserCalendar userName={this.props.user}/>
         } else if (this.props.typeDisplay === "room calendar"){
@@ -65,9 +65,9 @@ class UserHomepage extends React.Component{
                     />
                 </div>
                 <br/>
-                <NextMeeting nextMeeting={this.props.nextMeeting}/>
+                <NextMeeting nextMeeting={this.props.nextMeeting}/> 
             </div>
-        )
+        )   // nextMeeting={this.props.nextMeeting} à supprimer, un state est mis dans NextMeeting
        
     }
 };
@@ -113,7 +113,7 @@ class NextMeeting extends React.Component{
                 - le CSS <br/>
                 {this.props.nextMeeting}
             </p>
-        )
+        )// this.props.nextMeeting à remplacer par this.state.nextMeeting
     }
 };
 

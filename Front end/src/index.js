@@ -51,40 +51,33 @@ const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"
 const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
-const testCal = ReactDOM.createRoot(document.getElementById("root"))
 const pages = 7
 const pictureURL = image
-// const pictureTest = <img>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN8AAACgCAYAAACMjbk4AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAAFiUAABYlAUlSJPAAAAM+SURBVHhe7d3BicRAEATB9d8++aNjYG3YuUoioED/JpmnPi8pz/N8v/jvxBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb8TnHMrPfz8sXc47KBvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLb4UcpZpfm5Ys5R2WD+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e3woxSzS/PyxZyjskF8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dvhRitmleflizlHZIL4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7/CjF7NK8fDHnqGwQX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8e0QX4z4dogvRnw7xBcjvh1+lGJ2aV6+mHNUNogvRnw7xBcjvh3iixHfDvHFiG+H+GLEt0N8MeLbIb4Y8a143z/QAIMFASQrBQAAAABJRU5ErkJggg==</img>
-// pictureURL = pictureTest
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
 const criteriaUser = ["date", "start time", "end time", "duration", "room name", "video conference",
   "meeting title", "present person"]
-const assets = ["une liste", "d'assets"]
-const roomList = ["une liste", "de salles"]
-homepage.render(<HomepageScreen name="Room name (n places)" roomId={2}/>);
-// testCal.render(<MyCalendar eventsList= {[]}/>);
+homepage.render(<HomepageScreen roomId={2}/>);
 let display = pages - 1
-//let display = 0
 
 function areaToDisplay(next, shift){
   let intDisplay = (next + shift) % pages
   if (intDisplay === 0){
     homepage.render();
-    tabletForm.render(<Form criteria= {criteriaTablet} name={allMessages.roomName["en"]} roomName="Room name"/>);
+    tabletForm.render(<Form criteria= {criteriaTablet} name={allMessages.roomName["en"]} room="Room name"/>);
     userHomepage.render();
   } else if (intDisplay === 1) {
     tabletForm.render();
     userHomepage.render(
-      <BookingRoomTool roomList={roomList} userDisplay= "homepage" user="User name" 
-        nextMeeting="plus de rendez-vous de prévu"
+      <BookingRoomTool userDisplay= "homepage" user="User name" 
+        nextMeeting="Plus de rendez-vous de prévu"        // à supprimer, un state est mis dans NextMeeting
       />
     );
     userInterfaceFalse.render();
   } else if (intDisplay === 2) {
     userHomepage.render();
     userInterfaceFalse.render(
-      <BookingRoomTool assets={assets} roomList={roomList} criteria= {criteriaUser} userDisplay= "form"
+      <BookingRoomTool criteria= {criteriaUser} userDisplay= "form"
         name={allMessages.userInterface["en"]} user="User name"
       />
     );
@@ -92,33 +85,28 @@ function areaToDisplay(next, shift){
   } else if (intDisplay === 3) {
     userInterfaceFalse.render();
     userInterfaceTrue.render(
-      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL} criteria= {criteriaUser} 
+      <BookingRoomTool picture={pictureURL} criteria= {criteriaUser} 
         userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" activeTab={0}
       />
     );
     userCalendar.render();
   } else if (intDisplay === 4) {
     userInterfaceTrue.render();
-    userCalendar.render(<BookingRoomTool roomList={roomList} userDisplay= "user calendar" user="User name"/>
+    userCalendar.render(<BookingRoomTool userDisplay= "user calendar" user="User name"/>
     );
     roomCalendar.render();
   } else if (intDisplay === 5) {
     userCalendar.render();
     roomCalendar.render(
-      <BookingRoomTool assets={assets} roomList={roomList} picture={pictureURL} userDisplay= "room calendar" 
+      <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" 
         user="User name" activeTab={0}
       />
     );
     homepage.render();
   } else {
     roomCalendar.render();
-    homepage.render(<HomepageScreen name="Room name (n places)" roomId={2}/>);
+    homepage.render(<HomepageScreen roomId={2}/>);
     tabletForm.render();
-  }
-  if (intDisplay === pages){
-    testCal.render(<MyCalendar eventsList= {[]}/>)
-  } else {
-    testCal.render();
   }
   return(intDisplay)
 }

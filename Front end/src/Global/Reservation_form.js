@@ -26,10 +26,11 @@ class Form extends React.Component {
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
-      roomName: "roomName" in this.props ? this.props.roomName : "défaut", // ne se met pas à jour dans le bouton 'Validate' ...
+      room: "room" in this.props ? this.props.room : "défaut", // ne se met pas à jour dans le bouton 'Validate' ...
       roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
       meetings: {},
-    };
+    };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
+    // pour le user, ça va être compliqué ...
 
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
     this.handleDurationValueChange = this.handleDurationValueChange.bind(this);
@@ -101,7 +102,7 @@ class Form extends React.Component {
   };
 
   componentDidMount(){
-    if (this.state.roomName === "défaut"){ // le test semble bon, peut-être l'optimiser plus tard ?
+    if (this.state.room === "défaut"){ // le test semble bon, peut-être l'optimiser plus tard ?
       axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
       .then(res => {
         let rooms = []
@@ -146,7 +147,7 @@ class Form extends React.Component {
           duration= {this.state.duration}
           onChangeDuration= {this.handleDurationValueChange}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          roomName= {this.state.roomName}
+          roomName= {this.state.room}
           onChangeName= {changeName}
           videoConference= {this.state.videoConference}
           onChangeVideoConference= {this.handleVideoConferenceChange}
@@ -160,7 +161,7 @@ class Form extends React.Component {
           <ButtonArea date= {this.state.date}
           duration= {this.state.duration}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          roomName= {this.state.roomName}
+          roomName= {this.state.room}
           titleMeeting= {this.state.titleMeeting}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
           videoConference= {this.state.videoConference}
@@ -432,9 +433,9 @@ class CriteriaSelect extends React.Component{
   }
 
   render(){
-    {this.props.list.map(
+    /*{this.props.list.map(
       (arrayItem, index) => console.log(index, arrayItem.name, arrayItem.id)
-    )}
+    )}; //*/
     return(
       <span>
         {this.props.name + " "}

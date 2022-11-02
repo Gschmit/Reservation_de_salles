@@ -86,7 +86,7 @@ class BookingRoomTool extends React.Component{
         }); */
         // Here, we just want to access to the next meeting of the user --> create a python view to do this
         
-        return( // remplacer props.roomList par state.roomList
+        return(
             <table>
                 <tbody>
                     <tr>
@@ -102,7 +102,7 @@ class BookingRoomTool extends React.Component{
                                 criteria={this.props.criteria} 
                                 name={this.props.name} 
                                 buttons={this.props.buttons}
-                                nextMeeting={this.props.nextMeeting}
+                                nextMeeting={this.props.nextMeeting}  // à supprimer, un state est mis dans NextMeeting 
                                 user={this.props.user}
                                 room={nameRoomSelected}
                             />
