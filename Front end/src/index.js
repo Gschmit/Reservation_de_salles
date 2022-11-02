@@ -5,7 +5,6 @@ import {Form} from './Global/Reservation_form';
 import {HomepageScreen} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
-import {MyCalendar} from './Global/calendar';
 import image from "./photo.PNG";
 import reportWebVitals from './reportWebVitals';
 
