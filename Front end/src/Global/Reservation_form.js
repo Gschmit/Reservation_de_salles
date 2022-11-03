@@ -26,8 +26,9 @@ class Form extends React.Component {
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
-      room: "room" in this.props ? this.props.room : "défaut", // ne se met pas à jour dans le bouton 'Validate' ...
+      room: "room" in this.props ? this.props.room : NaN,
       roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
+      name: "",
       meetings: {},
     };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
     // pour le user, ça va être compliqué ...
@@ -97,32 +98,35 @@ class Form extends React.Component {
 
   handleRoomNameChange(newRoomName){
     this.setState({
-      roomName: newRoomName
+      room: newRoomName
     });
   };
 
   componentDidMount(){
-    if (this.state.room === "défaut"){ // le test semble bon, peut-être l'optimiser plus tard ?
-      axios.get("http://127.0.0.1:8000/booking_meeting_room/room_list")
+    if (isNaN(this.state.room)){ // On test ici seulement si l'id de la salle est renseigné
+      // on voudrait savoir si on a affaire un afficahge sur salle ou un affichage pour user
+      axios.get(url + "room_list")
       .then(res => {
         let rooms = []
-        
         for (const room in res.data) {
           rooms.push(JSON.parse(res.data[room]))
         };
         this.setState({roomList : rooms})
       });
-      
       // Pour un utilisateur, on a besoin de la liste de toutes les réunions  (plus éventuellement un filtre 
       // sur celle de celui-ci) !!! Mettre à jour ce besoin, à faire si possible sur python !!!
       // Pour une salle, il faut limiter la durée de la réunion ainsi que les horaires disponibles.
-      /* axios.get(`http://127.0.0.1:8000/booking_meeting_room/{partie à voir}/${roomId à récupérer qqpart}/`)
+      /* axios.get(url + `{partie à voir}/${roomId à récupérer qqpart}/`)
       .then(res => {
         // set here the max value of duration depending on the start time value.
         // and set first and last start time possible.
       }); */
     } else {
-      /* axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
+      axios.get(url + `room/${this.state.room}/`)
+      .then(res => {
+        this.setState({name : JSON.parse(res.data["room"]).name})
+      })
+      /* axios.get(url + "meeting_list")
       .then(res => {
         let meet = {}
         for (const meeting in res.data) {
@@ -136,10 +140,10 @@ class Form extends React.Component {
   };
 
   render(){
-    let changeName = this.props.criteria.includes("room name") ? this.handleRoomNameChange : this.handleNameReservingTextChange
+    let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
       <div>
-        <h1> Reservation form of {this.props.name} </h1>
+        <h1> Reservation form of {this.state.name} </h1>
         <br/>
         <form>
           <Informations date= {this.state.date}
@@ -161,7 +165,7 @@ class Form extends React.Component {
           <ButtonArea date= {this.state.date}
           duration= {this.state.duration}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          roomName= {this.state.room}
+          room= {this.state.room}
           titleMeeting= {this.state.titleMeeting}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
           videoConference= {this.state.videoConference}
@@ -182,16 +186,32 @@ class ButtonArea extends React.Component{
       date= {this.props.date}
       duration= {this.props.duration}
       nameOfWhoSReserving= {this.props.nameOfWhoSReserving}
-      roomName= {this.props.roomName}
+      room= {this.props.room}
       titleMeeting= {this.props.titleMeeting}
       numberOfPresentPerson= {this.props.numberOfPresentPerson}
       videoConference= {this.props.videoConference}
-      /*callback= {() => {
-        axios.put(url + "meeting", {})
-      }}*/
-      callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
-      duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.roomName}
-      title:${this.props.titleMeeting} visio:${this.props.videoConference} number:${this.props.numberOfPresentPerson}`)}
+      callback= {() => {
+        let present
+        if (!this.props.numberOfPresentPerson === ""){
+          present = this.props.numberOfPresentPerson
+        }
+        axios.put(
+          url + "meeting",
+          {
+            room: this.props.room, user: this.props.nameOfWhoSReserving, date: this.props.date, 
+            duration: this.props.duration, title: this.props.titleMeeting, 
+            physically_present_person: present
+          }
+        )
+        .then(res => {
+          console.log(res.data)
+        })
+        alert("submit")       
+      }} //*/
+      /*callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
+      duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.room}
+      title:${this.props.titleMeeting} visio:${this.props.videoConference} 
+      physically_present_person:${this.props.numberOfPresentPerson}`)} //*/
       />
       <ActionButton name="Cancel" callback= {() => alert("You clicked on 'Cancel'")}/>
     </div>); // Pour le bouton Cancel, la fonction callback doit juste ramener à l'écran précédent (mettre ça
@@ -433,16 +453,13 @@ class CriteriaSelect extends React.Component{
   }
 
   render(){
-    /*{this.props.list.map(
-      (arrayItem, index) => console.log(index, arrayItem.name, arrayItem.id)
-    )}; //*/
     return(
       <span>
         {this.props.name + " "}
-        <select required={this.props.required}>
+        <select required={this.props.required} onChange={this.handleDataChange}>
           <option key={-1} value={"empty"}>-- Select one --</option>
           {this.props.list.map(
-            (arrayItem, index) => <option key={index} value={arrayItem.name}>{arrayItem.name}</option>
+            (arrayItem, index) => <option key={index} value={arrayItem.id}>{arrayItem.name}</option>
           )}
         </select>
       </span>

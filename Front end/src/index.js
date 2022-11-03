@@ -53,7 +53,7 @@ const pages = 7
 const pictureURL = image
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"]
-const criteriaUser = ["date", "start time", "end time", "duration", "room name", "video conference",
+const criteriaUser = ["date", "start time", "end time", "duration", "room id", "video conference",
   "meeting title", "present person"]
 homepage.render(<HomepageScreen roomId={2}/>);
 let display = pages - 1
@@ -62,7 +62,7 @@ function areaToDisplay(next, shift){
   let intDisplay = (next + shift) % pages
   if (intDisplay === 0){
     homepage.render();
-    tabletForm.render(<Form criteria= {criteriaTablet} name={allMessages.roomName["en"]} room="Room name"/>);
+    tabletForm.render(<Form criteria= {criteriaTablet} room={2}/>);
     userHomepage.render();
   } else if (intDisplay === 1) {
     tabletForm.render();

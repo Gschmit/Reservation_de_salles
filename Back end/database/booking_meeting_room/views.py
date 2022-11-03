@@ -15,6 +15,8 @@ from rest_framework.response import Response
 
 import booking_meeting_room.functions as func
 
+TYPING_ERROR_USERNAME = " @ Un_invité @ "
+
 
 class IndexView(APIView):               # useless ?
     """
@@ -167,11 +169,32 @@ class HandleMeetingView(APIView):
             other_persons = data["other_persons"]
         else:
             other_persons = None
+        # data = {room: int, user: str, date: time, duration: int, title: str} + optionals :
+        # {physically_present_person: int, other_persons: str}
+        # data["room"] is an int (the room id), data["user"] is a string (the user name)
         room = get_object_or_404(Room, pk=data["room"])
-        user = get_object_or_404(User, pk=data["user"])
-        func.create_a_new_meeting(room, user, data["start_timestamps"], data["title"],
-                                  data["duration"], physically_present_person, other_persons)
-        return Response(data=None)
+        # user = get_object_or_404(User, name=data["user"])     # TO DO : write a function to test all
+        # kind of typing error (here, we just test the spaces at the end of the name) and replace
+        # the try/except statement ("hide" would be better than "replace")
+        try:
+            user = User.objects.get(name=data["user"])
+        except User.DoesNotExist:
+            name = data["user"]
+            while name[-1] == " ":
+                name = name[:-1]
+            try:
+                user = User.objects.get(name=name)
+            except User.DoesNotExist:
+                try:
+                    invited = User.objects.get(name=TYPING_ERROR_USERNAME)
+                    user = invited
+                except User.DoesNotExist:
+                    user = func.create_a_new_user(TYPING_ERROR_USERNAME, "invited")
+                    print("Le créateur de la réunion n'a pas été trouvé")
+        # The print statement should be returned ?
+        meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
+                                            data["duration"], physically_present_person, other_persons)
+        return Response(data=meeting.toJSON())
 
     @staticmethod
     def delete(request):
