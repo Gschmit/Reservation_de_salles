@@ -204,9 +204,9 @@ class ButtonArea extends React.Component{
           }
         )
         .then(res => {
-          console.log(res.data)
+          console.log(res.data) // pas le temps de le voir ...
         })
-        alert("submit")       
+        //alert("submit") // must find something better to have time to see if it works properly
       }} //*/
       /*callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
       duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.room}
