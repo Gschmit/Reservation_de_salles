@@ -31,9 +31,9 @@ class TabUser extends React.Component{
         if (this.props.typeDisplay === "form"){
             tabDisplay = <Form criteria={this.props.criteria} name={this.props.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
-            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting}/> // à supprimer, un state est mis dans NextMeeting
+            tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting} user={this.props.user}/>
         } else if (this.props.typeDisplay === "user calendar"){
-            tabDisplay = <UserCalendar userName={this.props.user}/>
+            tabDisplay = <UserCalendar userName={this.props.userName}/>
         } else if (this.props.typeDisplay === "room calendar"){
             tabDisplay = <RoomCalendar roomName={this.props.room}/>
         } else {
@@ -65,9 +65,9 @@ class UserHomepage extends React.Component{
                     />
                 </div>
                 <br/>
-                <NextMeeting nextMeeting={this.props.nextMeeting}/> 
+                <NextMeeting nextMeeting={this.props.nextMeeting} user={this.props.user}/> 
             </div>
-        )   // nextMeeting={this.props.nextMeeting} à supprimer, un state est mis dans NextMeeting
+        )
        
     }
 };
@@ -85,24 +85,11 @@ class BookingButtons extends React.Component{
 };
 
 class NextMeeting extends React.Component{
-    state = {
-        nextMeeting: ""
-      };
-
-    componentDidMount(){
-        /*axios.get(url + `user_next_meeting/${this.props.user.id}`)
-        .then(res => {
-          this.setState({nextMeeting : res.data.next_meeting}); // res.data.next_meeting ou res.data[next_meeting]
-        });*/
-      };
-    
     render(){
         return(
             <p>
                 TO DO : <br/>
-                - mettre le fichier test de django à jour suite au "post" mis en places <span style={{color:"limegreen"}}>done</span> <br/>
-                - supprimer le "get" inutile que l'on vient de remplacer ainsi <span style={{color:"limegreen"}}>done</span> <br/> 
-                - dans le front, définir toutes les fonctions (args et responses) dont on va avoir besoin <br/>
+                - dans le front, définir toutes les fonctions (args et responses) dont on va avoir besoin <span style={{color:"limegreen"}}>done (?) </span> <br/>
                 - dans le back : <br/>
                 -- créer les tests pour nos fonctions <br/>
                 -- créer les fonctions adéquats, passant tous les tests <br/>
@@ -113,7 +100,7 @@ class NextMeeting extends React.Component{
                 - le CSS <br/>
                 {this.props.nextMeeting}
             </p>
-        )// this.props.nextMeeting à remplacer par this.state.nextMeeting
+        )
     }
 };
 

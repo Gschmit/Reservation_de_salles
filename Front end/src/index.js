@@ -20,6 +20,7 @@ import reportWebVitals from './reportWebVitals';
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting/<int:meeting_id>")
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/meeting_list")
 // axios.get("http://127.0.0.1:8000/booking_meeting_room/room_meetings/<int:room_id>")
+// axios.get("http://127.0.0.1:8000/booking_meeting_room/user_next_meeting/<int:user_id>`)
 
 // a url variable is defined in the file Reservation_form
 
@@ -45,8 +46,6 @@ const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
 const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
-// const tabAsset = ReactDOM.createRoot(document.getElementById("tab asset"));      // Ne sera plus jamais utiliser normalement
-// const tabRoom = ReactDOM.createRoot(document.getElementById("tab room list"));   // Ne sera plus jamais utiliser normalement
 const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
@@ -68,37 +67,35 @@ function areaToDisplay(next, shift){
   } else if (intDisplay === 1) {
     tabletForm.render();
     userHomepage.render(
-      <BookingRoomTool userDisplay= "homepage" user="User name" 
-        nextMeeting="Plus de rendez-vous de prévu"        // à supprimer, un state est mis dans NextMeeting
-      />
+      <BookingRoomTool userDisplay= "homepage" userName="User name" user={2} />
     );
     userInterfaceFalse.render();
   } else if (intDisplay === 2) {
     userHomepage.render();
     userInterfaceFalse.render(
-      <BookingRoomTool criteria= {criteriaUser} userDisplay= "form"
-        name={allMessages.userInterface["en"]} user="User name"
+      <BookingRoomTool criteria= {criteriaUser} userDisplay= "form" user={2}
+        name={allMessages.userInterface["en"]} userName="User name"
       />
     );
     userInterfaceTrue.render();
   } else if (intDisplay === 3) {
     userInterfaceFalse.render();
     userInterfaceTrue.render(
-      <BookingRoomTool picture={pictureURL} criteria= {criteriaUser} 
-        userDisplay= "form" name={allMessages.userInterface["en"]} user="User name" activeTab={0}
+      <BookingRoomTool picture={pictureURL} criteria= {criteriaUser} user={2}
+        userDisplay= "form" name={allMessages.userInterface["en"]} username="User name" activeTab={0}
       />
     );
     userCalendar.render();
   } else if (intDisplay === 4) {
     userInterfaceTrue.render();
-    userCalendar.render(<BookingRoomTool userDisplay= "user calendar" user="User name"/>
+    userCalendar.render(<BookingRoomTool userDisplay= "user calendar" userName="User name" user={2}/>
     );
     roomCalendar.render();
   } else if (intDisplay === 5) {
     userCalendar.render();
     roomCalendar.render(
-      <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" 
-        user="User name" activeTab={0}
+      <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" user={2}
+        userName="User name" activeTab={0}
       />
     );
     homepage.render();

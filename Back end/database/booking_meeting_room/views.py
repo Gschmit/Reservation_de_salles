@@ -112,6 +112,29 @@ class UserView(APIView):
         return Response(data=context)
 
 
+class UserNextMeetingView(APIView):
+    """
+    View of the next meeting of a user
+    """
+    @staticmethod
+    def get(request, user_id):
+        """
+        View of the next meeting of the user 'user_id'
+        """
+        meeting_list: list[Meeting] = list(Meeting.objects.filter(user=user_id).order_by('start_timestamps'))
+
+        if meeting_list:
+            meet = meeting_list[0]
+            time = meet.start_timestamps.strftime("on %A %d of %B %Y, at %H:%M")
+            duration = f"{meet.duration // 2} hour(s)"
+            if meet.duration % 2 == 1:
+                duration += " and 30 minutes"
+            context = {'meeting': f"{meet.title} in {meet.room}, {time} for {duration}"}
+        else:
+            context = {'meeting': "Plus de rendez-vous de prévu"}
+        return Response(data=context["meeting"])
+
+
 class MeetingView(APIView):
     """
     View of a meeting
@@ -198,8 +221,8 @@ class MeetingListView(APIView):
         """
         For getting the view
         """
-        meeting_list: list[Meeting] = list(Meeting.objects.order_by('-start_timestamps')[:])
-        meeting_list.reverse()
+        meeting_list: list[Meeting] = list(Meeting.objects.order_by('start_timestamps')[:])
+        # meeting_list.reverse()
         context = {
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
@@ -223,7 +246,7 @@ class RoomListView(APIView):
         return Response(data=context)
 
 
-class RoomMeetings(APIView):
+class RoomMeetingsView(APIView):
     """
     View for the meetings of room
     """

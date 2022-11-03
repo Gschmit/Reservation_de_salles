@@ -571,3 +571,66 @@ class RoomMeetingsViewTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, meeting0.duration)
         self.assertContains(response, meeting1.title)
+
+
+class UserNextMeetingViewTests(TestCase):
+    def test_no_futur_meeting(self):
+        user = create_user("a user", "staff")
+        response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
+                                           args=(user.id, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Plus de rendez-vous de prévu")
+
+    def test_with_only_futur_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
+        user2 = create_user("another user", "staff")
+        now = make_aware(datetime.datetime.now())
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60)
+        now1h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60*24)
+        now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 3*60)
+        now3h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        meeting = create_meeting(room, user, now1h, 3, "a meeting")
+        meeting2 = create_meeting(room, user2, now1d, 4, "another meeting")
+        meeting3 = create_meeting(room, user, now3h, 2, "second meeting")
+        response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
+                                           args=(user.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "a meeting")
+        self.assertContains(response, meeting.duration)
+        self.assertNotContains(response, meeting2.title)
+        self.assertNotContains(response, meeting3.title)
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
+               in response.data
+
+    def test_with_past_and_futur_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
+        user2 = create_user("another user", "staff")
+        now = make_aware(datetime.datetime.now())
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60)
+        now1h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60*24)
+        now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        now_m1y = make_aware(datetime.datetime(now.year - 1, now.month, now.day, now.hour, now.minute))
+        meeting = create_meeting(room, user, now1h, 3, "a meeting")
+        meeting2 = create_meeting(room, user2, now1d, 4, "another meeting")
+        meeting3 = create_meeting(room, user, now_m1y, 2, "second meeting")
+        response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
+                                           args=(user.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "a meeting")
+        self.assertContains(response, meeting.duration)
+        self.assertNotContains(response, meeting2.title)
+        self.assertNotContains(response, meeting3.title)
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
+               in response.data

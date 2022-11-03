@@ -26,6 +26,8 @@ class BookingRoomTool extends React.Component{
             activeRoomInList: "activeTab" in this.props ? this.props.activeTab : NaN,
             userDisplay: "userDisplay" in this.props ? this.props.userDisplay : null,
             roomList: [],
+            user: 0,
+            nextMeeting: "",
         }
         this.handleChangeActiveRoomInList = this.handleChangeActiveRoomInList.bind(this);
         this.handleChangeUserDisplay = this.handleChangeUserDisplay.bind(this);
@@ -39,19 +41,28 @@ class BookingRoomTool extends React.Component{
         this.setState({userDisplay: newUserDisplay})
     }
 
-    componentDidMount(){
-        axios.get(url + "room_list")
-        .then(res => {
-        let rooms = []
-        for (const room in res.data) {
-            rooms.push(JSON.parse(res.data[room]))
-        };
-        this.setState({roomList : rooms})
+    async componentDidMount(){
+        let p = axios.get(url + "room_list")
+        p.then(res => {
+            let rooms = []
+            for (const room in res.data) {
+                rooms.push(JSON.parse(res.data[room]))
+            };
+            this.setState({roomList : rooms})
         });  // la liste des salles, peut être triée d'une certaine manière ?
+        axios.get(url + `user/${this.props.user}/`)
+        .then(res => {
+            let user = JSON.parse(res.data["user"]) 
+            this.setState({user : user})
+        });
+        axios.get(url + `user_next_meeting/${this.props.user}`)
+            .then(res => {
+                this.setState({nextMeeting : res.data});
+            }); 
     };
 
     render(){
-        let roomSelected, nameRoomSelected//, userId, nextMeeting
+        let roomSelected, nameRoomSelected
         if (isNaN(this.state.activeRoomInList)){
             roomSelected = <></>
             nameRoomSelected = ""
@@ -102,8 +113,9 @@ class BookingRoomTool extends React.Component{
                                 criteria={this.props.criteria} 
                                 name={this.props.name} 
                                 buttons={this.props.buttons}
-                                nextMeeting={this.props.nextMeeting}  // à supprimer, un state est mis dans NextMeeting 
-                                user={this.props.user}
+                                nextMeeting={this.state.nextMeeting}
+                                user={this.state.user}
+                                userName={this.props.userName}
                                 room={nameRoomSelected}
                             />
                         </td>
