@@ -3,7 +3,49 @@
 import React from 'react';
 import {MyCalendar} from '../Global/calendar';
 import axios from 'axios';
-import {url} from '../Global/Reservation_form';
+import {Form, url} from '../Global/Reservation_form';
+
+const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
+  "meeting title", "present person"];
+
+// garder le code, cette fonction est pour modifier un meeting ! (et va donc ailleurs)
+/*function tabletOnSelectEvent(event, nextRoot, currentRoot, roomId){
+  let start = new Date(event.start)
+  let end = new Date(event.end)
+  let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
+  console.log("event: ", event)
+  // récupérer le user qqpart (quand la fonction sera au bon endroit) ainsi que le nombre de personnes présentes
+  nextRoot.render(
+    <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
+      titleMeeting={event.title} previousPage={{
+        root: currentRoot, 
+        toRender: <HomepageScreen roomId={roomId} root={currentRoot} nextPageRoot={nextRoot}/>
+      }}
+    />
+  )
+  currentRoot.render(<></>)
+}; //*/  // On mettra ça dans le MyCalendar
+/*onSelectEvent={(event) => tabletOnSelectEvent(
+            event, this.props.formRoot, this.props.root, this.props.roomId
+          )}//*/
+
+function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
+  let start = new Date(slot.start)
+  let end = new Date(slot.end)
+  console.log("slot: ", slot)
+  if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
+    let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
+    nextRoot.render(
+      <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
+        previousPage={{
+          root: currentRoot, 
+          toRender: <HomepageScreen roomId={roomId} root={currentRoot} nextPageRoot={nextRoot}/>
+        }}
+      />
+    )
+    currentRoot.render(<></>) //*/
+  };
+};
 
 class HomepageScreen extends React.Component{
     state = {
@@ -23,7 +65,9 @@ class HomepageScreen extends React.Component{
         <div>
             <h1> Homepage </h1> <br/>
             <HomepageRoomNameDisplay roomName={name} /> <br/>
-            <HomepageRoomCalendar roomId={this.props.roomId} />
+            <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
+              formRoot={this.props.nextPageRoot}
+            />
         </div>
       )
     };
@@ -54,9 +98,13 @@ class HomepageScreen extends React.Component{
     render(){
       // aller chercher dans la liste des réunions les réunions de la salle actuelle (componentDidMount)
       return( // height et width à régler en fonction des dimensions de l'écran d'affichage
-          <MyCalendar eventsList={this.state.meetings} height={300} width={600}/>
+          <MyCalendar eventsList={this.state.meetings} height={300} width={600} 
+            onSelectSlot={(slot) => tabletOnSelectSlot(
+              slot, this.props.formRoot, this.props.root, this.props.roomId
+            )}
+          />
       )
     };
   };
 
-export {HomepageScreen};
+export {HomepageScreen, criteriaTablet};

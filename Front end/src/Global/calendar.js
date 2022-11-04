@@ -43,11 +43,8 @@ class MyCalendar extends React.Component{
                 startAccessor="start"
                 endAccessor="end"
                 style={{ height: this.props.height, width: this.props.width}}
-                /* selectable={true} // modifiable ? doit être à true pour 'onSelectSlot' et 'onSelecting'
-                onSelecting={(date) => {alert("tu as cliquer sur " + date.end); console.log(date.start)}}
-                onSelectSlot={(slot) => {alert(slot); console.log("onSelectSlot :", slot)}}
-                */ // onSelectSlot réagit bien plus vite et une seule fois, onSelecting semble chiant à utiliser 
-                // concrétement ... faire comme pour onSelectEvent une fois le chois définitif fais
+                selectable={true} // modifiable ? doit être à true pour 'onSelectSlot' et 'onSelecting'
+                onSelectSlot={this.props.onSelectSlot}
                 onSelectEvent= {this.props.onSelectEvent}  // cette props n'existe nulle part, doit elle rester 
                 // une props, ou est-ce qu'on fait une unique fonction, dont les attributs sont des props/state ?
                 />

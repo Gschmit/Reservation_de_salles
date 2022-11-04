@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {Form} from './Global/Reservation_form';
-import {HomepageScreen} from './Tablet_display/Homepage';
+import {HomepageScreen, criteriaTablet} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 import image from "./photo.PNG";
@@ -51,21 +51,23 @@ const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user inte
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
 const pages = 7;
 const pictureURL = image;
-const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
-  "meeting title", "present person"];
+//const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
+//  "meeting title", "present person"];
 const criteriaUser = ["date", "start time", "end time", "duration", "room id", "video conference",
   "meeting title", "present person"];
 let display = pages - 1;
-areaToDisplay(display, 1);
+display = areaToDisplay(display, 0);
 
 function areaToDisplay(intDisplay, shift){
   let next = (intDisplay + shift) % pages
   if (next === 0){
     homepage.render();
     tabletForm.render(
-      <Form criteria= {criteriaTablet} room={2} 
-        previousPage={{root: homepage, toRender: <HomepageScreen roomId={2}/>}}
-        root={tabletForm}
+      <Form criteria= {criteriaTablet} room={2} root={tabletForm}
+        previousPage={{
+          root: homepage, 
+          toRender: <HomepageScreen roomId={2} root={homepage} nextPageRoot={tabletForm}/>
+        }}
       />
     );
     userHomepage.render();
@@ -107,7 +109,7 @@ function areaToDisplay(intDisplay, shift){
     homepage.render();
   } else {
     roomCalendar.render();
-    homepage.render(<HomepageScreen roomId={2}/>);
+    homepage.render(<HomepageScreen roomId={2} root={homepage} nextPageRoot={tabletForm}/>);
     tabletForm.render();
   }
   if (!(shift === 0)){

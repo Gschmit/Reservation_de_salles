@@ -196,10 +196,10 @@ class HandleMeetingView(APIView):
                     except User.DoesNotExist:
                         user = func.create_a_new_user(TYPING_ERROR_USERNAME, "invited")
             # The print statement should be returned ?
-            """meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
+            meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
                                                 data["duration"], physically_present_person, other_persons)
-            """
             print("meeting created")
+            context["meeting"] = meeting.toJSON()
         return Response(data=context)
 
     @staticmethod

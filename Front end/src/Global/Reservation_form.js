@@ -5,7 +5,6 @@ import React from 'react';
 import axios from 'axios';
 import './global.css';
 
-let options = ["test1", "Second élement"]
 const url = "http://127.0.0.1:8000/booking_meeting_room/"
 
 function setToTwoNumber(number){
@@ -27,7 +26,7 @@ class Form extends React.Component {
       videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
       room: "room" in this.props ? this.props.room : NaN,
-      roomList: options, // [], // supprimer la variable "options" une fois que le lien avec le back end sera ok
+      roomList: [],
       name: "",
       meetings: {},
     };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
