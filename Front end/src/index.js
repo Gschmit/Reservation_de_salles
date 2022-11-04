@@ -55,8 +55,8 @@ const criteriaTablet = ["date", "start time", "end time", "duration", "name of w
   "meeting title", "present person"];
 const criteriaUser = ["date", "start time", "end time", "duration", "room id", "video conference",
   "meeting title", "present person"];
-let display = pages - 2;
-areaToDisplay(display, 0);
+let display = pages - 1;
+areaToDisplay(display, 1);
 
 function areaToDisplay(intDisplay, shift){
   let next = (intDisplay + shift) % pages

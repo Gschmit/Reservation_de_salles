@@ -185,13 +185,12 @@ class ButtonArea extends React.Component{
     // à l'aide d'un put ou d'une autre fonction déjà pré-existente)
     return(<div className='space'>
       <ActionButton name= "Validate" type= "button"
-      callback= {() => {
+      callback= {async () => {
         let present
-        let reject = false
         if (!this.props.numberOfPresentPerson === ""){
           present = this.props.numberOfPresentPerson
         }
-        axios.put(
+        let response = await axios.put(
           url + "meeting",
           {
             room: this.props.room, user: this.props.nameOfWhoSReserving, date: this.props.date, 
@@ -200,29 +199,18 @@ class ButtonArea extends React.Component{
           }
         )
         .then(res => {
-          console.log(res.data) // pas le temps de le voir ...
+          return res.data
         })
-        .catch(
-          console.log("rejected"),
-          reject = true
-        )
-        .then();
-          console.log(reject)
-          if (!reject){
-            // avec type="submit" : la page est entièrement rechargée, donc ce code n'est pas visible
-            // avec type="button" : le .then est exécuté, mais pas ce bloc ci
-            console.log("it's ok")
-            this.props.previousPage.root.render(this.props.previousPage.toRender)
-            this.props.root.render(<></>)
-          } else {
-            console.log("else ok")
-          }
-        
-      }} //*/
-      /*callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
-      duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.room}
-      title:${this.props.titleMeeting} visio:${this.props.videoConference} 
-      physically_present_person:${this.props.numberOfPresentPerson}`)} //*/
+        if (!response.rejected){
+          // avec type="submit" : la page est entièrement rechargée, donc le code à partir du '.then'
+          // s'exécute trop vite pour être visible (est-ce vraiment important ??)
+          // avec type="button" : on n'a pas l'alerte qui explique le champs est requis
+          this.props.previousPage.root.render(this.props.previousPage.toRender)
+          this.props.root.render(<></>)
+        } else {
+          console.log(response.error)
+        }
+      }}
       />
       <ActionButton name= "Cancel" type= "button"
         callback= {() => {
