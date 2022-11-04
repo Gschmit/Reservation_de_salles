@@ -162,9 +162,9 @@ class HandleMeetingView(APIView):
         """
         data = request.data
         if data["user"] == "":
-            context = {"rejected": True, "error": "No user fill in"}
+            context = {"rejected": True, "error": "No user fill in", "warning": None}
         else:
-            context = {"rejected": False, "error": None}
+            context = {"rejected": False, "error": None, "warning": None}
             if "physically_present_person" in data.keys():
                 physically_present_person = data["physically_present_person"]
             else:
@@ -177,30 +177,29 @@ class HandleMeetingView(APIView):
             # {physically_present_person: int, other_persons: str}
             # data["room"] is an int (the room id), data["user"] is a string (the user name)
             room = get_object_or_404(Room, pk=data["room"])
-            # user = get_object_or_404(User, name=data["user"])     # TO DO : write a function to test all
-            # kind of typing error (here, we just test the spaces at the end of the name) and replace
-            # the try/except statement ("hide" would be better than "replace")
+            # TO DO : write a function to test all kind of typing error (here, we just test the spaces
+            # at the end of the name) and replace the try/except statement ("hide" would be better
+            # than "replace")
             try:
                 user = User.objects.get(name=data["user"])
             except User.DoesNotExist:
                 name = data["user"]
-                # while name[-1] == " ":
-                #    name = name[:-1]
+                while name[-1] == " ":
+                    name = name[:-1]
                 try:
                     user = User.objects.get(name=name)
                 except User.DoesNotExist:
+                    context["warning"] = "Le créateur de la réunion n'a pas été trouvé"
                     try:
                         invited = User.objects.get(name=TYPING_ERROR_USERNAME)
                         user = invited
                     except User.DoesNotExist:
                         user = func.create_a_new_user(TYPING_ERROR_USERNAME, "invited")
-                        print("Le créateur de la réunion n'a pas été trouvé")
             # The print statement should be returned ?
             """meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
                                                 data["duration"], physically_present_person, other_persons)
+            """
             print("meeting created")
-            return Response(data=meeting.toJSON())"""
-        print("meeting created")
         return Response(data=context)
 
     @staticmethod

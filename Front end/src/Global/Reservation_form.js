@@ -207,8 +207,10 @@ class ButtonArea extends React.Component{
           // avec type="button" : on n'a pas l'alerte qui explique le champs est requis
           this.props.previousPage.root.render(this.props.previousPage.toRender)
           this.props.root.render(<></>)
+          console.log("Warning :", response.warning)
         } else {
-          console.log(response.error)
+          console.log("Error :", response.error)
+          console.log("Warning :", response.warning)
         }
       }}
       />
