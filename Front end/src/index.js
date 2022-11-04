@@ -42,35 +42,41 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-const homepage = ReactDOM.createRoot(document.getElementById('homepage'));
-const tabletForm = ReactDOM.createRoot(document.getElementById("reservation page"));
+const homepage = ReactDOM.createRoot(document.getElementById('tablet homepage'));
+const tabletForm = ReactDOM.createRoot(document.getElementById("tablet reservation page"));
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
 const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
 const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
-const pages = 7
-const pictureURL = image
+const pages = 7;
+const pictureURL = image;
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
-  "meeting title", "present person"]
+  "meeting title", "present person"];
 const criteriaUser = ["date", "start time", "end time", "duration", "room id", "video conference",
-  "meeting title", "present person"]
-homepage.render(<HomepageScreen roomId={2}/>);
-let display = pages - 1
+  "meeting title", "present person"];
+let display = pages - 2;
+areaToDisplay(display, 0);
 
-function areaToDisplay(next, shift){
-  let intDisplay = (next + shift) % pages
-  if (intDisplay === 0){
+function areaToDisplay(intDisplay, shift){
+  let next = (intDisplay + shift) % pages
+  if (next === 0){
     homepage.render();
-    tabletForm.render(<Form criteria= {criteriaTablet} room={2}/>);
+    tabletForm.render(
+      <Form criteria= {criteriaTablet} room={2} 
+        previousPage={{root: homepage, toRender: <HomepageScreen roomId={2}/>}}
+        root={tabletForm}
+      />
+    );
     userHomepage.render();
-  } else if (intDisplay === 1) {
+  } else if (next === 1) {
+    homepage.render();
     tabletForm.render();
     userHomepage.render(
       <BookingRoomTool userDisplay= "homepage" userName="User name" user={2} />
     );
     userInterfaceFalse.render();
-  } else if (intDisplay === 2) {
+  } else if (next === 2) {
     userHomepage.render();
     userInterfaceFalse.render(
       <BookingRoomTool criteria= {criteriaUser} userDisplay= "form" user={2}
@@ -78,7 +84,7 @@ function areaToDisplay(next, shift){
       />
     );
     userInterfaceTrue.render();
-  } else if (intDisplay === 3) {
+  } else if (next === 3) {
     userInterfaceFalse.render();
     userInterfaceTrue.render(
       <BookingRoomTool picture={pictureURL} criteria= {criteriaUser} user={2}
@@ -86,12 +92,12 @@ function areaToDisplay(next, shift){
       />
     );
     userCalendar.render();
-  } else if (intDisplay === 4) {
+  } else if (next === 4) {
     userInterfaceTrue.render();
     userCalendar.render(<BookingRoomTool userDisplay= "user calendar" userName="User name" user={2}/>
     );
     roomCalendar.render();
-  } else if (intDisplay === 5) {
+  } else if (next === 5) {
     userCalendar.render();
     roomCalendar.render(
       <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" user={2}
@@ -104,7 +110,10 @@ function areaToDisplay(next, shift){
     homepage.render(<HomepageScreen roomId={2}/>);
     tabletForm.render();
   }
-  return(intDisplay)
+  if (!(shift === 0)){
+    console.log("previous:", intDisplay, "current:", next)
+  }
+  return(next)
 }
 
 const button1 = ReactDOM.createRoot(document.getElementById("button zone"));

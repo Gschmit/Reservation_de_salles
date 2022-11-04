@@ -194,6 +194,7 @@ class HandleMeetingView(APIView):
         # The print statement should be returned ?
         meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
                                             data["duration"], physically_present_person, other_persons)
+        print("meeting created")
         return Response(data=meeting.toJSON())
 
     @staticmethod

@@ -96,9 +96,9 @@ class Form extends React.Component {
     });
   };
 
-  handleRoomNameChange(newRoomName){
+  handleRoomNameChange(newRoom){
     this.setState({
-      room: newRoomName
+      room: newRoom
     });
   };
 
@@ -138,7 +138,7 @@ class Form extends React.Component {
     };
 
   };
-
+  // this component have a 'previousPage' props !
   render(){
     let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
@@ -170,6 +170,8 @@ class Form extends React.Component {
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
           videoConference= {this.state.videoConference}
           buttons= {this.props.buttons}
+          previousPage= {this.props.previousPage}
+          root= {this.props.root}
           />
         </form>
       </div>
@@ -182,16 +184,10 @@ class ButtonArea extends React.Component{
   render(){ // Pour le bouton Validate, on veux créer la réunion (faire ça sur python, à la main ou directement 
     // à l'aide d'un put ou d'une autre fonction déjà pré-existente)
     return(<div className='space'>
-      <ActionButton name= "Validate"
-      date= {this.props.date}
-      duration= {this.props.duration}
-      nameOfWhoSReserving= {this.props.nameOfWhoSReserving}
-      room= {this.props.room}
-      titleMeeting= {this.props.titleMeeting}
-      numberOfPresentPerson= {this.props.numberOfPresentPerson}
-      videoConference= {this.props.videoConference}
+      <ActionButton name= "Validate" type= "button"
       callback= {() => {
         let present
+        let reject = false
         if (!this.props.numberOfPresentPerson === ""){
           present = this.props.numberOfPresentPerson
         }
@@ -206,14 +202,35 @@ class ButtonArea extends React.Component{
         .then(res => {
           console.log(res.data) // pas le temps de le voir ...
         })
-        //alert("submit") // must find something better to have time to see if it works properly
+        .catch(
+          console.log("rejected"),
+          reject = true
+        )
+        .then();
+          console.log(reject)
+          if (!reject){
+            // avec type="submit" : la page est entièrement rechargée, donc ce code n'est pas visible
+            // avec type="button" : le .then est exécuté, mais pas ce bloc ci
+            console.log("it's ok")
+            this.props.previousPage.root.render(this.props.previousPage.toRender)
+            this.props.root.render(<></>)
+          } else {
+            console.log("else ok")
+          }
+        
       }} //*/
       /*callback= {() => alert(`You clicked on 'Validate' date:${this.props.date} 
       duration:${this.props.duration} user:${this.props.nameOfWhoSReserving} room:${this.props.room}
       title:${this.props.titleMeeting} visio:${this.props.videoConference} 
       physically_present_person:${this.props.numberOfPresentPerson}`)} //*/
       />
-      <ActionButton name="Cancel" callback= {() => alert("You clicked on 'Cancel'")}/>
+      <ActionButton name= "Cancel" type= "button"
+        callback= {() => {
+          //alert("You clicked on 'Cancel' " + this.props.previousPage._internalRoot.containerInfo.id)
+          this.props.previousPage.root.render(this.props.previousPage.toRender)
+          this.props.root.render(<></>)
+        }}
+      />
     </div>); // Pour le bouton Cancel, la fonction callback doit juste ramener à l'écran précédent (mettre ça
     // en props/state qqpart ?)
   }
@@ -222,12 +239,15 @@ class ButtonArea extends React.Component{
 class ActionButton extends React.Component {
   render(){
     return(
+        <button type= {this.props.type} onClick= {this.props.callback}> {this.props.name} </button>
+    );
+    /*return(
       React.createElement(
         'button',
         { onClick: this.props.callback },
         this.props.name,
       )
-    ); /* date, duration, nameOfWhoSReserving, titleMeeting, videoConference, numberOfPresentPerson, roomName */
+    );//*/
   };
 };
 
@@ -280,7 +300,7 @@ class Informations extends React.Component {
     } else {
       durationData = <></>
     }
-    if (this.props.criteria.includes("room name")){
+    if (this.props.criteria.includes("room id")){
       roomNameData = <CriteriaSelect name= "room : "
         data= {this.props.roomName}
         type= "select"
@@ -544,6 +564,8 @@ class CriteriaNumber extends React.Component{
         value= {this.props.data}
         onChange= {this.handleDataChange}
         step= {1}
+        min= {1}  // counting the reserver, instead : 0
+        // no max value to allow to see rooms with no enought space, without creating bugs
         required={this.props.required}
         />
       </span>

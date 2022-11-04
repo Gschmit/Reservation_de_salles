@@ -60,7 +60,7 @@ class BookingRoomTool extends React.Component{
                 this.setState({nextMeeting : res.data});
             }); 
     };
-
+    // this component have a 'previousPage' props !
     render(){
         let roomSelected, nameRoomSelected
         if (isNaN(this.state.activeRoomInList)){
