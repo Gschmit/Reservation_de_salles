@@ -137,7 +137,6 @@ class Form extends React.Component {
     };
 
   };
-  // this component have a 'previousPage' props !
   render(){
     let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
@@ -180,8 +179,7 @@ class Form extends React.Component {
 };
 
 class ButtonArea extends React.Component{
-  render(){ // Pour le bouton Validate, on veux créer la réunion (faire ça sur python, à la main ou directement 
-    // à l'aide d'un put ou d'une autre fonction déjà pré-existente)
+  render(){
     return(<div className='space'>
       <ActionButton name= "Validate" type= "button"
       callback= {async () => {
@@ -203,7 +201,7 @@ class ButtonArea extends React.Component{
         if (!response.rejected){
           // avec type="submit" : la page est entièrement rechargée, donc le code à partir du '.then'
           // s'exécute trop vite pour être visible (est-ce vraiment important ??)
-          // avec type="button" : on n'a pas l'alerte qui explique le champs est requis
+          // avec type="button" : on n'a pas l'alerte qui explique que le champs est requis
           this.props.previousPage.root.render(this.props.previousPage.toRender)
           this.props.root.render(<></>)
           console.log("Warning :", response.warning)
@@ -215,13 +213,11 @@ class ButtonArea extends React.Component{
       />
       <ActionButton name= "Cancel" type= "button"
         callback= {() => {
-          //alert("You clicked on 'Cancel' " + this.props.previousPage._internalRoot.containerInfo.id)
           this.props.previousPage.root.render(this.props.previousPage.toRender)
           this.props.root.render(<></>)
         }}
       />
-    </div>); // Pour le bouton Cancel, la fonction callback doit juste ramener à l'écran précédent (mettre ça
-    // en props/state qqpart ?)
+    </div>);
   }
 };
 
@@ -230,13 +226,6 @@ class ActionButton extends React.Component {
     return(
         <button type= {this.props.type} onClick= {this.props.callback}> {this.props.name} </button>
     );
-    /*return(
-      React.createElement(
-        'button',
-        { onClick: this.props.callback },
-        this.props.name,
-      )
-    );//*/
   };
 };
 

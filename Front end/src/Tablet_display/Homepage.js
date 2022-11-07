@@ -32,7 +32,6 @@ const criteriaTablet = ["date", "start time", "end time", "duration", "name of w
 function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
   let start = new Date(slot.start)
   let end = new Date(slot.end)
-  console.log("slot: ", slot)
   if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
     let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
     nextRoot.render(
@@ -47,64 +46,104 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
   };
 };
 
+function startOfTheMeeting(nextMeeting){
+  if (nextMeeting){
+    let now = new Date()
+    let start = new Date(
+      nextMeeting.start_timestamps.year, nextMeeting.start_timestamps.month - 1,
+      nextMeeting.start_timestamps.day, nextMeeting.start_timestamps.hour,
+      nextMeeting.start_timestamps.minute
+    );
+    console.log(start, now, start < now)
+    if (start < now){
+      alert("valide ?")
+    }
+  };
+};
+
 class HomepageScreen extends React.Component{
-    state = {
-      room : {capacity:0, name:""}
-    }
+  state = {
+    room : {capacity:0, name:""}
+  }
 
-    componentDidMount(){
-      axios.get(url + `room/${this.props.roomId}/`)
-      .then(res => {
-        this.setState({room : JSON.parse(res.data.room)})
-      });
-    }
+  componentDidMount(){
+    axios.get(url + `room/${this.props.roomId}/`)
+    .then(res => {
+      this.setState({room : JSON.parse(res.data.room)})
+    });
+  }
 
-    render(){
-      let name = `${this.state.room.name} (${this.state.room.capacity} places)`
-      return(
-        <div>
-            <h1> Homepage </h1> <br/>
-            <HomepageRoomNameDisplay roomName={name} /> <br/>
-            <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
-              formRoot={this.props.nextPageRoot}
-            />
-        </div>
-      )
-    };
-  };
-  
-  class HomepageRoomNameDisplay extends React.Component{
-    render(){ // éventuellement un formatage en gras ou autre de l'écriture
-      return(this.props.roomName)
-    };
-  };
-  
-  class HomepageRoomCalendar extends React.Component{
-    state = {
-      meetings: []
-    };
-
-    componentDidMount(){
-      axios.get(url + `room_meetings/${this.props.roomId}`)
-      .then(res => {
-        let meetingList = []
-        for (const meet in res.data){
-          meetingList.push(JSON.parse(res.data[meet]))
-        };
-        this.setState({meetings : meetingList});
-      });
-    };
-
-    render(){
-      // aller chercher dans la liste des réunions les réunions de la salle actuelle (componentDidMount)
-      return( // height et width à régler en fonction des dimensions de l'écran d'affichage
-          <MyCalendar eventsList={this.state.meetings} height={300} width={600} 
-            onSelectSlot={(slot) => tabletOnSelectSlot(
-              slot, this.props.formRoot, this.props.root, this.props.roomId
-            )}
+  render(){
+    let name = `${this.state.room.name} (${this.state.room.capacity} places)`
+    return(
+      <div>
+          <h1> Homepage </h1> <br/>
+          <HomepageRoomNameDisplay roomName={name} /> <br/>
+          <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
+            formRoot={this.props.nextPageRoot}
           />
-      )
-    };
+      </div>
+    )
   };
+};
+  
+class HomepageRoomNameDisplay extends React.Component{
+  render(){ // éventuellement un formatage en gras ou autre de l'écriture
+    return(this.props.roomName)
+  };
+};
+
+class HomepageRoomCalendar extends React.Component{
+  state = {
+    meetings: []
+  };
+
+  async componentDidMount(){
+    let nextMeeting = await axios.get(url + `room_meetings/${this.props.roomId}`)
+    .then(res => {
+      let meetingList = []
+      for (const meet in res.data){
+        meetingList.push(JSON.parse(res.data[meet]))
+      };
+      this.setState({meetings : meetingList.slice(0, -1)});
+      return(meetingList[meetingList.length - 1])
+    });
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting)
+  };
+
+  componentWillUnmount(){
+    clearInterval(this.startMeeting)
+  }
+
+  render(){
+    return( // height et width à régler en fonction des dimensions de l'écran d'affichage
+        <MyCalendar eventsList={this.state.meetings} height={300} width={600} 
+          onSelectSlot={(slot) => tabletOnSelectSlot(
+            slot, this.props.formRoot, this.props.root, this.props.roomId
+          )}
+        />
+    )
+  };
+};
+
+class StartMeeting extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      isShowing: false
+    };
+    
+    this.toggle = this.toggle.bind(this);
+  };
+
+  toggle(){
+    this.setState({isShowing : !this.state.isShowing});
+  };
+
+  render(){
+    this.state.isShowing,
+    this.toggle
+  };
+};
 
 export {HomepageScreen, criteriaTablet};

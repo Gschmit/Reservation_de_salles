@@ -3,7 +3,7 @@
 import datetime
 
 from django.shortcuts import get_object_or_404
-
+from django.utils.timezone import make_aware
 
 from .models import Meeting, Room, User
 
@@ -284,8 +284,15 @@ class RoomMeetingsView(APIView):
         """
         For getting the view
         """
-        meeting_list: list[Meeting] = list(Meeting.objects.all().filter(room=room_id))
+        meeting_list: list[Meeting] = Meeting.objects.all().filter(room=room_id).order_by("start_timestamps")
+        futur_meetings = list(filter(lambda meet: meet.start_timestamps >= make_aware(datetime.datetime.now()), meeting_list))
+        print(futur_meetings)
+        if futur_meetings:
+            next_meeting = futur_meetings[0]
+        else:
+            next_meeting = None
         context = {
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
+        context["next_meeting"] = next_meeting.toJSON()
         return Response(data=context)

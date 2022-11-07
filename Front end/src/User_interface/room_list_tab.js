@@ -12,13 +12,13 @@ class TabRoomList extends React.Component {
                     />
                 )}
             </div>
-        )   // peut-on accèder aux attributs des objets de la BDD de Django ? // Ouiiiiii !
-    }
+        );
+    };
 };
 
 class RoomFromTab extends React.Component {
     render(){
-        let active, videoConference // videoConference est un attribut de la props room
+        let active, videoConference
         if (this.props.isActive){
             // mis en bleu sur la maquette --> surtout un code (une classe par exemple) pour le CSS ?
             active = "is active"

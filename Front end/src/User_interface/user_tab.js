@@ -110,7 +110,7 @@ class UserCalendar extends React.Component{
       };
 
     componentDidMount(){
-        /*axios.get(url + `user_meetings/${this.props.user.id}`)
+        /*axios.get(url + `user_meetings/${this.props.user.id}`) // view pas encore faite
         .then(res => {
           let meetingList = []
           for (const meet in res.data){
@@ -123,7 +123,7 @@ class UserCalendar extends React.Component{
     render(){
         let events = meetingsToEvents(this.state.meetings)
         return(
-            <MyCalendar eventsList={events} height={500} width={700}/>
+            <MyCalendar eventsList={events} height={400} width={500}/>
         )
     }
 };
@@ -147,7 +147,7 @@ class RoomCalendar extends React.Component{
     render(){
         let events = meetingsToEvents(this.state.meetings)
         return(
-            <MyCalendar eventsList={events} height={500} width={700}/>
+            <MyCalendar eventsList={events} height={400} width={500}/>
         )
     }
 };

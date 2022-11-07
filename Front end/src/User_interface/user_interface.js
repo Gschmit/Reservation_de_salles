@@ -41,7 +41,7 @@ class BookingRoomTool extends React.Component{
         this.setState({userDisplay: newUserDisplay})
     }
 
-    componentDidMount(){ // on fait 3 appel "get" successif ... ne peut on pas optimiser cela en un seul ?
+    componentDidMount(){ // on fait 3 appels "get" successif ... ne peut on pas optimiser cela en un seul ?
         axios.get(url + "room_list")
         .then(res => {
             let rooms = []
