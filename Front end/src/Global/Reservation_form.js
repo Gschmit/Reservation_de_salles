@@ -181,13 +181,14 @@ class Form extends React.Component {
 class ButtonArea extends React.Component{
   render(){
     return(<div className='space'>
-      <ActionButton name= "Validate" type= "button"
+      <ActionButton name= "Valider" type= "button"
       callback= {async () => {
         let present
+        console.log(this.props.date, this.props.date.toUTCString())
         if (!this.props.numberOfPresentPerson === ""){
           present = this.props.numberOfPresentPerson
         }
-        let response = await axios.put(
+        /*let response = await axios.put(
           url + "meeting",
           {
             room: this.props.room, user: this.props.nameOfWhoSReserving, date: this.props.date, 
@@ -208,10 +209,10 @@ class ButtonArea extends React.Component{
         } else {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
-        }
+        }//*/
       }}
       />
-      <ActionButton name= "Cancel" type= "button"
+      <ActionButton name= "Annuler" type= "button"
         callback= {() => {
           this.props.previousPage.root.render(this.props.previousPage.toRender)
           this.props.root.render(<></>)
@@ -235,7 +236,7 @@ class Informations extends React.Component {
     let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
       videoConferenceData, titleMeetingData, presentPersonNumberData
     if (this.props.criteria.includes("date")){
-      dateData = <CriteriaDate name= {`${allMessages.date['en']} : `}
+      dateData = <CriteriaDate name= {`${allMessages.date['fr']} : `}
         data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
         type= "date"
         onChange= {this.props.onChangeDate}
@@ -246,7 +247,7 @@ class Informations extends React.Component {
       dateData = <></>
     }
     if (this.props.criteria.includes("start time")){
-      startTimeData = <CriteriaTime name= "start time : "
+      startTimeData = <CriteriaTime name= "début : "
         data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDate}
@@ -257,7 +258,7 @@ class Informations extends React.Component {
       startTimeData = <></>
     }
     if (this.props.criteria.includes("end time")){
-      endTimeData = <CriteriaTime name= "end time : "
+      endTimeData = <CriteriaTime name= "fin : "
         data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDuration}
@@ -268,7 +269,7 @@ class Informations extends React.Component {
       endTimeData = <></>
     }
     if (this.props.criteria.includes("duration")){
-      durationData = <CriteriaDuration name= "duration (in hours) : "
+      durationData = <CriteriaDuration name= "durée (en heures) : "
         data= {this.props.duration / 2}
         type= "duration"
         onChange= {this.props.onChangeDuration}
@@ -279,7 +280,7 @@ class Informations extends React.Component {
       durationData = <></>
     }
     if (this.props.criteria.includes("room id")){
-      roomNameData = <CriteriaSelect name= "room : "
+      roomNameData = <CriteriaSelect name= "salle : "
         data= {this.props.roomName}
         type= "select"
         onChange= {this.props.onChangeName}
@@ -290,7 +291,7 @@ class Informations extends React.Component {
       roomNameData = <></>
     }
     if (this.props.criteria.includes("name of who is reserving")){
-      reservingNameData = <CriteriaText name= "name of who is reserving : "
+      reservingNameData = <CriteriaText name= "Personne qui réserve : " // better name ?
         data= {this.props.nameOfWhoSReserving}
         type= "text"
         onChange= {this.props.onChangeName}
@@ -310,7 +311,7 @@ class Informations extends React.Component {
       videoConferenceData = <></>
     }
     if (this.props.criteria.includes("meeting title")){
-      titleMeetingData = <CriteriaText name= "title of the meeting : "
+      titleMeetingData = <CriteriaText name= "intitulé de la réunion : "
         data= {this.props.titleMeeting}
         type= "text"
         onChange= {this.props.onChangeTitle}
@@ -321,7 +322,7 @@ class Informations extends React.Component {
       titleMeetingData = <></>
     }
     if (this.props.criteria.includes("present person")){
-      presentPersonNumberData = <CriteriaNumber name= "number of physically present persons : "
+      presentPersonNumberData = <CriteriaNumber name= "nombre de personnes physiquement présentes : "
       data= {this.props.numberOfPresentPerson}
       type= "number"
       onChange= {this.props.onChangePresent}

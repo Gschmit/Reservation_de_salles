@@ -1,6 +1,7 @@
 """ In charge of the views """
 
 import datetime
+import json
 
 from django.shortcuts import get_object_or_404
 from django.utils.timezone import make_aware
@@ -195,9 +196,12 @@ class HandleMeetingView(APIView):
                         user = invited
                     except User.DoesNotExist:
                         user = func.create_a_new_user(TYPING_ERROR_USERNAME, "invited")
-            # The print statement should be returned ?
+            print(data["date"])
+            print(f'{{"date": "{data["date"]}" }}')
+            print(json.loads(f'{{"date": "{data["date"]}" }}'))
             meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
                                                 data["duration"], physically_present_person, other_persons)
+            print(meeting.start_timestamps)
             print("meeting created")
             context["meeting"] = meeting.toJSON()
         return Response(data=context)
@@ -288,11 +292,11 @@ class RoomMeetingsView(APIView):
         futur_meetings = list(filter(lambda meet: meet.start_timestamps >= make_aware(datetime.datetime.now()), meeting_list))
         print(futur_meetings)
         if futur_meetings:
-            next_meeting = futur_meetings[0]
+            next_meeting = futur_meetings[0].toJSON()
         else:
             next_meeting = None
         context = {
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
-        context["next_meeting"] = next_meeting.toJSON()
+        context["next_meeting"] = next_meeting
         return Response(data=context)
