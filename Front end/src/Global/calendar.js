@@ -1,7 +1,7 @@
 import React from 'react';
 import './global.css';
 
-import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
 // import '../../node_modules/react-big-calendar/lib/sass/styles';  // kécécé ?
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css'
 import moment from "moment"; 
@@ -34,7 +34,7 @@ function languageFormated(language){
 
 require(`moment/locale/${languageFormated(window.navigator.language)}`)
 
-function meetingsToEvents(meetingList){
+function meetingsToEventsForRooms(meetingList){
     let events = []
         meetingList.forEach(element => {
             let startDate = new Date(
@@ -43,7 +43,7 @@ function meetingsToEvents(meetingList){
                 element.start_timestamps.minute
                 );
             events.push({start : startDate, end : new Date(startDate.getTime() + element.duration * 30 * 60 * 1000),
-                title: element.title
+                title: element.username
             });
         });
     return events
@@ -60,7 +60,9 @@ class MyCalendar extends React.Component{
     } */
 
     render(){
-        let events = meetingsToEvents(this.props.eventsList)
+        let events = meetingsToEventsForRooms(this.props.eventsList)
+        let hour = new Date()
+        hour.setHours(7)
         return( //Views ('month'|'week'|'work_week'|'day'|'agenda')
             <div>
                 <Calendar
@@ -72,6 +74,7 @@ class MyCalendar extends React.Component{
                     events={events}
                     startAccessor="start"
                     endAccessor="end"
+                    scrollToTime={hour}
                     style={{ height: this.props.height, width: this.props.width}}
                     selectable={true} // modifiable ? doit être à true pour 'onSelectSlot' et 'onSelecting'
                     onSelectSlot={this.props.onSelectSlot}
@@ -83,4 +86,4 @@ class MyCalendar extends React.Component{
     }
 };
 
-export {MyCalendar, meetingsToEvents};
+export {MyCalendar, meetingsToEventsForRooms as meetingsToEvents};

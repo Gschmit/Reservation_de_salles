@@ -7,6 +7,8 @@ import {Form, url} from '../Global/Reservation_form';
 
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"];
+const height = 550
+const width = window.innerWidth * 90/100
 
 // garder le code, cette fonction est pour modifier un meeting ! (et va donc ailleurs)
 /*function tabletOnSelectEvent(event, nextRoot, currentRoot, roomId){
@@ -89,7 +91,7 @@ class HomepageScreen extends React.Component{
   
 class HomepageRoomNameDisplay extends React.Component{
   render(){ // éventuellement un formatage en gras ou autre de l'écriture
-    return(this.props.roomName)
+    return(<p className="center">{this.props.roomName}</p>)
   };
 };
 
@@ -106,6 +108,7 @@ class HomepageRoomCalendar extends React.Component{
         meetingList.push(JSON.parse(res.data[meet]))
       };
       this.setState({meetings : meetingList.slice(0, -1)});
+      console.log(meetingList.slice(0, -1))
       return(meetingList[meetingList.length - 1])
     });
     this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting)
@@ -117,7 +120,7 @@ class HomepageRoomCalendar extends React.Component{
 
   render(){
     return( // height et width à régler en fonction des dimensions de l'écran d'affichage
-        <MyCalendar eventsList={this.state.meetings} height={300} width={600} 
+        <MyCalendar eventsList={this.state.meetings} height={height} width={width} 
           onSelectSlot={(slot) => tabletOnSelectSlot(
             slot, this.props.formRoot, this.props.root, this.props.roomId
           )}
@@ -126,7 +129,7 @@ class HomepageRoomCalendar extends React.Component{
   };
 };
 
-class StartMeeting extends React.Component{
+/*class StartMeeting extends React.Component{
   constructor(props) {
     super(props);
     this.state = {
@@ -144,6 +147,6 @@ class StartMeeting extends React.Component{
     this.state.isShowing,
     this.toggle
   };
-};
+};//*/
 
 export {HomepageScreen, criteriaTablet};

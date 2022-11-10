@@ -25,6 +25,22 @@
 
 /* For the calendar : */
 
+.rbc-allday-cell{
+  display:none;
+}
+.rbc-time-view .rbc-header {
+  border-bottom: none;
+} /* rbc-current-time-indicato doesn't work*/
+.rbc-current-time-indicator{
+  position: absolute;
+  z-index: 3;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-color:crimson;
+  pointer-events: none;
+}
+
 /* à retravailler !! 
 
 .rbc-calendar{
@@ -147,11 +163,6 @@
   background-color:fuchsia;
   margin: 1mm;
   padding: 1mm;
-}
-.rbc-allday-cell{
-    background-color: dimgray;
-    margin: 1mm;
-    padding: 1mm;
 }
 */
 

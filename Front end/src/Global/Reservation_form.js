@@ -180,18 +180,18 @@ class Form extends React.Component {
 
 class ButtonArea extends React.Component{
   render(){
+    let dateUTC = new Date(this.props.date.getTime() - this.props.date.getTimezoneOffset() * 60 * 1000)
     return(<div className='space'>
       <ActionButton name= "Valider" type= "button"
       callback= {async () => {
         let present
-        console.log(this.props.date, this.props.date.toUTCString())
         if (!this.props.numberOfPresentPerson === ""){
           present = this.props.numberOfPresentPerson
         }
-        /*let response = await axios.put(
+        let response = await axios.put(
           url + "meeting",
           {
-            room: this.props.room, user: this.props.nameOfWhoSReserving, date: this.props.date, 
+            room: this.props.room, user: this.props.nameOfWhoSReserving, date: dateUTC, 
             duration: this.props.duration, title: this.props.titleMeeting, 
             physically_present_person: present
           }
@@ -209,7 +209,7 @@ class ButtonArea extends React.Component{
         } else {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
-        }//*/
+        }
       }}
       />
       <ActionButton name= "Annuler" type= "button"
