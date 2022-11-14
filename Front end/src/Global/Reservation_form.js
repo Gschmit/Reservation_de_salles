@@ -4,6 +4,8 @@ import allMessages from '../Displayed_messages';
 import React from 'react';
 import axios from 'axios';
 import './global.css';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 const url = "http://127.0.0.1:8000/booking_meeting_room/"
 
@@ -212,6 +214,11 @@ class ButtonArea extends React.Component{
         } else if (response.error === "Two meetings overlap") {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
+          (
+            <Popup trigger={<button> Trigger</button>} position="right center">
+              <div>Popup content here !!</div>
+            </Popup>
+          );
         } else {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
