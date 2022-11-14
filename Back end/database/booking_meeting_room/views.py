@@ -15,7 +15,7 @@ from rest_framework.response import Response
 
 import booking_meeting_room.functions as func
 
-TYPING_ERROR_USERNAME = " @ Un_invité @ "
+# TYPING_ERROR_USERNAME = " @ Un_invité @ "
 
 
 class IndexView(APIView):               # useless ?
@@ -123,7 +123,8 @@ class UserNextMeetingView(APIView):
         """
         View of the next meeting of the user 'user_id'
         """
-        meeting_list: list[Meeting] = list(Meeting.objects.filter(user=user_id).order_by('start_timestamps'))
+        meeting_list: list[Meeting] = list(Meeting.objects.filter(user=user_id).order_by(
+            'start_timestamps'))
 
         if meeting_list:
             meet = meeting_list[0]
@@ -177,6 +178,7 @@ class HandleMeetingView(APIView):
             # {physically_present_person: int, other_persons: str}
             # data["room"] is an int (the room id), data["user"] is a string (the user name)
             room = get_object_or_404(Room, pk=data["room"])
+            existing_meetings = list(Meeting.objects.all().filter(room=room.id))
             # TO DO : write a function to test all kind of typing error (here, we just test the spaces
             # at the end of the name) and replace the try/except statement ("hide" would be better
             # than "replace")
@@ -190,14 +192,26 @@ class HandleMeetingView(APIView):
                     user = User.objects.get(name=name)
                 except User.DoesNotExist:
                     context["warning"] = "Le créateur de la réunion n'a pas été trouvé"
-                    try:
+                    user = func.create_a_new_user(name, "invited")  # on tablet
+                    """try:
                         invited = User.objects.get(name=TYPING_ERROR_USERNAME)
                         user = invited
                     except User.DoesNotExist:
                         user = func.create_a_new_user(TYPING_ERROR_USERNAME, "invited")
+                    """
             meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
-                                                data["duration"], physically_present_person, other_persons)
+                                                data["duration"], physically_present_person,
+                                                other_persons)
             print("meeting created")
+            for meet in existing_meetings:
+                print(meet.title)
+                if meeting.check_overlapping(meet):
+                    meeting.delete_meeting()
+                    context = {"rejected": True, "error": "Two meetings overlap",
+                               "warning": f"{meet.title} and {meeting.title} overlap"}
+                    break
+            else:
+                pass
             context["meeting"] = meeting.toJSON()
         return Response(data=context)
 
@@ -285,7 +299,6 @@ class RoomMeetingsView(APIView):
         """
         meeting_list: list[Meeting] = Meeting.objects.all().filter(room=room_id).order_by("start_timestamps")
         futur_meetings = list(filter(lambda meeting: meeting.start_timestamps >= make_aware(datetime.datetime.now()), meeting_list))
-        print(futur_meetings)
         if futur_meetings:
             next_meeting = futur_meetings[0]
             next_meeting.username = futur_meetings[0].user.name

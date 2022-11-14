@@ -2,7 +2,6 @@ import React from 'react';
 import './global.css';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-// import '../../node_modules/react-big-calendar/lib/sass/styles';  // kécécé ?
 import '../../node_modules/react-big-calendar/lib/css/react-big-calendar.css'
 import moment from "moment"; 
 
@@ -20,7 +19,7 @@ const messages = { // make it a function to be depending on the language of the 
     agenda: "Agenda",
     date: "date",
     time: "heure",
-    event: "événement", // Or anything you want
+    event: "événement",
     showMore: total => `+ ${total} événement(s) supplémentaire(s)`
   }
 
@@ -68,7 +67,7 @@ class MyCalendar extends React.Component{
                 <Calendar
                     localizer={localizer}
                     culture={window.navigator.language}
-                    views={["work_week", "week", "day"]}
+                    views={["day", "work_week", "week"]}
                     defaultView={"work_week"}
                     messages={messages}
                     events={events}

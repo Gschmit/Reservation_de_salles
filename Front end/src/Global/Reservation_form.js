@@ -103,7 +103,7 @@ class Form extends React.Component {
 
   componentDidMount(){
     if (isNaN(this.state.room)){ // On test ici seulement si l'id de la salle est renseigné
-      // on voudrait savoir si on a affaire un afficahge sur salle ou un affichage pour user
+      // on voudrait savoir si on a affaire un affichage sur salle ou un affichage pour user
       axios.get(url + "room_list")
       .then(res => {
         let rooms = []
@@ -206,7 +206,10 @@ class ButtonArea extends React.Component{
           this.props.previousPage.root.render(this.props.previousPage.toRender)
           this.props.root.render(<></>)
           console.log("Warning :", response.warning)
-        } else {
+        } else if (response.error === "No user fill in") {
+          console.log("Error :", response.error,)
+          console.log("Warning :", response.warning)
+        } else if (response.error === "Two meetings overlap") {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
         }
@@ -253,6 +256,7 @@ class Informations extends React.Component {
         onChange= {this.props.onChangeDate}
         change="time"
         required={true}
+        step={300} // 5 minutes
         />
     } else {
       startTimeData = <></>
@@ -264,6 +268,7 @@ class Informations extends React.Component {
         onChange= {this.props.onChangeDuration}
         change="duration"
         required={true}
+        step={1800} // 30 minutes
         />
     } else {
       endTimeData = <></>
@@ -365,7 +370,7 @@ class CriteriaDate extends React.Component{
   }
 
   render(){
-    return(
+    return( // min and max works well
       <span>
         {this.props.name + " "}
         <input
@@ -395,7 +400,7 @@ class CriteriaTime extends React.Component{
   }
 
   render(){
-    return(
+    return( // min and max doesn't work, neither step
       <span>
         {this.props.name + " "}
         <input
@@ -403,9 +408,9 @@ class CriteriaTime extends React.Component{
         type= "time"
         value= {this.props.data}
         onChange= {this.handleDataChange}
-        step= {60}
+        step= {this.props.step}
         required={this.props.required}
-        />
+        /> 
       </span>
     )
   }
@@ -420,13 +425,13 @@ class CriteriaDuration extends React.Component{
   handleDataChange(e) {
     if (this.props.change === "normal"){
       this.props.onChange(e.target.value);
-    } else {
+    } else {  // this test is weird, change and type values are always 'duration'
       this.props.onChange(e.target.value, this.props.type)
     }
   }
 
   render(){
-    return(
+    return(// min and max works well
       <span>
         {this.props.name + " "}
         <input
@@ -434,6 +439,7 @@ class CriteriaDuration extends React.Component{
         value= {this.props.data}
         onChange= {this.handleDataChange}
         step= {1/2}
+        min= {1/2}
         required={this.props.required}
         />
       </span>
@@ -545,6 +551,7 @@ class CriteriaNumber extends React.Component{
         step= {1}
         min= {1}  // counting the reserver, instead : 0
         // no max value to allow to see rooms with no enought space, without creating bugs
+        // but for rooms view, set up an advertising ?
         required={this.props.required}
         />
       </span>

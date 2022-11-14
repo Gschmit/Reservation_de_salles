@@ -21,7 +21,7 @@ const width = window.innerWidth * 90/100
     <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
       titleMeeting={event.title} previousPage={{
         root: currentRoot, 
-        toRender: <HomepageScreen roomId={roomId} root={currentRoot} nextPageRoot={nextRoot}/>
+        toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot}/>
       }}
     />
   )
@@ -40,7 +40,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
       <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
         previousPage={{
           root: currentRoot, 
-          toRender: <HomepageScreen roomId={roomId} root={currentRoot} nextPageRoot={nextRoot}/>
+          toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot}/>
         }}
       />
     )
@@ -82,7 +82,7 @@ class HomepageScreen extends React.Component{
           <h1> Homepage </h1> <br/>
           <HomepageRoomNameDisplay roomName={name} /> <br/>
           <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
-            formRoot={this.props.nextPageRoot}
+            formRoot={this.props.formRoot}
           />
       </div>
     )
@@ -90,7 +90,7 @@ class HomepageScreen extends React.Component{
 };
   
 class HomepageRoomNameDisplay extends React.Component{
-  render(){ // éventuellement un formatage en gras ou autre de l'écriture
+  render(){ // éventuellement un formatage en gras ou autre de l'écriture, et/ou passer en titre
     return(<p className="center">{this.props.roomName}</p>)
   };
 };
@@ -108,10 +108,10 @@ class HomepageRoomCalendar extends React.Component{
         meetingList.push(JSON.parse(res.data[meet]))
       };
       this.setState({meetings : meetingList.slice(0, -1)});
-      console.log(meetingList.slice(0, -1))
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting)
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting) // toutes les 6 secondes (toutes 
+    // les minutes/30 secondes serait bien ?)
   };
 
   componentWillUnmount(){

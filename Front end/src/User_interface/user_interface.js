@@ -126,4 +126,5 @@ class BookingRoomTool extends React.Component{
     };
 };
 
-export {BookingRoomTool};
+export {BookingRoomTool}; 
+// export default BookingRoomTool; // would be better

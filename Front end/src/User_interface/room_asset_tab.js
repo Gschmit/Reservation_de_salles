@@ -49,3 +49,4 @@ class RoomSelectedAssetsList extends React.Component {
 }
 
 export {TabRoomSelected}
+// export default TabRoomSelected; // would be better
