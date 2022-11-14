@@ -125,7 +125,6 @@ class UserNextMeetingView(APIView):
         """
         meeting_list: list[Meeting] = list(Meeting.objects.filter(user=user_id).order_by(
             'start_timestamps'))
-
         if meeting_list:
             meet = meeting_list[0]
             time = meet.start_timestamps.strftime("on %A %d of %B %Y, at %H:%M")
