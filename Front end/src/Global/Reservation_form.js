@@ -212,6 +212,9 @@ class ButtonArea extends React.Component{
         } else if (response.error === "Two meetings overlap") {
           console.log("Error :", response.error)
           console.log("Warning :", response.warning)
+        } else {
+          console.log("Error :", response.error)
+          console.log("Warning :", response.warning)
         }
       }}
       />
