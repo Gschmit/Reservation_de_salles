@@ -4,7 +4,7 @@ import allMessages from '../Displayed_messages';
 import React from 'react';
 import axios from 'axios';
 import './global.css';
-import Popup from 'reactjs-popup';
+// import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
 const url = "http://127.0.0.1:8000/booking_meeting_room/"
@@ -16,6 +16,12 @@ function setToTwoNumber(number){
     return(number)
   }
 }
+
+/*const Modal = () => (
+  <Popup trigger={<button className="button"> Open Modal </button>} modal>
+    <span> Modal content </span>
+  </Popup>
+);//*/
 
 class Form extends React.Component {
   constructor(props) {
@@ -31,6 +37,7 @@ class Form extends React.Component {
       roomList: [],
       name: "",
       meetings: {},
+      response: {rejected: true, error: null, warning: null},
     };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
     // pour le user, ça va être compliqué ...
 
@@ -41,7 +48,9 @@ class Form extends React.Component {
     this.handleVideoConferenceChange = this.handleVideoConferenceChange.bind(this);
     this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
-  };
+    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
 
   handleDateValueChange(newDate, typeChanged){
     let oldDate = new Date(this.state.date)
@@ -103,6 +112,32 @@ class Form extends React.Component {
     });
   };
 
+  handleSubmitResponseChange(newResponse){
+    this.setState({
+      response: newResponse
+    });
+  };
+
+  handleSubmit(event, response) {
+    alert("eho")
+    event.preventDefault();
+    if (!response.rejected){
+      this.props.previousPage.root.render(this.props.previousPage.toRender)
+      this.props.root.render(<></>)
+      console.log("Warning :", response.warning)
+    } else if (response.error === "No user fill in") {
+      console.log("Error :", response.error,)
+      console.log("Warning :", response.warning)
+    } else if (response.error === "Two meetings overlap") {
+      console.log("Error :", response.error)
+      console.log("Warning :", response.warning)
+    } else {
+      console.log("Error :", response.error)
+      console.log("Warning :", response.warning)
+    }
+    console.log(response);
+  };
+
   componentDidMount(){
     if (isNaN(this.state.room)){ // On test ici seulement si l'id de la salle est renseigné
       // on voudrait savoir si on a affaire un affichage sur salle ou un affichage pour user
@@ -145,7 +180,7 @@ class Form extends React.Component {
       <div>
         <h1> Reservation form of {this.state.name} </h1>
         <br/>
-        <form>
+        <form onSubmit={(event) => {this.handleSubmit(event, this.state.response)} }>
           <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
@@ -172,6 +207,7 @@ class Form extends React.Component {
           buttons= {this.props.buttons}
           previousPage= {this.props.previousPage}
           root= {this.props.root}
+          onSubmitCheckResponse= {this.handleSubmitResponseChange}
           />
         </form>
       </div>
@@ -181,10 +217,20 @@ class Form extends React.Component {
 };
 
 class ButtonArea extends React.Component{
+  constructor(props){
+    super(props);
+
+    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this);
+  }
+
+  handleSubmitResponseChange(response) {
+      this.props.onSubmitCheckResponse(response);
+  }
+
   render(){
     let dateUTC = new Date(this.props.date.getTime() - this.props.date.getTimezoneOffset() * 60 * 1000)
     return(<div className='space'>
-      <ActionButton name= "Valider" type= "button"
+      <ActionButton name= "Valider" type= "submit"
       callback= {async () => {
         let present
         if (!this.props.numberOfPresentPerson === ""){
@@ -201,28 +247,8 @@ class ButtonArea extends React.Component{
         .then(res => {
           return res.data
         })
-        if (!response.rejected){
-          // avec type="submit" : la page est entièrement rechargée, donc le code à partir du '.then'
-          // s'exécute trop vite pour être visible (est-ce vraiment important ??)
-          // avec type="button" : on n'a pas l'alerte qui explique que le champs est requis
-          this.props.previousPage.root.render(this.props.previousPage.toRender)
-          this.props.root.render(<></>)
-          console.log("Warning :", response.warning)
-        } else if (response.error === "No user fill in") {
-          console.log("Error :", response.error,)
-          console.log("Warning :", response.warning)
-        } else if (response.error === "Two meetings overlap") {
-          console.log("Error :", response.error)
-          console.log("Warning :", response.warning)
-          (
-            <Popup trigger={<button> Trigger</button>} position="right center">
-              <div>Popup content here !!</div>
-            </Popup>
-          );
-        } else {
-          console.log("Error :", response.error)
-          console.log("Warning :", response.warning)
-        }
+        console.log("axios :", response)
+        this.handleSubmitResponseChange(response)
       }}
       />
       <ActionButton name= "Annuler" type= "button"

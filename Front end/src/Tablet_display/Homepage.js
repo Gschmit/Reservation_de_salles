@@ -110,7 +110,7 @@ class HomepageRoomCalendar extends React.Component{
       this.setState({meetings : meetingList.slice(0, -1)});
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting) // toutes les 6 secondes (toutes 
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
   };
 
