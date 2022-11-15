@@ -2,19 +2,55 @@ import React from 'react';
 
 class TabRoomList extends React.Component {
     render(){
+        console.log("length", this.props.roomList.length)
         return(
-            <div>
-                {this.props.roomList.map(
-                    (roomItem, index) => 
-                    <RoomFromTab key={index} 
-                        room={roomItem}
-                        isActive={index === this.props.activeTab}
-                    />
-                )}
-            </div>
+                <div className="tab">
+                    {this.props.roomList.map((roomItem, index) => (
+                        <RoomFromTab key={roomItem.id}
+                            room={roomItem}
+                            index={index}
+                            isActive={index === this.props.activeTab}
+                            onChange={this.props.onChange}
+                        />  
+                    ))}
+                </div>
         );
     };
 };
+
+/* // solution 1
+<div id="menu-tab">
+                <div id="page-wrap">
+                    <div className="tabs">
+                        {this.props.roomList.map(
+                            (roomItem, index) =>
+                            <div className="tab"  key={index}>
+                                <input id={`tab-${index}`} name="tab-group-1" type="radio" />
+                                <label htmlFor={`tab-${index}`} > {roomItem.name} {index} </label>
+                                <RoomFromTab 
+                                    room={roomItem}
+                                    isActive={index === this.props.activeTab}
+                                />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+*/
+
+/* // solution 2
+<div>
+  <p>Click on the buttons inside the tabbed menu:</p>
+  <div className="tab">
+  {this.state.data.map((button, i) => (
+    <button key={button.name} className="tablinks" onClick={() => this.handleClick(i)}>{button.name}</button>
+    )
+    )
+  }
+  </div>
+</div>
+*/
+
 
 class RoomFromTab extends React.Component {
     render(){
@@ -32,8 +68,10 @@ class RoomFromTab extends React.Component {
             videoConference = <p> Non actif </p> // <></>
         }
         return( 
-            <div>
-                <p>{this.props.room.name} ({this.props.room.capacity} places) {active}</p>
+            <div className="content">
+                <button className="tablinks" onClick={() => this.props.onChange(this.props.index, this.props.isActive)}>
+                    {this.props.room.name} ({this.props.room.capacity} places) {active}
+                </button>
                 {videoConference} 
                 <br/>
             </div>

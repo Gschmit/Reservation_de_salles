@@ -43,65 +43,46 @@ root.render(
 reportWebVitals();
 
 const homepage = ReactDOM.createRoot(document.getElementById('tablet homepage'));
-const tabletForm = ReactDOM.createRoot(document.getElementById("tablet reservation page"));
+const tabletForm = ReactDOM.createRoot(document.getElementById("tablet reservation page")); // no more displayed "alone"
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
-const userInterfaceFalse = ReactDOM.createRoot(document.getElementById("user interface false"));
-const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true"));
+const userInterface = ReactDOM.createRoot(document.getElementById("user interface"));
+// const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true")); // no longer usefull
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
-const pages = 7;
+const pages = 5;
 const pictureURL = image;
 const roomId = 2      // to get somewhere for many tablets
 const userId = 2      // to get somewhere for final app
 //const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
-//  "meeting title", "present person"];
+//  "meeting title", "present person"]; // this const is defined somewhere else
 const criteriaUser = ["date", "start time", "end time", "duration", "room id", "video conference",
   "meeting title", "present person"];
 let display = pages - 1;
-areaToDisplay(display, 0); // display = areaToDisplay(display, 0); // for switching pages
+display = areaToDisplay(display, 0); // for switching pages
 
 function areaToDisplay(intDisplay, shift){
   let next = (intDisplay + shift) % pages
   if (next === 0){
     homepage.render();
-    tabletForm.render(
-      <Form criteria= {criteriaTablet} room={2} root={tabletForm}
-        previousPage={{
-          root: homepage, 
-          toRender: <HomepageScreen roomId={roomId} root={homepage} formRoot={tabletForm}/>
-        }}
-      />
-    );
-    userHomepage.render();
-  } else if (next === 1) {
-    homepage.render();
     tabletForm.render();
     userHomepage.render(
       <BookingRoomTool userDisplay= "homepage" userName="User name" user={userId} />
     );
-    userInterfaceFalse.render();
-  } else if (next === 2) {
+    userInterface.render();
+  } else if (next === 1) {
     userHomepage.render();
-    userInterfaceFalse.render(
+    userInterface.render(
       <BookingRoomTool criteria= {criteriaUser} userDisplay= "form" user={userId}
         name={allMessages.userInterface["en"]} userName="User name"
       />
     );
-    userInterfaceTrue.render();
-  } else if (next === 3) {
-    userInterfaceFalse.render();
-    userInterfaceTrue.render(
-      <BookingRoomTool picture={pictureURL} criteria= {criteriaUser} user={userId}
-        userDisplay= "form" name={allMessages.userInterface["en"]} username="User name" activeTab={0}
-      />
-    );
     userCalendar.render();
-  } else if (next === 4) {
-    userInterfaceTrue.render();
+  } else if (next === 2) {
+    userInterface.render();
     userCalendar.render(<BookingRoomTool userDisplay= "user calendar" userName="User name" user={userId}/>
     );
     roomCalendar.render();
-  } else if (next === 5) {
+  } else if (next === 3) {
     userCalendar.render();
     roomCalendar.render(
       <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" user={userId}
@@ -109,10 +90,11 @@ function areaToDisplay(intDisplay, shift){
       />
     );
     homepage.render();
+    tabletForm.render();
   } else {
     roomCalendar.render();
     homepage.render(<HomepageScreen roomId={roomId} root={homepage} formRoot={tabletForm}/>);
-    tabletForm.render();
+    userHomepage.render();
   }
   if (!(shift === 0)){
     console.log("previous:", intDisplay, "current:", next)

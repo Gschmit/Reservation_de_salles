@@ -33,8 +33,12 @@ class BookingRoomTool extends React.Component{
         this.handleChangeUserDisplay = this.handleChangeUserDisplay.bind(this);
     }
 
-    handleChangeActiveRoomInList(newRoomActive){
-        this.setState({activeRoomInList: newRoomActive})
+    handleChangeActiveRoomInList(newRoomActive, setToNaN){
+        if (setToNaN){
+            this.setState({activeRoomInList: NaN})
+        } else {
+            this.setState({activeRoomInList: newRoomActive})
+        }
     }
 
     handleChangeUserDisplay(newUserDisplay){
