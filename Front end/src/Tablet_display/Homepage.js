@@ -77,9 +77,8 @@ class HomepageScreen extends React.Component{
 
   render(){
     let name = `${this.state.room.name} (${this.state.room.capacity} places)`
-    return(
+    return( //<h1> Homepage </h1> <br/>
       <div>
-          <h1> Homepage </h1> <br/>
           <HomepageRoomNameDisplay roomName={name} /> <br/>
           <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
             formRoot={this.props.formRoot}
@@ -110,13 +109,13 @@ class HomepageRoomCalendar extends React.Component{
       this.setState({meetings : meetingList.slice(0, -1)});
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
+    this.startMeeting = nextMeeting //setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
   };
 
-  componentWillUnmount(){
+  /*componentWillUnmount(){
     clearInterval(this.startMeeting)
-  }
+  }; //*/
 
   render(){
     return( // height et width à régler en fonction des dimensions de l'écran d'affichage

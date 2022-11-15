@@ -130,6 +130,19 @@ class Meeting(models.Model):
             self.__setattr__("other_persons", None)
         self.save()
 
+    def slot(self):
+        """
+        To know from when to when is the meeting
+        """
+        try:
+            start = datetime.datetime.strptime(str(self.start_timestamps), '%Y-%m-%dT%H:%M:%S.%fZ')
+        except ValueError:
+            # print("value error", self.title)
+            start = datetime.datetime.strptime(str(self.start_timestamps), '%Y-%m-%d %H:%M:%S+%f:00')
+        duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
+        end = start + duration
+        return start, end
+
     def check_overlapping(self, other):
         """
         Check if the two meetings are compatible
@@ -138,24 +151,8 @@ class Meeting(models.Model):
         if self.room != other.room:
             return False
         else:
-            try:
-                self_start = datetime.datetime.strptime(str(self.start_timestamps),
-                                                        '%Y-%m-%dT%H:%M:%S.%fZ')
-            except ValueError:
-                # print("value error", self.title)
-                self_start = datetime.datetime.strptime(str(self.start_timestamps),
-                                                        '%Y-%m-%d %H:%M:%S+%f:00')
-            try:
-                other_start = datetime.datetime.strptime(str(other.start_timestamps),
-                                                         '%Y-%m-%dT%H:%M:%S.%fZ')
-            except ValueError:
-                # print("value error", other.title)
-                other_start = datetime.datetime.strptime(str(other.start_timestamps),
-                                                         '%Y-%m-%d %H:%M:%S+%f:00')
-            self_duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
-            other_duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
-            self_end = self_start + self_duration
-            other_end = other_start + other_duration
+            self_start, self_end = self.slot()
+            other_start, other_end = other.slot()
             if self_end <= other_start:
                 return False
             elif self_start >= other_end:

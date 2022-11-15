@@ -201,16 +201,15 @@ class HandleMeetingView(APIView):
             meeting = func.create_a_new_meeting(room, user, data["date"], data["title"],
                                                 data["duration"], physically_present_person,
                                                 other_persons)
-            print("meeting created")
+            meet: Meeting
             for meet in existing_meetings:
-                print(meet.title)
                 if meeting.check_overlapping(meet):
                     meeting.delete_meeting()
                     context = {"rejected": True, "error": "Two meetings overlap",
-                               "warning": f"{meet.title} and {meeting.title} overlap"}
+                               "warning": meet.slot()}
                     break
             else:
-                pass
+                print("meeting created")
             context["meeting"] = meeting.toJSON()
         return Response(data=context)
 

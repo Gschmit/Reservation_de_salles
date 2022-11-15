@@ -8,6 +8,9 @@
   --short-stroke-contrast-salmon: rgb(255,157,130);
 }
 
+.mandatory {
+  color: red;}
+
 .center{
     text-align: center;
 }
@@ -18,10 +21,10 @@
     flex-direction: row;
 }
 
-.shift{ 
+/*.shift{ 
     background-color: aquamarine;
     object-position: 1px 10px;
-}
+}*/
 
 /* For the modal popup*/
 

@@ -118,9 +118,26 @@ class Form extends React.Component {
     });
   };
 
-  handleSubmit(event, response) {
-    alert("eho")
+  async handleSubmit(event) {
     event.preventDefault();
+    let dateUTC = new Date(this.state.date.getTime() - this.state.date.getTimezoneOffset() * 60 * 1000)
+      let present
+      if (!this.state.numberOfPresentPerson === ""){
+        present = this.state.numberOfPresentPerson
+      }
+      let response = await axios.put(
+        url + "meeting",
+        {
+          room: this.state.room, user: this.state.nameOfWhoSReserving, date: dateUTC, 
+          duration: this.state.duration, title: this.state.titleMeeting, 
+          physically_present_person: present
+        }
+      )
+      .then(res => {
+        return res.data
+      })
+      console.log("axios :", response)
+      this.handleSubmitResponseChange(response)
     if (!response.rejected){
       this.props.previousPage.root.render(this.props.previousPage.toRender)
       this.props.root.render(<></>)
@@ -128,14 +145,23 @@ class Form extends React.Component {
     } else if (response.error === "No user fill in") {
       console.log("Error :", response.error,)
       console.log("Warning :", response.warning)
+      event.preventDefault();
     } else if (response.error === "Two meetings overlap") {
       console.log("Error :", response.error)
       console.log("Warning :", response.warning)
+      let start = new Date(response.warning[0])
+      let day = `${setToTwoNumber(start.getDate())}/${setToTwoNumber(start.getMonth() + 1)}/${start.getFullYear()}`
+      start = `${setToTwoNumber(start.getHours())}:${setToTwoNumber(start.getMinutes())}`
+      let end = new Date(response.warning[1])
+      end = `${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`
+      alert(`Il y a déjà une réunion prévue de ${start} à ${end} le ${day}`)
+      event.preventDefault();
     } else {
       console.log("Error :", response.error)
       console.log("Warning :", response.warning)
+      event.preventDefault();
     }
-    console.log(response);
+    console.log(response.rejected);
   };
 
   componentDidMount(){
@@ -176,11 +202,9 @@ class Form extends React.Component {
   };
   render(){
     let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
-    return(
+    return( //<h1> Reservation form of {this.state.name} </h1> <br/>
       <div>
-        <h1> Reservation form of {this.state.name} </h1>
-        <br/>
-        <form onSubmit={(event) => {this.handleSubmit(event, this.state.response)} }>
+        <form onSubmit={this.handleSubmit} >
           <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
@@ -228,28 +252,9 @@ class ButtonArea extends React.Component{
   }
 
   render(){
-    let dateUTC = new Date(this.props.date.getTime() - this.props.date.getTimezoneOffset() * 60 * 1000)
     return(<div className='space'>
       <ActionButton name= "Valider" type= "submit"
-      callback= {async () => {
-        let present
-        if (!this.props.numberOfPresentPerson === ""){
-          present = this.props.numberOfPresentPerson
-        }
-        let response = await axios.put(
-          url + "meeting",
-          {
-            room: this.props.room, user: this.props.nameOfWhoSReserving, date: dateUTC, 
-            duration: this.props.duration, title: this.props.titleMeeting, 
-            physically_present_person: present
-          }
-        )
-        .then(res => {
-          return res.data
-        })
-        console.log("axios :", response)
-        this.handleSubmitResponseChange(response)
-      }}
+      //callback= {}
       />
       <ActionButton name= "Annuler" type= "button"
         callback= {() => {
@@ -275,7 +280,7 @@ class Informations extends React.Component {
     let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
       videoConferenceData, titleMeetingData, presentPersonNumberData
     if (this.props.criteria.includes("date")){
-      dateData = <CriteriaDate name= {`${allMessages.date['fr']} : `}
+      dateData = <CriteriaDate name= {`${allMessages.date['fr']}`}
         data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
         type= "date"
         onChange= {this.props.onChangeDate}
@@ -286,7 +291,7 @@ class Informations extends React.Component {
       dateData = <></>
     }
     if (this.props.criteria.includes("start time")){
-      startTimeData = <CriteriaTime name= "début : "
+      startTimeData = <CriteriaTime name= "début"
         data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDate}
@@ -298,7 +303,7 @@ class Informations extends React.Component {
       startTimeData = <></>
     }
     if (this.props.criteria.includes("end time")){
-      endTimeData = <CriteriaTime name= "fin : "
+      endTimeData = <CriteriaTime name= "fin"
         data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
         type= "time"
         onChange= {this.props.onChangeDuration}
@@ -310,7 +315,7 @@ class Informations extends React.Component {
       endTimeData = <></>
     }
     if (this.props.criteria.includes("duration")){
-      durationData = <CriteriaDuration name= "durée (en heures) : "
+      durationData = <CriteriaDuration name= "durée (en heures)"
         data= {this.props.duration / 2}
         type= "duration"
         onChange= {this.props.onChangeDuration}
@@ -321,7 +326,7 @@ class Informations extends React.Component {
       durationData = <></>
     }
     if (this.props.criteria.includes("room id")){
-      roomNameData = <CriteriaSelect name= "salle : "
+      roomNameData = <CriteriaSelect name= "salle"
         data= {this.props.roomName}
         type= "select"
         onChange= {this.props.onChangeName}
@@ -332,7 +337,7 @@ class Informations extends React.Component {
       roomNameData = <></>
     }
     if (this.props.criteria.includes("name of who is reserving")){
-      reservingNameData = <CriteriaText name= "Personne qui réserve : " // better name ?
+      reservingNameData = <CriteriaText name= "Personne qui réserve" // better name ?
         data= {this.props.nameOfWhoSReserving}
         type= "text"
         onChange= {this.props.onChangeName}
@@ -352,7 +357,7 @@ class Informations extends React.Component {
       videoConferenceData = <></>
     }
     if (this.props.criteria.includes("meeting title")){
-      titleMeetingData = <CriteriaText name= "intitulé de la réunion : "
+      titleMeetingData = <CriteriaText name= "intitulé de la réunion"
         data= {this.props.titleMeeting}
         type= "text"
         onChange= {this.props.onChangeTitle}
@@ -363,7 +368,7 @@ class Informations extends React.Component {
       titleMeetingData = <></>
     }
     if (this.props.criteria.includes("present person")){
-      presentPersonNumberData = <CriteriaNumber name= "nombre de personnes physiquement présentes : "
+      presentPersonNumberData = <CriteriaNumber name= "nombre de personnes physiquement présentes"
       data= {this.props.numberOfPresentPerson}
       type= "number"
       onChange= {this.props.onChangePresent}
@@ -406,9 +411,10 @@ class CriteriaDate extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return( // min and max works well
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         className='shift'
         type= "date"
@@ -436,9 +442,10 @@ class CriteriaTime extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return( // min and max doesn't work, neither step
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         className='shift'
         type= "time"
@@ -467,9 +474,10 @@ class CriteriaDuration extends React.Component{
   }
 
   render(){
-    return(// min and max works well
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
+    return( // min and max works well
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         type= "number"
         value= {this.props.data}
@@ -494,9 +502,10 @@ class CriteriaSelect extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return(
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <select required={this.props.required} onChange={this.handleDataChange}>
           <option key={-1} value={"empty"}>-- Select one --</option>
           {this.props.list.map(
@@ -519,9 +528,10 @@ class CriteriaText extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return(
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         type= "text"
         value= {this.props.data}
@@ -544,9 +554,10 @@ class CriteriaRadio extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return(
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         type= "radio"
         checked= {this.props.data}
@@ -577,9 +588,10 @@ class CriteriaNumber extends React.Component{
   }
 
   render(){
+    let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return(
       <span>
-        {this.props.name + " "}
+        <span>{this.props.name}{mandatory} : </span>
         <input
         type= "number"
         value= {this.props.data}
