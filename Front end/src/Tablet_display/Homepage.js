@@ -48,7 +48,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
   };
 };
 
-function startOfTheMeeting(nextMeeting){
+/*function startOfTheMeeting(nextMeeting){
   if (nextMeeting){
     let now = new Date()
     let start = new Date(
@@ -61,7 +61,7 @@ function startOfTheMeeting(nextMeeting){
       alert("valide ?")
     }
   };
-};
+};*/
 
 class HomepageScreen extends React.Component{
   state = {

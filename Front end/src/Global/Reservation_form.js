@@ -136,16 +136,17 @@ class Form extends React.Component {
       .then(res => {
         return res.data
       })
-      console.log("axios :", response)
       this.handleSubmitResponseChange(response)
     if (!response.rejected){
       this.props.previousPage.root.render(this.props.previousPage.toRender)
       this.props.root.render(<></>)
       console.log("Warning :", response.warning)
     } else if (response.error === "No user fill in") {
+      // this if is never executed (in the room view) (because of the form validation?)
       console.log("Error :", response.error,)
       console.log("Warning :", response.warning)
-      event.preventDefault();
+      alert(`${response.error}, ${response.warning}`)
+      event.preventDefault() // this statement seems to have no effect then
     } else if (response.error === "Two meetings overlap") {
       console.log("Error :", response.error)
       console.log("Warning :", response.warning)
@@ -155,7 +156,6 @@ class Form extends React.Component {
       let end = new Date(response.warning[1])
       end = `${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`
       alert(`Il y a déjà une réunion prévue de ${start} à ${end} le ${day}`)
-      event.preventDefault();
     } else {
       console.log("Error :", response.error)
       console.log("Warning :", response.warning)
@@ -221,19 +221,15 @@ class Form extends React.Component {
           criteria= {this.props.criteria}
           roomList= {this.state.roomList}
           /> <br/>
-          <ButtonArea date= {this.state.date}
-          duration= {this.state.duration}
-          nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          room= {this.state.room}
-          titleMeeting= {this.state.titleMeeting}
-          numberOfPresentPerson= {this.state.numberOfPresentPerson}
-          videoConference= {this.state.videoConference}
-          buttons= {this.props.buttons}
-          previousPage= {this.props.previousPage}
-          root= {this.props.root}
-          onSubmitCheckResponse= {this.handleSubmitResponseChange}
+          <ButtonArea
+          buttons= {this.props.buttons} // ??
+          previousPage= {this.props.previousPage} // oui
+          root= {this.props.root} // oui
+          onSubmitCheckResponse= {this.handleSubmitResponseChange} // oui
           />
         </form>
+        <br/>
+        <p className='mandatory center'> * champs obligatoire </p>
       </div>
     ); // à quoi sert la props buttons ?? (elle remonte jsuqu'au composant "BookingRoomTool", mais n'est pas 
     // renseigné dans le fichier "index") (pas utiliser dans le composant "ButtonArea")
@@ -253,9 +249,7 @@ class ButtonArea extends React.Component{
 
   render(){
     return(<div className='space'>
-      <ActionButton name= "Valider" type= "submit"
-      //callback= {}
-      />
+      <ActionButton name= "Valider" type= "submit" />
       <ActionButton name= "Annuler" type= "button"
         callback= {() => {
           this.props.previousPage.root.render(this.props.previousPage.toRender)

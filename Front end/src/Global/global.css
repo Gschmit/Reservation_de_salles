@@ -1,4 +1,5 @@
-.ikos{
+/* Ikos colors */
+:root{
   --main-colour: rgb(10, 131, 175);
   --main-dark-blue: rgb(32, 59, 87);
   --secondary-magenta: rgb(160,32,101);
@@ -9,7 +10,8 @@
 }
 
 .mandatory {
-  color: red;}
+  color: red;
+}
 
 .center{
     text-align: center;
@@ -69,14 +71,14 @@
 }
 .rbc-time-view .rbc-header {
   border-bottom: none;
-} /* rbc-current-time-indicato doesn't work*/
+} /* only props with !important work for rbc-current-time-indicator. The other are already applied */
 .rbc-current-time-indicator{
   position: absolute;
   z-index: 3;
   left: 0;
   right: 0;
-  height: 10px;
-  background-color:crimson;
+  height: 1px;
+  background-color: var(--short-stroke-red) !important;
   pointer-events: none;
 }
 

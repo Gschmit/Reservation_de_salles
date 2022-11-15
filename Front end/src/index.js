@@ -120,7 +120,7 @@ function areaToDisplay(intDisplay, shift){
   return(next)
 }
 
-/*const button1 = ReactDOM.createRoot(document.getElementById("button zone"));
+const button1 = ReactDOM.createRoot(document.getElementById("button zone"));
 button1.render(
   React.createElement(
     'button',
