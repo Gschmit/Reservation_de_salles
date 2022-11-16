@@ -2,6 +2,10 @@
 from django.urls import path
 from . import views
 
+# paths :
+# cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Front end
+# cd Documents\01_Outil de gestion\1_Réservation_de_salle\room_reservation\Back end\database
+
 app_name = 'booking_meeting_room'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),

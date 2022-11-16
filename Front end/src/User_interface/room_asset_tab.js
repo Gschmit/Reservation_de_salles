@@ -10,8 +10,8 @@ class TabRoomSelected extends React.Component {  // Il faudra ajouter/ajuster le
                 <RoomSelectedData assets={this.props.assets}/>
             </div>
         )
-    }
-}
+    };
+};
 
 class RoomSelectedPicture extends React.Component {  // la prop alt dans le render devra être modifier quand l'image fonctionnera
     render(){
@@ -20,8 +20,8 @@ class RoomSelectedPicture extends React.Component {  // la prop alt dans le rend
                 <img src={this.props.picture} alt={`l'affichage ne fonctionne pas ${this.props.picture}`}></img>
             </div>
         )
-    }
-}
+    };
+};
 
 class RoomSelectedData extends React.Component {
     render(){
@@ -32,8 +32,8 @@ class RoomSelectedData extends React.Component {
                 <RoomSelectedAssetsList assets={this.props.assets}/>
             </div>
         )
-    }
-}
+    };
+};
 
 class RoomSelectedAssetsList extends React.Component {
     render(){
@@ -45,8 +45,8 @@ class RoomSelectedAssetsList extends React.Component {
                 )}
             </ul>
         )
-    }
-}
+    };
+};
 
 export {TabRoomSelected}
 // export default TabRoomSelected; // would be better

@@ -25,7 +25,7 @@ class BookingRoomTool extends React.Component{
         this.state = {
             activeRoomInList: "activeTab" in this.props ? this.props.activeTab : NaN,
             userDisplay: "userDisplay" in this.props ? this.props.userDisplay : null,
-            roomList: [],
+            roomList: {},
             user: 0,
             nextMeeting: "",
         }
@@ -48,9 +48,10 @@ class BookingRoomTool extends React.Component{
     componentDidMount(){ // on fait 3 appels "get" successif ... ne peut on pas optimiser cela en un seul ?
         axios.get(url + "room_list")
         .then(res => {
-            let rooms = []
+            let rooms = {}
             for (const room in res.data) {
-                rooms.push(JSON.parse(res.data[room]))
+                let roomObject = JSON.parse(res.data[room])
+                rooms[roomObject.id] = roomObject
             };
             this.setState({roomList : rooms})
         });  // la liste des salles, peut être triée d'une certaine manière ?
@@ -65,7 +66,8 @@ class BookingRoomTool extends React.Component{
             }); 
     };
     // this component have a 'previousPage' props !
-    render(){
+    render(){ // if we want to put an id instead of an index in activeRoomInList, the roomList object must 
+        // be an object (python dict) instead of a simple list
         let roomSelected, nameRoomSelected
         if (isNaN(this.state.activeRoomInList)){
             roomSelected = <></>
@@ -79,7 +81,7 @@ class BookingRoomTool extends React.Component{
             }
             roomSelected = <td className="right"> 
                 <TabRoomSelected assets={assets} picture={picture} room={this.state.activeRoomInList}/>
-            </td> 
+            </td> // the room props is not used yet. At the end, it could be the only one (?)
             nameRoomSelected = name
         };
         /* let promiseUser = axios.get("http://127.0.0.1:8000/booking_meeting_room/user/2/")

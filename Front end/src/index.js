@@ -1,11 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import {Form} from './Global/Reservation_form';
-import {HomepageScreen, criteriaTablet} from './Tablet_display/Homepage';
+import {HomepageScreen} from './Tablet_display/Homepage';
 import {BookingRoomTool} from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
-import image from "./photo.PNG";
+// import image from "./photo.PNG";
 import reportWebVitals from './reportWebVitals';
 
 // paths :
@@ -50,7 +49,6 @@ const userInterface = ReactDOM.createRoot(document.getElementById("user interfac
 // const userInterfaceTrue = ReactDOM.createRoot(document.getElementById("user interface true")); // no longer usefull
 const roomCalendar = ReactDOM.createRoot(document.getElementById("room calendar"));
 const pages = 5;
-const pictureURL = image;
 const roomId = 2      // to get somewhere for many tablets
 const userId = 2      // to get somewhere for final app
 //const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
@@ -79,15 +77,14 @@ function areaToDisplay(intDisplay, shift){
     userCalendar.render();
   } else if (next === 2) {
     userInterface.render();
-    userCalendar.render(<BookingRoomTool userDisplay= "user calendar" userName="User name" user={userId}/>
+    userCalendar.render(
+      <BookingRoomTool userDisplay= "user calendar" userName="User name" user={userId} />
     );
     roomCalendar.render();
   } else if (next === 3) {
     userCalendar.render();
     roomCalendar.render(
-      <BookingRoomTool picture={pictureURL} userDisplay= "room calendar" user={userId}
-        userName="User name" activeTab={0}
-      />
+      <BookingRoomTool userDisplay= "room calendar" user={userId} userName="User name" activeTab={roomId} />
     );
     homepage.render();
     tabletForm.render();
