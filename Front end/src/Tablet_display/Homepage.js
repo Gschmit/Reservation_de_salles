@@ -31,7 +31,7 @@ const width = window.innerWidth * 90/100
             event, this.props.formRoot, this.props.root, this.props.roomId
           )}//*/
 
-function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
+function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
   let start = new Date(slot.start)
   let end = new Date(slot.end)
   if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
@@ -40,7 +40,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
       <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
         previousPage={{
           root: currentRoot, 
-          toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot}/>
+          toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot} popupRoot={popupRoot}/>
         }}
       />
     )
@@ -48,7 +48,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
   };
 };
 
-/*function startOfTheMeeting(nextMeeting){
+function startOfTheMeeting(nextMeeting){
   if (nextMeeting){
     let now = new Date()
     let start = new Date(
@@ -61,7 +61,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
       alert("valide ?")
     }
   };
-};*/
+};//*/
 
 function isNow(meeting){
   if (meeting != null){
@@ -94,7 +94,7 @@ class HomepageScreen extends React.Component{
       <div>
           <HomepageRoomNameDisplay roomName={name} /> <br/>
           <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
-            formRoot={this.props.formRoot}
+            formRoot={this.props.formRoot} popupRoot={this.props.popupRoot}
           />
       </div>
     )
@@ -110,45 +110,58 @@ class HomepageRoomNameDisplay extends React.Component{
 class HomepageRoomCalendar extends React.Component{
   state = {
     meetings: [],
-    meetingCurrently: false
+    meetingCurrently: false,
+    currentMeetingId: NaN,
   };
 
   async componentDidMount(){
     let currently = false
+    let currentMeetingId = NaN
     let nextMeeting = await axios.get(url + `room_meetings/${this.props.roomId}`)
     .then(res => {
       let meetingList = []
       for (const meet in res.data){
         let meeting = JSON.parse(res.data[meet])
         meetingList.push(meeting)
-        currently = currently || isNow(meeting)
+        if (isNow(meeting)){
+          currently = true
+          currentMeetingId = meeting.id
+        }
       };
       this.setState({meetings : meetingList.slice(0, -1)});
       this.setState({meetingCurrently : currently});
+      this.setState({currentMeetingId: currentMeetingId})
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = nextMeeting //setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
     this.endMeeting = setInterval(() => {
-      this.setState({meetingCurrently : this.meetingToEnd(this.state.meetings)})
-    }, 1000 * 6)
+      let boolean, id = this.meetingToEnd(this.state.meetings)
+      this.setState({meetingCurrently : boolean, currentMeetingId : id})
+    }, 1000 * 60)
   };
 
   componentWillUnmount(){
-    // clearInterval(this.startMeeting)
+    clearInterval(this.startMeeting)
     clearInterval(this.endMeeting)
   };
 
   meetingToEnd(meetingList){
     let currently = false
-    meetingList.map( meet => currently = currently || isNow(meet));
-    return(currently)
+    let currentMeetingId = NaN
+    meetingList.map( meet => {
+      if (isNow(meet)){
+        currently = true
+        currentMeetingId = meet.id
+      }
+    });
+    return(currently, currentMeetingId)
   };
 
   render(){
     let endTheMeeting
     if (this.state.meetingCurrently){
-      endTheMeeting = <button onClick={() => console.log("cliqué")}> Réunion terminée </button>
+      endTheMeeting = <button onClick={() => console.log("mettre fin à la réunion")}> Réunion terminée </button>
     } else {
       endTheMeeting = <></>
     }
@@ -156,7 +169,7 @@ class HomepageRoomCalendar extends React.Component{
       <div>
         <MyCalendar eventsList={this.state.meetings} height={height} width={width} 
           onSelectSlot={(slot) => tabletOnSelectSlot(
-            slot, this.props.formRoot, this.props.root, this.props.roomId
+            slot, this.props.formRoot, this.props.root, this.props.roomId, this.props.popupRoot
           )}
         />
         {endTheMeeting}

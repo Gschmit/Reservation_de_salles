@@ -41,8 +41,9 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
-const homepage = ReactDOM.createRoot(document.getElementById('tablet homepage'));
-const tabletForm = ReactDOM.createRoot(document.getElementById("tablet reservation page")); // no more displayed "alone"
+const homepage = ReactDOM.createRoot(document.getElementById('tablet_homepage'));
+const homepagePopup = ReactDOM.createRoot(document.getElementById('tablet_homepage_popup'));
+const tabletForm = ReactDOM.createRoot(document.getElementById("tablet_reservation_page")); // no more displayed "alone"
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
 const userInterface = ReactDOM.createRoot(document.getElementById("user interface"));
@@ -62,6 +63,7 @@ function areaToDisplay(intDisplay, shift){
   let next = (intDisplay + shift) % pages
   if (next === 0){
     homepage.render();
+    homepagePopup.render();
     tabletForm.render();
     userHomepage.render(
       <BookingRoomTool userDisplay= "homepage" userName="User name" user={userId} />
@@ -87,10 +89,14 @@ function areaToDisplay(intDisplay, shift){
       <BookingRoomTool userDisplay= "room calendar" user={userId} userName="User name" activeTab={roomId} />
     );
     homepage.render();
+    homepagePopup.render();
     tabletForm.render();
   } else {
     roomCalendar.render();
-    homepage.render(<HomepageScreen roomId={roomId} root={homepage} formRoot={tabletForm}/>);
+    homepage.render(
+      <HomepageScreen roomId={roomId} root={homepage} formRoot={tabletForm} popupRoot={homepagePopup} />
+    );
+    // homepagePopup.render(<h1> Juste du texte pour tester la mise en popup </h1>);
     userHomepage.render();
   }
   if (!(shift === 0)){

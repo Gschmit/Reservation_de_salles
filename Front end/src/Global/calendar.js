@@ -46,7 +46,6 @@ function meetingsToEventsForRooms(meetingList){
                 meetingId: element.id,
             });
         });
-    console.log("events creation :", events)
     return events
 }
 
