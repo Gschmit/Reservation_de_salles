@@ -58,7 +58,6 @@ class BookingRoomTool extends React.Component{
         .then(res => {
             let user = JSON.parse(res.data["user"]) 
             this.setState({user : user})
-            console.log(user, "création du BookingRoomTool")
         });
         axios.get(url + `user_next_meeting/${this.props.userId}`)
             .then(res => {

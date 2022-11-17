@@ -99,8 +99,7 @@ class TabletForm extends React.Component {
       )
       .then(res => {
         return res.data
-      })
-      this.handleSubmitResponseChange(response) // à quoi sert le state response mtn ? 
+      }) 
     if (!response.rejected){
       this.props.previousPage.root.render(this.props.previousPage.toRender)
       this.props.root.render(<></>)
@@ -175,7 +174,6 @@ class TabletForm extends React.Component {
           buttons= {this.props.buttons}
           previousPage= {this.props.previousPage}
           root= {this.props.root}
-          onSubmitCheckResponse= {this.handleSubmitResponseChange}
           />
         </form>
         <br/>
@@ -198,9 +196,6 @@ class UserForm extends React.Component{
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
       room: "room" in this.props ? this.props.room : NaN,
       roomList: [],
-      name: "",
-      meetings: {},
-      response: {rejected: true, error: null, warning: null}, // useless a priori
     };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
     // pour le user, ça va être compliqué ...
 
@@ -211,7 +206,6 @@ class UserForm extends React.Component{
     this.handleVideoConferenceChange = this.handleVideoConferenceChange.bind(this);
     this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
     this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
-    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this); // useless a priori
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -274,12 +268,6 @@ class UserForm extends React.Component{
     });
   };
 
-  handleSubmitResponseChange(newResponse){
-    this.setState({
-      response: newResponse
-    });
-  };// useless a priori
-
   async handleSubmit(event) {
     event.preventDefault();
       let present
@@ -297,7 +285,6 @@ class UserForm extends React.Component{
       .then(res => {
         return res.data
       })
-      this.handleSubmitResponseChange(response)
     if (!response.rejected){
       this.props.previousPage.root.render(this.props.previousPage.toRender)
       this.props.root.render(<></>)
@@ -362,7 +349,6 @@ class UserForm extends React.Component{
   };
 
   render(){
-    let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
     return(
       <div>
         <form onSubmit={this.handleSubmit} >
@@ -372,7 +358,7 @@ class UserForm extends React.Component{
           onChangeDuration= {this.handleDurationValueChange}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
           roomName= {this.state.room}
-          onChangeName= {changeName}
+          onChangeName= {this.handleRoomNameChange}
           videoConference= {this.state.videoConference}
           onChangeVideoConference= {this.handleVideoConferenceChange}
           titleMeeting= {this.state.titleMeeting}
@@ -386,7 +372,6 @@ class UserForm extends React.Component{
           buttons= {this.props.buttons}
           previousPage= {this.props.previousPage}
           root= {this.props.root}
-          onSubmitCheckResponse= {this.handleSubmitResponseChange}
           />
         </form>
         <br/>
@@ -398,16 +383,6 @@ class UserForm extends React.Component{
 };
 
 class ButtonArea extends React.Component{
-  constructor(props){
-    super(props);
-
-    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this);
-  }
-
-  handleSubmitResponseChange(response) {
-      this.props.onSubmitCheckResponse(response);
-  }
-
   render(){
     return(<div className='space'>
       <ActionButton name= "Valider" type= "submit" />
