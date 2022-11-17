@@ -79,9 +79,7 @@ function areaToDisplay(intDisplay, shift){
     roomCalendar.render();
   } else if (next === 3) {
     userCalendar.render();
-    roomCalendar.render(
-      <BookingRoomTool userDisplay= "room calendar" userId={userId} activeTab={roomId} />
-    );
+    roomCalendar.render( <BookingRoomTool userDisplay= "room calendar" userId={userId} activeTab={roomId} /> );
     homepage.render();
     homepagePopup.render();
     tabletForm.render();
