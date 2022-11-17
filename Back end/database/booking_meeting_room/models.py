@@ -10,8 +10,7 @@ def json_default(value):
     To serialize datetime.datetime objects et all objects define here
     """
     if isinstance(value, datetime.datetime):
-        return dict(year=value.year, month=value.month, day=value.day, hour=value.hour,
-                    minute=value.minute)
+        return value.strftime("%Y-%m-%dT%H:%M:00.000Z")
     # elif isinstance(value, Room or User or Meeting):
     #     return value.toJSON()
     else:

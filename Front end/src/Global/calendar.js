@@ -36,11 +36,7 @@ require(`moment/locale/${languageFormated(window.navigator.language)}`)
 function meetingsToEventsForRooms(meetingList){
     let events = []
         meetingList.forEach(element => {
-            let startDate = new Date(
-                element.start_timestamps.year, element.start_timestamps.month - 1,
-                element.start_timestamps.day, element.start_timestamps.hour,
-                element.start_timestamps.minute
-                );
+            let startDate = new Date(element.start_timestamps);
             events.push({start : startDate, end : new Date(startDate.getTime() + element.duration * 30 * 60 * 1000),
                 title: element.username,
                 meetingId: element.id,

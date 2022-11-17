@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import {HomepageScreen} from './Tablet_display/Homepage';
-import {BookingRoomTool} from './User_interface/user_interface';
+import BookingRoomTool from './User_interface/user_interface';
 import allMessages from './Displayed_messages';
 // import image from "./photo.PNG";
 import reportWebVitals from './reportWebVitals';

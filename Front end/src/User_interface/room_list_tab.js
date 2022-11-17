@@ -50,5 +50,4 @@ class RoomFromTab extends React.Component {
     }
 };
 
-export {TabRoomList}
-// export default TabRoomList; // would be better
+export default TabRoomList;

@@ -142,5 +142,4 @@ class RoomCalendar extends React.Component{
     }
 };
 
-export {TabUser}
-// export default TabUser; // would be better
+export default TabUser;

@@ -33,7 +33,9 @@ const width = window.innerWidth * 90/100
 
 function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
   let start = new Date(slot.start)
+  console.log("tabletOnSelectSlot, start", start)
   let end = new Date(slot.end)
+  console.log("tabletOnSelectSlot, end",end)
   if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
     let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
     nextRoot.render(
@@ -48,17 +50,20 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
   };
 };
 
-function startOfTheMeeting(nextMeeting){
+function startOfTheMeeting(nextMeeting, popupRoot){
   if (nextMeeting){
     let now = new Date()
+    console.log(nextMeeting.start_timestamps, new Date(nextMeeting.start_timestamps)) // on a un décalage d'une heure !
     let start = new Date(
       nextMeeting.start_timestamps.year, nextMeeting.start_timestamps.month - 1,
       nextMeeting.start_timestamps.day, nextMeeting.start_timestamps.hour,
       nextMeeting.start_timestamps.minute
     );
+    console.log("startOfTheMeeting, start",start)
     console.log(start, now, start < now)
     if (start < now){
-      alert("valide ?")
+      console.log("start < now est ok")
+      popupRoot.render(<h1> Are you there ? </h1>)
     }
   };
 };//*/
@@ -67,8 +72,7 @@ function isNow(meeting){
   if (meeting != null){
     let startTimestamps = meeting.start_timestamps
     let now = new Date()
-    let start = new Date(startTimestamps.year, startTimestamps.month - 1, startTimestamps.day, 
-      startTimestamps.hour, startTimestamps.minute)
+    let start = new Date(startTimestamps)
     let end = new Date(start.getTime() + meeting.duration * 30 * 60 * 1000)
     return(start < now && now < end)
   } else {
@@ -133,7 +137,7 @@ class HomepageRoomCalendar extends React.Component{
       this.setState({currentMeetingId: currentMeetingId})
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting) // toutes les 60 secondes (toutes 
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
     this.endMeeting = setInterval(() => {
       let boolean, id = this.meetingToEnd(this.state.meetings)

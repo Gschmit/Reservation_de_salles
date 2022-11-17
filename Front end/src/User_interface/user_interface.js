@@ -1,9 +1,9 @@
 import React from 'react';
 import axios from 'axios';
 import {url} from '../Global/Reservation_form';
-import {TabRoomSelected} from './room_asset_tab';
-import {TabRoomList} from './room_list_tab';
-import {TabUser} from './user_tab'
+import TabRoomSelected from './room_asset_tab';
+import TabRoomList from './room_list_tab';
+import TabUser from './user_tab'
 import './user_interface.css';
 
 function assetsList(aRoom){
@@ -132,5 +132,4 @@ class BookingRoomTool extends React.Component{
     };
 };
 
-export {BookingRoomTool}; 
-// export default BookingRoomTool; // would be better
+export default BookingRoomTool;
