@@ -37,6 +37,8 @@ function meetingsToEventsForRooms(meetingList){
     let events = []
         meetingList.forEach(element => {
             let startDate = new Date(element.start_timestamps);
+            // To see the time difference
+            // console.log("meetingsToEventsForRooms, ligne 40, calendar.js", startDate, element.start_timestamps)
             events.push({start : startDate, end : new Date(startDate.getTime() + element.duration * 30 * 60 * 1000),
                 title: element.username,
                 meetingId: element.id,

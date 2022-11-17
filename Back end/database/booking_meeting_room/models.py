@@ -1,6 +1,7 @@
 """ Models """
 
 from django.db import models
+from django.utils.timezone import make_aware
 from json import dumps
 import datetime
 
@@ -10,7 +11,7 @@ def json_default(value):
     To serialize datetime.datetime objects et all objects define here
     """
     if isinstance(value, datetime.datetime):
-        return value.strftime("%Y-%m-%dT%H:%M:00.000Z")
+        return value.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     # elif isinstance(value, Room or User or Meeting):
     #     return value.toJSON()
     else:
@@ -137,10 +138,12 @@ class Meeting(models.Model):
         To know from when to when is the meeting
         """
         try:
-            start = datetime.datetime.strptime(str(self.start_timestamps), '%Y-%m-%dT%H:%M:%S.%fZ')
+            start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
+                                                          '%Y-%m-%dT%H:%M:%S.%fZ'))
         except ValueError:
             # print("value error", self.title)
-            start = datetime.datetime.strptime(str(self.start_timestamps), '%Y-%m-%d %H:%M:%S+%f:00')
+            start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
+                                                          '%Y-%m-%d %H:%M:%S+%f:00'))
         duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
         end = start + duration
         return start, end

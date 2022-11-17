@@ -66,27 +66,21 @@ function areaToDisplay(intDisplay, shift){
     homepagePopup.render();
     tabletForm.render();
     userHomepage.render(
-      <BookingRoomTool userDisplay= "homepage" userName="User name" user={userId} />
+      <BookingRoomTool userDisplay= "homepage" userId={userId} />
     );
     userInterface.render();
   } else if (next === 1) {
     userHomepage.render();
-    userInterface.render(
-      <BookingRoomTool criteria= {criteriaUser} userDisplay= "form" user={userId}
-        name={allMessages.userInterface["en"]} userName="User name"
-      />
-    );
+    userInterface.render( <BookingRoomTool criteria= {criteriaUser} userDisplay= "form" userId={userId} /> );
     userCalendar.render();
   } else if (next === 2) {
     userInterface.render();
-    userCalendar.render(
-      <BookingRoomTool userDisplay= "user calendar" userName="User name" user={userId} />
-    );
+    userCalendar.render( <BookingRoomTool userDisplay= "user calendar" userId={userId} /> );
     roomCalendar.render();
   } else if (next === 3) {
     userCalendar.render();
     roomCalendar.render(
-      <BookingRoomTool userDisplay= "room calendar" user={userId} userName="User name" activeTab={roomId} />
+      <BookingRoomTool userDisplay= "room calendar" userId={userId} activeTab={roomId} />
     );
     homepage.render();
     homepagePopup.render();

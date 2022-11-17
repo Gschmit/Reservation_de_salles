@@ -4,7 +4,6 @@ import allMessages from '../Displayed_messages';
 import React from 'react';
 import axios from 'axios';
 import './global.css';
-// import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 
 const url = "http://127.0.0.1:8000/booking_meeting_room/"
@@ -17,13 +16,7 @@ function setToTwoNumber(number){
   }
 }
 
-/*const Modal = () => (
-  <Popup trigger={<button className="button"> Open Modal </button>} modal>
-    <span> Modal content </span>
-  </Popup>
-);//*/
-
-class Form extends React.Component {
+class TabletForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -31,24 +24,15 @@ class Form extends React.Component {
       duration: "duration" in this.props ? this.props.duration : 2, /* in half hour */
       nameOfWhoSReserving: "user" in this.props ? this.props.user : "",
       titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
-      videoConference: "videoConference" in this.props ? this.props.videoConference : false,
       numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
-      room: "room" in this.props ? this.props.room : NaN,
-      roomList: [],
-      name: "",
-      meetings: {},
-      response: {rejected: true, error: null, warning: null},
-    };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
-    // pour le user, ça va être compliqué ...
+    };    // pour le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
+    // ça va être compliqué ... 
 
     this.handleDateValueChange = this.handleDateValueChange.bind(this);
     this.handleDurationValueChange = this.handleDurationValueChange.bind(this);
     this.handleNameReservingTextChange = this.handleNameReservingTextChange.bind(this);
     this.handleTitleMeetingTextChange = this.handleTitleMeetingTextChange.bind(this);
-    this.handleVideoConferenceChange = this.handleVideoConferenceChange.bind(this);
     this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
-    this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
-    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
@@ -79,7 +63,185 @@ class Form extends React.Component {
         duration: parseInt((endDate.getTime() - this.state.date.getTime()) / 1000 / 60 / 30)
       });
     }
+  };
 
+  handleNameReservingTextChange(newPerson){
+    this.setState({
+      nameOfWhoSReserving: newPerson
+    });
+  };
+
+  handleTitleMeetingTextChange(newTitleMeeting){
+    this.setState({
+      titleMeeting: newTitleMeeting
+    });
+  };
+
+  handlePresentPersonValueChange(newPresentPersonNumber){
+    this.setState({
+      numberOfPresentPerson: newPresentPersonNumber
+    });
+  };
+
+  async handleSubmit(event) {
+    event.preventDefault();
+      let present
+      if (!this.state.numberOfPresentPerson === ""){
+        present = this.state.numberOfPresentPerson
+      }
+      let response = await axios.put(
+        url + "meeting",
+        {
+          room: this.props.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
+          duration: this.state.duration, title: this.state.titleMeeting, 
+          physically_present_person: present
+        }
+      )
+      .then(res => {
+        return res.data
+      })
+      this.handleSubmitResponseChange(response) // à quoi sert le state response mtn ? 
+    if (!response.rejected){
+      this.props.previousPage.root.render(this.props.previousPage.toRender)
+      this.props.root.render(<></>)
+      console.log("Warning :", response.warning)
+    } else if (response.error === "No user fill in") {
+      // this if is never executed (in the room view) (because of the form validation?)
+      console.log("Error :", response.error,)
+      console.log("Warning :", response.warning)
+      alert(`${response.error}, ${response.warning}`)
+      event.preventDefault() // this statement seems to have no effect then
+    } else if (response.error === "Two meetings overlap") {
+      console.log("Error :", response.error)
+      console.log("Warning :", response.warning)
+      let start = new Date(response.warning[0])
+      let day = `${setToTwoNumber(start.getDate())}/${setToTwoNumber(start.getMonth() + 1)}/${start.getFullYear()}`
+      start = `${setToTwoNumber(start.getHours())}:${setToTwoNumber(start.getMinutes())}`
+      let end = new Date(response.warning[1])
+      end = `${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`
+      alert(`Il y a déjà une réunion prévue de ${start} à ${end} le ${day}`)
+    } else {
+      console.log("Error :", response.error)
+      console.log("Warning :", response.warning)
+      event.preventDefault();
+    }
+    console.log(response.rejected);
+  };
+
+  componentDidMount(){
+    // Il faudrait limiter la durée de la réunion ainsi que les horaires disponibles.
+    /* axios.get(url + `{partie à voir}/${roomId à récupérer qqpart}/`)
+    .then(res => {
+      // set here the max value of duration depending on the start time value.
+      //                                                !!!!!!!!!!!!!!!!!!!!
+      // and set first and last start time possible. => !!! TO REALLY DO !!!
+      //                                                !!!!!!!!!!!!!!!!!!!!
+    }); */
+    axios.get(url + `room/${this.props.room}/`)
+    .then(res => {
+      this.setState({name : JSON.parse(res.data["room"]).name})
+    })
+
+    /* axios.get(url + "meeting_list")
+    .then(res => {
+      let meet = {}
+      for (const meeting in res.data) {
+        meet[meeting] = JSON.parse(res.data[meeting])
+      };
+      console.log("meet :", meet)
+      this.setState({meetings : meet})
+    });*/ // why this get call ? le state meetings n'existe plus
+  };
+
+  render(){
+    return(
+      <div>
+        <form onSubmit={this.handleSubmit} >
+        <Informations date= {this.state.date}
+          onChangeDate= {this.handleDateValueChange}
+          duration= {this.state.duration}
+          onChangeDuration= {this.handleDurationValueChange}
+          nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
+          roomName= {this.props.room}
+          onChangeName= {this.handleNameReservingTextChange}
+          titleMeeting= {this.state.titleMeeting}
+          onChangeTitle= {this.handleTitleMeetingTextChange}
+          numberOfPresentPerson= {this.state.numberOfPresentPerson}
+          onChangePresent= {this.handlePresentPersonValueChange}
+          criteria= {this.props.criteria} // could disapear ? => or may be changed for formKind = "room"
+          formKind= "room"
+          /> <br/>
+          <ButtonArea
+          buttons= {this.props.buttons}
+          previousPage= {this.props.previousPage}
+          root= {this.props.root}
+          onSubmitCheckResponse= {this.handleSubmitResponseChange}
+          />
+        </form>
+        <br/>
+        <p className='mandatory center'> * champs obligatoire </p>
+      </div>
+    ); // à quoi sert la props buttons ?? (elle remonte jsuqu'au composant "BookingRoomTool", mais n'est pas 
+    // renseigné dans le fichier "index") (pas utiliser dans le composant "ButtonArea")
+  };
+};
+
+class UserForm extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      date: "date" in this.props ? this.props.date : new Date(), /* Give the date and the start time of the meeting */
+      duration: "duration" in this.props ? this.props.duration : 2, /* in half hour */
+      nameOfWhoSReserving: "user" in this.props ? this.props.user : "",
+      titleMeeting: "titleMeeting" in this.props ? this.props.titleMeeting : "",
+      videoConference: "videoConference" in this.props ? this.props.videoConference : false,
+      numberOfPresentPerson: "numberOfPresentPerson" in this.props ? this.props.numberOfPresentPerson : "",
+      room: "room" in this.props ? this.props.room : NaN,
+      roomList: [],
+      name: "",
+      meetings: {},
+      response: {rejected: true, error: null, warning: null}, // useless a priori
+    };    // pour la room et le user, trouver un moyen de stocker l'id et/ou l'objet plutôt que le nom
+    // pour le user, ça va être compliqué ...
+
+    this.handleDateValueChange = this.handleDateValueChange.bind(this);
+    this.handleDurationValueChange = this.handleDurationValueChange.bind(this);
+    this.handleNameReservingTextChange = this.handleNameReservingTextChange.bind(this);
+    this.handleTitleMeetingTextChange = this.handleTitleMeetingTextChange.bind(this);
+    this.handleVideoConferenceChange = this.handleVideoConferenceChange.bind(this);
+    this.handlePresentPersonValueChange = this.handlePresentPersonValueChange.bind(this);
+    this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
+    this.handleSubmitResponseChange = this.handleSubmitResponseChange.bind(this); // useless a priori
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleDateValueChange(newDate, typeChanged){
+    let oldDate = new Date(this.state.date)
+    if (typeChanged === "date"){
+      oldDate.setFullYear(newDate.slice(0,4), newDate.slice(5,7) - 1, newDate.slice(8,10))
+
+    } else {
+      oldDate.setHours(newDate.slice(0,2))
+      oldDate.setMinutes(newDate.slice(3,5))
+    }
+    this.setState({
+      date: oldDate
+    });
+  };
+
+  handleDurationValueChange(newDuration, typeChanged){
+    if (typeChanged === "duration"){
+      this.setState({
+        duration: 2 * newDuration
+      });
+    } else {
+      let endDate = new Date(this.state.date)
+      endDate.setHours(newDuration.slice(0,2))
+      endDate.setMinutes(newDuration.slice(3,5))
+      this.setState({
+        duration: parseInt((endDate.getTime() - this.state.date.getTime()) / 1000 / 60 / 30)
+      });
+    }
   };
 
   handleNameReservingTextChange(newPerson){
@@ -116,11 +278,10 @@ class Form extends React.Component {
     this.setState({
       response: newResponse
     });
-  };
+  };// useless a priori
 
   async handleSubmit(event) {
     event.preventDefault();
-    let dateUTC = new Date(this.state.date.getTime() - this.state.date.getTimezoneOffset() * 60 * 1000)
       let present
       if (!this.state.numberOfPresentPerson === ""){
         present = this.state.numberOfPresentPerson
@@ -128,7 +289,7 @@ class Form extends React.Component {
       let response = await axios.put(
         url + "meeting",
         {
-          room: this.state.room, user: this.state.nameOfWhoSReserving, date: dateUTC, 
+          room: this.state.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
           duration: this.state.duration, title: this.state.titleMeeting, 
           physically_present_person: present
         }
@@ -198,11 +359,11 @@ class Form extends React.Component {
         this.setState({meetings : meet})
       });*/
     };
-
   };
+
   render(){
     let changeName = this.props.criteria.includes("room id") ? this.handleRoomNameChange : this.handleNameReservingTextChange
-    return( //<h1> Reservation form of {this.state.name} </h1> <br/>
+    return(
       <div>
         <form onSubmit={this.handleSubmit} >
           <Informations date= {this.state.date}
@@ -218,14 +379,14 @@ class Form extends React.Component {
           onChangeTitle= {this.handleTitleMeetingTextChange}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
           onChangePresent= {this.handlePresentPersonValueChange}
-          criteria= {this.props.criteria}
+          criteria= {this.props.criteria} // could disapear ? => or may be changed in criteria = "user"
           roomList= {this.state.roomList}
           /> <br/>
           <ButtonArea
-          buttons= {this.props.buttons} // ??
-          previousPage= {this.props.previousPage} // oui
-          root= {this.props.root} // oui
-          onSubmitCheckResponse= {this.handleSubmitResponseChange} // oui
+          buttons= {this.props.buttons}
+          previousPage= {this.props.previousPage}
+          root= {this.props.root}
+          onSubmitCheckResponse= {this.handleSubmitResponseChange}
           />
         </form>
         <br/>
@@ -273,53 +434,57 @@ class Informations extends React.Component {
     let end = new Date(this.props.date.getTime() + this.props.duration * 30 * 60 * 1000)
     let dateData, startTimeData, endTimeData, durationData, roomNameData, reservingNameData, 
       videoConferenceData, titleMeetingData, presentPersonNumberData
-    if (this.props.criteria.includes("date")){
-      dateData = <CriteriaDate name= {`${allMessages.date['fr']}`}
-        data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
-        type= "date"
-        onChange= {this.props.onChangeDate}
-        change="date"
-        required={true}
-        />
-    } else {
-      dateData = <></>
-    }
-    if (this.props.criteria.includes("start time")){
-      startTimeData = <CriteriaTime name= "début"
-        data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
-        type= "time"
-        onChange= {this.props.onChangeDate}
-        change="time"
-        required={true}
-        step={300} // 5 minutes
-        />
-    } else {
-      startTimeData = <></>
-    }
-    if (this.props.criteria.includes("end time")){
-      endTimeData = <CriteriaTime name= "fin"
-        data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
-        type= "time"
-        onChange= {this.props.onChangeDuration}
-        change="duration"
-        required={true}
-        step={1800} // 30 minutes
-        />
-    } else {
-      endTimeData = <></>
-    }
-    if (this.props.criteria.includes("duration")){
-      durationData = <CriteriaDuration name= "durée (en heures)"
-        data= {this.props.duration / 2}
-        type= "duration"
-        onChange= {this.props.onChangeDuration}
-        change="duration"
-        required={true}
-        />
-    } else {
-      durationData = <></>
-    }
+    dateData = <CriteriaDate
+      name= {`${allMessages.date['fr']}`}
+      data= {`${this.props.date.getFullYear()}-${setToTwoNumber(this.props.date.getMonth() + 1)}-${setToTwoNumber(this.props.date.getDate())}`}
+      type= "date"
+      onChange= {this.props.onChangeDate}
+      change="date"
+      required={true}
+      />
+    startTimeData = <CriteriaTime
+      name= "début"
+      data= {`${setToTwoNumber(this.props.date.getHours())}:${setToTwoNumber(this.props.date.getMinutes())}`}
+      type= "time"
+      onChange= {this.props.onChangeDate}
+      change="time"
+      required={true}
+      step={300} // 5 minutes
+      />
+    endTimeData = <CriteriaTime
+      name= "fin"
+      data= {`${setToTwoNumber(end.getHours())}:${setToTwoNumber(end.getMinutes())}`}
+      type= "time"
+      onChange= {this.props.onChangeDuration}
+      change="duration"
+      required={true}
+      step={1800} // 30 minutes
+      />
+    durationData = <CriteriaDuration
+      name= "durée (en heures)"
+      data= {this.props.duration / 2}
+      type= "duration"
+      onChange= {this.props.onChangeDuration}
+      change="duration"
+      required={true}
+      />
+    titleMeetingData = <CriteriaText
+      name= "intitulé de la réunion"
+      data= {this.props.titleMeeting}
+      type= "text"
+      onChange= {this.props.onChangeTitle}
+      change="normal"
+      required={false}
+      />
+    presentPersonNumberData = <CriteriaNumber
+      name= "nombre de personnes physiquement présentes"
+      data= {this.props.numberOfPresentPerson}
+      type= "number"
+      onChange= {this.props.onChangePresent}
+      required={false}
+      />
     if (this.props.criteria.includes("room id")){
+      console.log("497, ai je le droit de m'afficher :", this.props.formKind !== "room")
       roomNameData = <CriteriaSelect name= "salle"
         data= {this.props.roomName}
         type= "select"
@@ -328,19 +493,11 @@ class Informations extends React.Component {
         required={true}
         />
     } else {
+      console.log("506, ai je le droit de m'afficher :", this.props.formKind === "room")
       roomNameData = <></>
     }
-    if (this.props.criteria.includes("name of who is reserving")){
-      reservingNameData = <CriteriaText name= "Personne qui réserve" // better name ?
-        data= {this.props.nameOfWhoSReserving}
-        type= "text"
-        onChange= {this.props.onChangeName}
-        required={true}
-        />
-    } else {
-      reservingNameData = <></>
-    }
     if (this.props.criteria.includes("video conference")){
+      console.log("510, ai je le droit de m'afficher :", this.props.formKind !== "room")
       videoConferenceData = <CriteriaRadio name= "do you need video conference ?"
         data= {this.props.videoConference}
         type= "radio"
@@ -348,29 +505,31 @@ class Informations extends React.Component {
         required={true}
         />
     } else {
+      console.log("518, ai je le droit de m'afficher :", this.props.formKind === "room")
       videoConferenceData = <></>
     }
-    if (this.props.criteria.includes("meeting title")){
-      titleMeetingData = <CriteriaText name= "intitulé de la réunion"
-        data= {this.props.titleMeeting}
+    if (this.props.formKind === "room"){
+      reservingNameData = <CriteriaText name= "Personne qui réserve" // better name ?
+        data= {this.props.nameOfWhoSReserving}
         type= "text"
-        onChange= {this.props.onChangeTitle}
-        change="normal"
-        required={false}
+        onChange= {this.props.onChangeName}
+        required={true}
         />
-    } else {
-      titleMeetingData = <></>
+    } else { // if (this.props.formKind === "user") // maybe something else, if we need several 'formKind' for users
+      reservingNameData = <></>
     }
-    if (this.props.criteria.includes("present person")){
-      presentPersonNumberData = <CriteriaNumber name= "nombre de personnes physiquement présentes"
-      data= {this.props.numberOfPresentPerson}
-      type= "number"
-      onChange= {this.props.onChangePresent}
-      required={false}
-      /> 
-    } else {
-      presentPersonNumberData = <></>
-    }
+    /*make a sort :
+      - things always displayed :
+        * present person
+        * meeting title	
+        * end time 
+        * start time 
+        * date
+        * duration
+      - things displayed only for room :
+        * name of who is reserving
+      - things displayed only for user (maybe several 'formKind' for users)
+    */
     return(
       <div className='center'>
         {dateData}
@@ -382,7 +541,6 @@ class Informations extends React.Component {
         {roomNameData} {reservingNameData}
         <br/>
         {videoConferenceData}
-        {this.props.criteria.includes("video conference")?<br/>:""}
         {titleMeetingData}
         <br/>
         {presentPersonNumberData}
@@ -550,7 +708,7 @@ class CriteriaRadio extends React.Component{
   render(){
     let mandatory = this.props.required?<span className="mandatory">*</span> : <></>
     return(
-      <span>
+      <div>
         <span>{this.props.name}{mandatory} : </span>
         <input
         type= "radio"
@@ -566,7 +724,7 @@ class CriteriaRadio extends React.Component{
         onChange= {this.handleDataChange}
         required={this.props.required}
         />No
-      </span>
+      </div>
     )
   }
 }
@@ -601,4 +759,4 @@ class CriteriaNumber extends React.Component{
   }
 }
 
-export {Form, url};
+export {TabletForm, UserForm, url};

@@ -3,7 +3,7 @@
 import React from 'react';
 import {MyCalendar} from '../Global/calendar';
 import axios from 'axios';
-import {Form, url} from '../Global/Reservation_form';
+import {TabletForm, url} from '../Global/Reservation_form';
 
 const criteriaTablet = ["date", "start time", "end time", "duration", "name of who is reserving",
   "meeting title", "present person"];
@@ -33,13 +33,11 @@ const width = window.innerWidth * 90/100
 
 function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
   let start = new Date(slot.start)
-  console.log("tabletOnSelectSlot, start", start)
   let end = new Date(slot.end)
-  console.log("tabletOnSelectSlot, end",end)
   if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
     let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
     nextRoot.render(
-      <Form criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
+      <TabletForm criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
         previousPage={{
           root: currentRoot, 
           toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot} popupRoot={popupRoot}/>

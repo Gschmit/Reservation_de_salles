@@ -18,7 +18,6 @@ function assetsList(aRoom){
     return out[0]       // the second element is just to make the code working, without creating a useless variable
     };
 
-
 class BookingRoomTool extends React.Component{
     constructor(props){
         super(props)
@@ -26,7 +25,7 @@ class BookingRoomTool extends React.Component{
             activeRoomInList: "activeTab" in this.props ? this.props.activeTab : NaN,
             userDisplay: "userDisplay" in this.props ? this.props.userDisplay : null,
             roomList: {},
-            user: 0,
+            user: 0, // it bugs with 'null' as initial value, but user is a User python object, not an id
             nextMeeting: "",
         }
         this.handleChangeActiveRoomInList = this.handleChangeActiveRoomInList.bind(this);
@@ -55,12 +54,13 @@ class BookingRoomTool extends React.Component{
             };
             this.setState({roomList : rooms})
         });  // la liste des id des salles, peut être triée d'une certaine manière ?
-        axios.get(url + `user/${this.props.user}/`)
+        axios.get(url + `user/${this.props.userId}/`)
         .then(res => {
             let user = JSON.parse(res.data["user"]) 
             this.setState({user : user})
+            console.log(user, "création du BookingRoomTool")
         });
-        axios.get(url + `user_next_meeting/${this.props.user}`)
+        axios.get(url + `user_next_meeting/${this.props.userId}`)
             .then(res => {
                 this.setState({nextMeeting : res.data});
             }); 
@@ -114,14 +114,12 @@ class BookingRoomTool extends React.Component{
                             />
                         </td>
                         {roomSelected}
-                        <td>
+                        <td> 
                             <TabUser typeDisplay={this.state.userDisplay}
                                 criteria={this.props.criteria} 
-                                name={this.props.name} 
                                 buttons={this.props.buttons}
                                 nextMeeting={this.state.nextMeeting}
                                 user={this.state.user}
-                                userName={this.props.userName}
                                 room={nameRoomSelected}
                             />
                         </td>

@@ -14,7 +14,7 @@ code {
 
 #tablet_homepage{
   position: absolute;
-  z-index:0;
+  z-index:-1;
 }
 #tablet_homepage_popup{
   position: relative;

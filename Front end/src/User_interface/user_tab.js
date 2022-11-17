@@ -1,6 +1,6 @@
 import React from 'react';
 import axios from 'axios';
-import {Form, url} from '../Global/Reservation_form';
+import {UserForm, url} from '../Global/Reservation_form';
 import {MyCalendar, meetingsToEventsForRooms} from '../Global/calendar';
 
 
@@ -29,13 +29,13 @@ class TabUser extends React.Component{
     render(){
         let tabDisplay
         if (this.props.typeDisplay === "form"){
-            tabDisplay = <Form criteria={this.props.criteria} name={this.props.name} buttons={this.props.buttons}/>
+            tabDisplay = <UserForm criteria={this.props.criteria} name={this.props.user.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
             tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting} user={this.props.user}/>
         } else if (this.props.typeDisplay === "user calendar"){
-            tabDisplay = <UserCalendar userName={this.props.userName}/>
+            tabDisplay = <UserCalendar user={this.props.user}/>
         } else if (this.props.typeDisplay === "room calendar"){
-            tabDisplay = <RoomCalendar roomName={this.props.room}/>
+            tabDisplay = <RoomCalendar room={this.props.room}/>
         } else {
             tabDisplay = <p> Aucun affichage particulier n'a été spécifié </p>
         }
