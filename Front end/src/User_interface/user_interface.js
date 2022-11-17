@@ -54,7 +54,7 @@ class BookingRoomTool extends React.Component{
                 rooms[roomObject.id] = roomObject
             };
             this.setState({roomList : rooms})
-        });  // la liste des salles, peut être triée d'une certaine manière ?
+        });  // la liste des id des salles, peut être triée d'une certaine manière ?
         axios.get(url + `user/${this.props.user}/`)
         .then(res => {
             let user = JSON.parse(res.data["user"]) 
