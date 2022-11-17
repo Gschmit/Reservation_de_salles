@@ -102,9 +102,9 @@ def create_a_new_meeting(room: Room, user: User, start_timestamps: datetime.date
                                   physically_present_person=physically_present_person,)
 
 
-def modify_a_meeting(meeting: Meeting, room: Room = None, user: User = None,
-                     start_timestamps: datetime.datetime = None, title: str = None, duration: int = None,
-                     physically_present_person: int = None, other_persons: str = None,
+def modify_a_meeting(meeting: Meeting, room: Room = None, user: User = None, duration: int = None,
+                     start_timestamps: datetime.datetime = None, finished: bool = None,
+                     physically_present_person: int = None, other_persons: str = None, title: str = None,
                      remove_physically_present_person: bool = None, remove_other_persons: bool = None
                      ) -> None:
     """
@@ -112,6 +112,7 @@ def modify_a_meeting(meeting: Meeting, room: Room = None, user: User = None,
     @param room: Room (optional)
     @param user: User (optional)
     @param start_timestamps: datetime.datetime (optional)
+    @param finished: bool (optional)
     @param title: str (optional)
     @param duration: int (optional)
     @param physically_present_person: int (optional)
@@ -124,7 +125,7 @@ def modify_a_meeting(meeting: Meeting, room: Room = None, user: User = None,
     if remove_physically_present_person is None:
         remove_physically_present_person = False
     meeting.modify(room, user, start_timestamps, title, duration, physically_present_person,
-                   other_persons)
+                   other_persons, finished)
     meeting.remove_attribute(physically_present_person=remove_physically_present_person,
                              other_persons=remove_other_persons)
 

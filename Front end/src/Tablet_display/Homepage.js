@@ -130,8 +130,8 @@ class HomepageRoomCalendar extends React.Component{
     this.startMeeting = nextMeeting //setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
     this.endMeeting = setInterval(() => {
-      this.setState({meetingCurrently : this.endMeetingButton(this.state.meetings)})
-    }, 1000 * 60)
+      this.setState({meetingCurrently : this.meetingToEnd(this.state.meetings)})
+    }, 1000 * 6)
   };
 
   componentWillUnmount(){
@@ -139,21 +139,28 @@ class HomepageRoomCalendar extends React.Component{
     clearInterval(this.endMeeting)
   };
 
-  endMeetingButton(meetingList){
+  meetingToEnd(meetingList){
     let currently = false
-    console.log(meetingList)
     meetingList.map( meet => currently = currently || isNow(meet));
-    console.log(this.state.meetings)
     return(currently)
   };
 
   render(){
+    let endTheMeeting
+    if (this.state.meetingCurrently){
+      endTheMeeting = <button onClick={() => console.log("cliqué")}> Réunion terminée </button>
+    } else {
+      endTheMeeting = <></>
+    }
     return( // height et width à régler en fonction des dimensions de l'écran d'affichage
+      <div>
         <MyCalendar eventsList={this.state.meetings} height={height} width={width} 
           onSelectSlot={(slot) => tabletOnSelectSlot(
             slot, this.props.formRoot, this.props.root, this.props.roomId
           )}
         />
+        {endTheMeeting}
+      </div>
     )
   };
 };

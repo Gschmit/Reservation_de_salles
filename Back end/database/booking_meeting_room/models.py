@@ -87,12 +87,13 @@ class Meeting(models.Model):
     title = models.CharField(max_length=200)
     physically_present_person = models.IntegerField(blank=True, null=True)             # optional
     other_persons = models.CharField(max_length=300, blank=True, null=True)            # optional
+    finished = False
 
     def __str__(self):
         return f"{self.title} in {self.room}, by {self.user}"
 
     def modify(self, room=None, user=None, start_timestamps=None, title=None, duration=None,
-               physically_present_person=None, other_persons=None):
+               physically_present_person=None, other_persons=None, finished=None):
         """
         Allow to change easily as many attributes as needed
         """
@@ -114,6 +115,8 @@ class Meeting(models.Model):
                 self.__setattr__("physically_present_person", physically_present_person)
             if other_persons is not None:
                 self.__setattr__("other_persons", other_persons)
+            if finished is not None:
+                self.__setattr__("finished", finished)
             self.save()
 
     def delete_meeting(self):

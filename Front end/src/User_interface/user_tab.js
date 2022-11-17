@@ -1,7 +1,7 @@
 import React from 'react';
 import axios from 'axios';
 import {Form, url} from '../Global/Reservation_form';
-import {MyCalendar, meetingsToEvents} from '../Global/calendar';
+import {MyCalendar, meetingsToEventsForRooms} from '../Global/calendar';
 
 
 function funcTest(){
@@ -111,7 +111,7 @@ class UserCalendar extends React.Component{
       };
     
     render(){
-        let events = meetingsToEvents(this.state.meetings)
+        let events = meetingsToEventsForRooms(this.state.meetings)
         return(
             <MyCalendar eventsList={events} height={400} width={500}/>
         )
@@ -135,7 +135,7 @@ class RoomCalendar extends React.Component{
       };
     
     render(){
-        let events = meetingsToEvents(this.state.meetings)
+        let events = meetingsToEventsForRooms(this.state.meetings)
         return(
             <MyCalendar eventsList={events} height={400} width={500}/>
         )

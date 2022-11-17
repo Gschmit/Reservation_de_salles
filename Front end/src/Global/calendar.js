@@ -42,9 +42,11 @@ function meetingsToEventsForRooms(meetingList){
                 element.start_timestamps.minute
                 );
             events.push({start : startDate, end : new Date(startDate.getTime() + element.duration * 30 * 60 * 1000),
-                title: element.username
+                title: element.username,
+                meetingId: element.id,
             });
         });
+    console.log("events creation :", events)
     return events
 }
 
@@ -85,4 +87,4 @@ class MyCalendar extends React.Component{
     }
 };
 
-export {MyCalendar, meetingsToEventsForRooms as meetingsToEvents};
+export {MyCalendar, meetingsToEventsForRooms};
