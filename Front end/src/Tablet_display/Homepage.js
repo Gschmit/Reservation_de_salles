@@ -44,7 +44,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
         }}
       />
     )
-    currentRoot.render(<></>) //*/
+    currentRoot.render(<></>)
   };
 };
 
@@ -63,17 +63,30 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId){
   };
 };*/
 
+function isNow(meeting){
+  if (meeting != null){
+    let startTimestamps = meeting.start_timestamps
+    let now = new Date()
+    let start = new Date(startTimestamps.year, startTimestamps.month - 1, startTimestamps.day, 
+      startTimestamps.hour, startTimestamps.minute)
+    let end = new Date(start.getTime() + meeting.duration * 30 * 60 * 1000)
+    return(start < now && now < end)
+  } else {
+    return(false)
+  }
+}
+
 class HomepageScreen extends React.Component{
   state = {
     room : {capacity:0, name:""}
-  }
+  };
 
   componentDidMount(){
     axios.get(url + `room/${this.props.roomId}/`)
     .then(res => {
       this.setState({room : JSON.parse(res.data.room)})
     });
-  }
+  };
 
   render(){
     let name = `${this.state.room.name} (${this.state.room.capacity} places)`
@@ -96,26 +109,43 @@ class HomepageRoomNameDisplay extends React.Component{
 
 class HomepageRoomCalendar extends React.Component{
   state = {
-    meetings: []
+    meetings: [],
+    meetingCurrently: false
   };
 
   async componentDidMount(){
+    let currently = false
     let nextMeeting = await axios.get(url + `room_meetings/${this.props.roomId}`)
     .then(res => {
       let meetingList = []
       for (const meet in res.data){
-        meetingList.push(JSON.parse(res.data[meet]))
+        let meeting = JSON.parse(res.data[meet])
+        meetingList.push(meeting)
+        currently = currently || isNow(meeting)
       };
       this.setState({meetings : meetingList.slice(0, -1)});
+      this.setState({meetingCurrently : currently});
       return(meetingList[meetingList.length - 1])
     });
     this.startMeeting = nextMeeting //setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
+    this.endMeeting = setInterval(() => {
+      this.setState({meetingCurrently : this.endMeetingButton(this.state.meetings)})
+    }, 1000 * 60)
   };
 
-  /*componentWillUnmount(){
-    clearInterval(this.startMeeting)
-  }; //*/
+  componentWillUnmount(){
+    // clearInterval(this.startMeeting)
+    clearInterval(this.endMeeting)
+  };
+
+  endMeetingButton(meetingList){
+    let currently = false
+    console.log(meetingList)
+    meetingList.map( meet => currently = currently || isNow(meet));
+    console.log(this.state.meetings)
+    return(currently)
+  };
 
   render(){
     return( // height et width à régler en fonction des dimensions de l'écran d'affichage
