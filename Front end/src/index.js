@@ -41,6 +41,8 @@ root.render(
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
 
+alert("hello world !")
+
 const homepage = ReactDOM.createRoot(document.getElementById('tablet_homepage'));
 const homepagePopup = ReactDOM.createRoot(document.getElementById('tablet_homepage_popup'));
 const tabletForm = ReactDOM.createRoot(document.getElementById("tablet_reservation_page")); // no more displayed "alone"

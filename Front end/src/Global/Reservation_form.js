@@ -85,21 +85,131 @@ class TabletForm extends React.Component {
 
   async handleSubmit(event) {
     event.preventDefault();
-      let present
-      if (!this.state.numberOfPresentPerson === ""){
-        present = this.state.numberOfPresentPerson
+    let present
+    if (!this.state.numberOfPresentPerson === ""){
+      present = this.state.numberOfPresentPerson
+    }
+    alert("before axios")
+    let response = await axios.put(
+      url + "meeting",
+      {
+        room: this.props.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
+        duration: this.state.duration, title: this.state.titleMeeting, 
+        physically_present_person: present
       }
-      let response = await axios.put(
-        url + "meeting",
-        {
-          room: this.props.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
-          duration: this.state.duration, title: this.state.titleMeeting, 
-          physically_present_person: present
-        }
-      )
-      .then(res => {
-        return res.data
-      }) 
+    )
+    .then(res => {
+      return res.data
+    })
+    .catch(function (error) {
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        alert(error.response.data);
+        alert(error.response.status);
+        alert(error.response.headers);
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        alert(`response : ${error.request.response}`);
+        alert(`onreadystatechange : ${error.request.onreadystatechange}`);
+        alert(`readyState : ${error.request.readyState}`);
+        console.log(error.request)
+        // the result of error.request when python server is off :
+        /* 
+        XMLHttpRequest {onreadystatechange: null, readyState: 4, timeout: 0, withCredentials: false, upload: XMLHttpRequestUpload, …}
+onabort
+: 
+ƒ handleAbort()
+onerror
+: 
+ƒ handleError()
+onload
+: 
+null
+onloadend
+: 
+ƒ onloadend()
+onloadstart
+: 
+null
+onprogress
+: 
+null
+onreadystatechange
+: 
+null
+ontimeout
+: 
+ƒ handleTimeout()
+readyState
+: 
+4
+response
+: 
+""
+responseText
+: 
+""
+responseType
+: 
+""
+responseURL
+: 
+""
+responseXML
+: 
+null
+status
+: 
+0
+statusText
+: 
+""
+timeout
+: 
+0
+upload
+: 
+XMLHttpRequestUpload
+onabort
+: 
+null
+onerror
+: 
+null
+onload
+: 
+null
+onloadend
+: 
+null
+onloadstart
+: 
+null
+onprogress
+: 
+null
+ontimeout
+: 
+null
+[[Prototype]]
+: 
+XMLHttpRequestUpload
+withCredentials
+: 
+false
+[[Prototype]]
+: 
+XMLHttpRequest */
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        alert('Error', error.message);
+      }
+      console.log(error.config);
+    });
+    alert("after axios")
     if (!response.rejected){
       this.props.previousPage.root.render(this.props.previousPage.toRender)
       this.props.root.render(<></>)
