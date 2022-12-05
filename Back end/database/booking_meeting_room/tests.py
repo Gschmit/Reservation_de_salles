@@ -9,8 +9,8 @@ from django.utils.timezone import make_aware
 from .models import Room, User, Meeting
 import booking_meeting_room.functions as func
 
-
-def create_room(capacity, name, location, picture, videoconference, television_screen, projector,
+'''
+# def func.create_a_new_room(capacity, name, location, picture, videoconference, television_screen, projector,
                 paperboard, whiteboard, wall_whiteboard, computer, lab_validation=False):
     """
     @param capacity: int
@@ -32,6 +32,7 @@ def create_room(capacity, name, location, picture, videoconference, television_s
                                television_screen=television_screen, projector=projector,
                                paperboard=paperboard, whiteboard=whiteboard,
                                wall_whiteboard=wall_whiteboard, computer=computer)
+'''
 
 
 def create_user(name, status):
@@ -58,17 +59,17 @@ def create_meeting(room, user, start_timestamps, duration, title):
 
 class FunctionsFileTests(TestCase):
     @staticmethod
-    def test_days_in_a_months():
-        thirty = func.days_in_a_months(2022, 4)
-        thirty_one = func.days_in_a_months(2023, 12)
-        twenty_eight = func.days_in_a_months(2022, 2)
-        twenty_nine = func.days_in_a_months(2024, 2)
+    def test_days_in_a_month():
+        thirty = func.days_in_a_month(2022, 4)
+        thirty_one = func.days_in_a_month(2023, 12)
+        twenty_eight = func.days_in_a_month(2022, 2)
+        twenty_nine = func.days_in_a_month(2024, 2)
         assert thirty == 30
         assert thirty_one == 31
         assert twenty_eight == 28
         assert twenty_nine == 29
-        twenty_eight = func.days_in_a_months(2100, 2)
-        twenty_nine = func.days_in_a_months(2000, 2)
+        twenty_eight = func.days_in_a_month(2100, 2)
+        twenty_nine = func.days_in_a_month(2000, 2)
         assert twenty_eight == 28
         assert twenty_nine == 29
 
@@ -114,15 +115,49 @@ class FunctionsFileTests(TestCase):
         assert hour == 23
         assert minute == 55
 
+    @staticmethod  # TO DO
+    def test_create_a_new_user():
+        user = func.create_a_new_user("a user", "staff")
+        assert user is not None
+        assert user in User.objects.all()
+        assert user.status == "staff"
+        assert user.name == "a user"
+
+    @staticmethod  # TO DO
+    def test_create_a_new_room():
+        room1 = func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                       television_screen=False, projector=False, paperboard=False,
+                                       whiteboard=False, wall_whiteboard=False, computer=True,
+                                       capacity=2, lab_validation=True)
+        room2 = func.create_a_new_room("name2", "location", "picture", videoconference=False,
+                                       television_screen=False, projector=False, paperboard=False,
+                                       whiteboard=False, wall_whiteboard=False, computer=True)
+        assert room1 is not None
+        assert room1 in Room.objects.all()
+        assert room1.capacity == 2
+        assert room1.name == "name"
+        assert room1.location == "location"
+        assert room1.picture == "picture"
+        assert not (room1.videoconference or room1.television_screen or room1.projector)
+        assert not (room1.paperboard or room1.whiteboard or room1.wall_whiteboard)
+        assert (room1.lab_validation and room1.computer)
+        assert room2 is not None
+        assert room2 in Room.objects.all()
+        assert room2.capacity == 1
+        assert room2.name == "name2"
+        assert room2.location == "location"
+        assert room2.picture == "picture"
+        assert not (room2.videoconference or room2.television_screen or room2.projector)
+        assert not (room2.paperboard or room2.whiteboard or room2.wall_whiteboard)
+        assert (not room2.lab_validation and room2.computer)
+
     @staticmethod
     def test_create_a_new_meeting_default():
-        meet = func.create_a_new_meeting(create_room(1, "name", "location", "picture",
-                                                     videoconference=False, television_screen=False,
-                                                     projector=False, paperboard=False,
-                                                     whiteboard=False, wall_whiteboard=False,
-                                                     computer=False, lab_validation=False),
-                                         create_user("a user", "staff"),
-                                         make_aware(datetime.datetime(2022, 3, 5)), "title")
+        meet = func.create_a_new_meeting(
+            func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                   television_screen=False, projector=False, paperboard=False,
+                                   whiteboard=False, wall_whiteboard=False, computer=False),
+            create_user("a user", "staff"), make_aware(datetime.datetime(2022, 3, 5)), "title")
         assert meet is not None
         assert meet in Meeting.objects.all()
         assert meet.duration == 1
@@ -130,15 +165,12 @@ class FunctionsFileTests(TestCase):
 
     @staticmethod
     def test_create_a_new_meeting_all_parameter():
-        meet = func.create_a_new_meeting(create_room(1, "name", "location", "picture",
-                                                     videoconference=False, television_screen=False,
-                                                     projector=False, paperboard=False,
-                                                     whiteboard=False, wall_whiteboard=False,
-                                                     computer=False, lab_validation=False),
-                                         create_user("a user", "staff"),
-                                         make_aware(datetime.datetime(2022, 3, 5)), "title",
-                                         duration=2, other_persons="other",
-                                         physically_present_person=4)
+        meet = func.create_a_new_meeting(
+            func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                   television_screen=False, projector=False, paperboard=False,
+                                   whiteboard=False, wall_whiteboard=False, computer=False),
+            create_user("a user", "staff"), make_aware(datetime.datetime(2022, 3, 5)), "title",
+            duration=2, other_persons="other", physically_present_person=4)
         assert meet is not None
         assert meet in Meeting.objects.all()
         assert meet.duration == 2
@@ -147,13 +179,11 @@ class FunctionsFileTests(TestCase):
 
     @staticmethod
     def test_modify_a_meeting_modifying():
-        meet = func.create_a_new_meeting(create_room(1, "name", "location", "picture",
-                                                     videoconference=False, television_screen=False,
-                                                     projector=False, paperboard=False,
-                                                     whiteboard=False, wall_whiteboard=False,
-                                                     computer=False, lab_validation=False),
-                                         create_user("a user", "staff"),
-                                         make_aware(datetime.datetime(2022, 3, 5)), "title")
+        meet = func.create_a_new_meeting(
+            func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                   television_screen=False, projector=False, paperboard=False,
+                                   whiteboard=False, wall_whiteboard=False, computer=False),
+            create_user("a user", "staff"), make_aware(datetime.datetime(2022, 3, 5)), "title")
         func.modify_a_meeting(meet, duration=3)
         assert Meeting.objects.get(id=meet.id).duration == 3
         assert Meeting.objects.get(id=meet.id).title == "title"
@@ -169,14 +199,12 @@ class FunctionsFileTests(TestCase):
 
     @staticmethod
     def test_modify_a_meeting_deleting():
-        meet = func.create_a_new_meeting(create_room(1, "name", "location", "picture",
-                                                     videoconference=False, television_screen=False,
-                                                     projector=False, paperboard=False,
-                                                     whiteboard=False, wall_whiteboard=False,
-                                                     computer=False, lab_validation=False),
-                                         create_user("a user", "staff"),
-                                         make_aware(datetime.datetime(2022, 3, 5)), "title", duration=2,
-                                         other_persons="other", physically_present_person=4)
+        meet = func.create_a_new_meeting(
+            func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                   television_screen=False, projector=False, paperboard=False,
+                                   whiteboard=False, wall_whiteboard=False, computer=False),
+            create_user("a user", "staff"), make_aware(datetime.datetime(2022, 3, 5)), "title",
+            duration=2, other_persons="other", physically_present_person=4)
         func.modify_a_meeting(meet, remove_other_persons=True, remove_physically_present_person=True)
         modified_meeting = Meeting.objects.get(id=meet.id)
         assert modified_meeting.other_persons is None
@@ -186,14 +214,12 @@ class FunctionsFileTests(TestCase):
 
     @staticmethod
     def test_modify_a_meeting_delete_and_modify():
-        meet = func.create_a_new_meeting(create_room(1, "name", "location", "picture",
-                                                        videoconference=False, television_screen=False,
-                                                        projector=False, paperboard=False,
-                                                        whiteboard=False, wall_whiteboard=False,
-                                                        computer=False, lab_validation=False),
-                                         create_user("a user", "staff"),
-                                         make_aware(datetime.datetime(2022, 3, 5)), "title",
-                                         duration=2, other_persons="other", physically_present_person=4)
+        meet = func.create_a_new_meeting(
+            func.create_a_new_room("name", "location", "picture", videoconference=False,
+                                   television_screen=False, projector=False, paperboard=False,
+                                   whiteboard=False, wall_whiteboard=False, computer=False),
+            create_user("a user", "staff"), make_aware(datetime.datetime(2022, 3, 5)), "title",
+            duration=2, other_persons="other", physically_present_person=4)
         func.modify_a_meeting(meet, start_timestamps=make_aware(datetime.datetime(2022, 4, 6, 18, 45)),
                               title="another title", remove_other_persons=True,
                               physically_present_person=3)
@@ -208,15 +234,15 @@ class RoomModelTests(TestCase):
 
     @staticmethod
     def test_str():
-        room = create_room(capacity=2, name="a room", location="9ème étage", picture="an image",
-                           lab_validation=False, videoconference=False, television_screen=False,
-                           projector=False, paperboard=False, whiteboard=False, wall_whiteboard=False,
-                           computer=True)
+        room = func.create_a_new_room(capacity=2, name="a room", location="9ème étage",
+                                      picture="an image", lab_validation=False, videoconference=False,
+                                      television_screen=False, projector=False, paperboard=False,
+                                      whiteboard=False, wall_whiteboard=False, computer=True)
         assert str(room) == "a room"
 
     @staticmethod
     def test_assets():
-        room = create_room(capacity=2, name="a room", location="9ème étage", picture="an image",
+        room = func.create_a_new_room(capacity=2, name="a room", location="9ème étage", picture="an image",
                            lab_validation=True, videoconference=True, television_screen=False,
                            projector=False, paperboard=False, whiteboard=False, wall_whiteboard=False,
                            computer=True)
@@ -258,8 +284,8 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_str():
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 3, 10, 10, 30)), 2,
                                  "a meeting")
@@ -267,8 +293,8 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_modify_one_thing():
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 3, 10, 10, 30)), 2,
                                  "a meeting")
@@ -286,13 +312,13 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_modify_everything():
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 3, 10, 10, 30)), 2,
                                  "a meeting")
-        meeting.modify(room=create_room(4, "another room", "9ème étage", "another image", True, False,
-                                        True, False, False, False, True, False),
+        meeting.modify(room=func.create_a_new_room("another room", "9ème étage", "another image",
+                                                   True, False, True, False, False, False, True, 4),
                        user=create_user("other person", "not staff"), title="new name",
                        start_timestamps=make_aware(datetime.datetime(2022, 3, 10, 11, 0)), duration=1,
                        physically_present_person=3, other_persons="Hello")
@@ -318,8 +344,8 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_delete_meeting():
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 3, 10, 10, 30)), 2,
                                  "a meeting")
@@ -328,8 +354,8 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_remove_attribute():
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 3, 10, 10, 30)), 2,
                                  "a meeting")
@@ -361,7 +387,7 @@ class RoomViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_get_existent_room_id(self):
-        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_view", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
@@ -378,7 +404,7 @@ class RoomViewTests(TestCase):
         self.assertContains(response, room.location)
 
     def test_post_no_meeting(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.post(
             reverse("booking_meeting_room:room_view", args=(room.id, )),
@@ -389,7 +415,7 @@ class RoomViewTests(TestCase):
         assert '"name": "a room"' in response.data["room"]
 
     def test_post_occupied_room(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
                            False, True)
         create_meeting(room, create_user("user", "staff"),
                        make_aware(datetime.datetime(2022, 9, 12, 15, 10)), 2, "a meeting")
@@ -402,7 +428,7 @@ class RoomViewTests(TestCase):
         assert '"name": "a room"' in response.data["room"]
 
     def test_post_free_room(self):
-        room = create_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8ème étage", "a picture", True, False, False, False, True,
                            False, True)
         create_meeting(room, create_user("user", "staff"),
                        make_aware(datetime.datetime(2022, 9, 10, 15, 10)), 2, "a meeting")
@@ -436,8 +462,8 @@ class MeetingViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_existent_meeting_id(self):
-        room = create_room(2, "a room", "9ème étage", "an image", False, False, False, False, False,
-                           False, True, False)
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
                                  "a meeting")
@@ -452,7 +478,7 @@ class MeetingViewTests(TestCase):
 
 class HandleMeetingViewTests(TestCase):
     def test_create_a_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         title = "a title"
@@ -468,7 +494,7 @@ class HandleMeetingViewTests(TestCase):
         assert str(Meeting.objects.all()[0]) == f"{title} in {room.name}, by {user.name}"
 
     def test_delete_a_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         meeting = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
@@ -479,7 +505,7 @@ class HandleMeetingViewTests(TestCase):
         assert not Meeting.objects.all()
 
     def test_patch_a_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         title = "new title"
@@ -508,7 +534,7 @@ class MeetingListViewTests(TestCase):
         assert len(response.data) == 0
 
     def test_with_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         meeting1 = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
@@ -537,13 +563,13 @@ class RoomListViewTests(TestCase):
         assert len(response.data) == 0
 
     def test_with_room(self):
-        room1 = create_room(2, "a room", "9eme etage", "an image 1", False, False, False, False, False,
+        room1 = func.create_a_new_room(2, "a room", "9eme etage", "an image 1", False, False, False, False, False,
                             False, True, False)
-        room2 = create_room(2, "another room", "9eme etage", "an image 2", False, False, True, False, False,
+        room2 = func.create_a_new_room(2, "another room", "9eme etage", "an image 2", False, False, True, False, False,
                             False, True, False)
-        room3 = create_room(6, "a third room", "8eme etage", "an image 3", False, True, False, True, False,
+        room3 = func.create_a_new_room(6, "a third room", "8eme etage", "an image 3", False, True, False, True, False,
                             True, False, False)
-        room4 = create_room(8, "huge room", "9eme etage", "an image 4", True, True, False, False, False,
+        room4 = func.create_a_new_room(8, "huge room", "9eme etage", "an image 4", True, True, False, False, False,
                             False, False, True)
         response = self.client.get(reverse("booking_meeting_room:room_list_view"))
         self.assertEqual(response.status_code, 200)
@@ -563,14 +589,14 @@ class RoomMeetingsViewTests(TestCase):
         self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_but_no_meeting(self):
-        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_with_meetings(self):
-        room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
+        room = func.create_a_new_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         user = create_user("a user", "staff")
         meeting0 = create_meeting(room, user, make_aware(datetime.datetime(2022, 9, 23, 2, 45)), 2,
@@ -592,7 +618,7 @@ class UserNextMeetingViewTests(TestCase):
         self.assertContains(response, "Plus de rendez-vous de prévu")
 
     def test_with_only_futur_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -619,7 +645,7 @@ class UserNextMeetingViewTests(TestCase):
                in response.data
 
     def test_with_only_past_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -644,7 +670,7 @@ class UserNextMeetingViewTests(TestCase):
         self.assertNotContains(response, meeting3)
 
     def test_with_past_and_futur_meeting(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -669,11 +695,11 @@ class UserNextMeetingViewTests(TestCase):
                in response.data
 
     def test_with_several_users(self):
-        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+        room = func.create_a_new_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
-        room2 = create_room(2, "a second room", "9eme etage", "an image", False, False, False, False,
+        room2 = func.create_a_new_room(2, "a second room", "9eme etage", "an image", False, False, False, False,
                             False, False, True, False)
-        room3 = create_room(2, "a third room", "9eme etage", "an image", False, False, False, False,
+        room3 = func.create_a_new_room(2, "a third room", "9eme etage", "an image", False, False, False, False,
                             False, False, True, False)
         user = create_user("a user", "staff")
         user2 = create_user("another user", "staff")
@@ -689,7 +715,6 @@ class UserNextMeetingViewTests(TestCase):
                                                               now.minute, 60*24)
         now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
         now_m1y = make_aware(datetime.datetime(now.year - 1, now.month, now.day, now.hour, now.minute))
-        # now1h now_m1h now1d now_m1y
         meeting = create_meeting(room, user, now1h, 3, "a meeting")
         meeting2 = create_meeting(room, user, now1d, 4, "second meeting")
         meeting3 = create_meeting(room, user, now_m1y, 2, "third meeting")

@@ -4,7 +4,7 @@ import datetime
 from .models import Room, User, Meeting
 
 
-def days_in_a_months(year: int, month: int) -> int:
+def days_in_a_month(year: int, month: int) -> int:
     """
     Return the number of days of the month specified
 
@@ -32,7 +32,7 @@ def shift_date(year: int, month: int, day: int, hour: int, minute: int, duration
     end_day = day
     end_month = month
     end_year = year
-    max_day = days_in_a_months(year, month)
+    max_day = days_in_a_month(year, month)
     if end_minute >= 60 or end_minute < 0:
         end_hour += end_minute // 60
         end_minute %= 60
@@ -45,13 +45,13 @@ def shift_date(year: int, month: int, day: int, hour: int, minute: int, duration
         if end_month == 13:                 # days start to 1, not 0. That's why we can't use division
             end_year += 1                   # here.
             end_month = 1
-        max_day = days_in_a_months(end_year, end_month)
+        max_day = days_in_a_month(end_year, end_month)
     while end_day <= 0:
         end_month -= 1
         if end_month == 0:
             end_year -= 1
             end_month = 12
-        max_day = days_in_a_months(end_year, end_month)
+        max_day = days_in_a_month(end_year, end_month)
         end_day += max_day
     return end_year, end_month, end_day, end_hour, end_minute
 
