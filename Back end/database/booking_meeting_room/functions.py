@@ -128,10 +128,3 @@ def modify_a_meeting(meeting: Meeting, room: Room = None, user: User = None, dur
                    other_persons, finished)
     meeting.remove_attribute(physically_present_person=remove_physically_present_person,
                              other_persons=remove_other_persons)
-
-
-def delete_meeting(meeting: Meeting) -> None:
-    """
-    @param meeting: Meeting
-    """
-    meeting.delete_meeting()
