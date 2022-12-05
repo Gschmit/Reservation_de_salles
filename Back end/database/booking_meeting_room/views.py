@@ -125,16 +125,24 @@ class UserNextMeetingView(APIView):
         """
         meeting_list: list[Meeting] = list(Meeting.objects.filter(user=user_id).order_by(
             'start_timestamps'))
-        if meeting_list:
-            meet = meeting_list[0]
+        # print("UserNextMeetingView, meeting_list :", meeting_list)
+        now = make_aware(datetime.datetime.now())
+        if meeting_list and meeting_list[-1].start_timestamps >= now:
+            index = 0
+            meet = meeting_list[index]
+            while meet.start_timestamps < now:
+                index += 1
+                meet = meeting_list[index]
             time = meet.start_timestamps.strftime("on %A %d of %B %Y, at %H:%M")
             duration = f"{meet.duration // 2} hour(s)"
+            # print("UserNextMeetingView, meet :", meet)
             if meet.duration % 2 == 1:
                 duration += " and 30 minutes"
-            context = {'meeting': f"{meet.title} in {meet.room}, {time} for {duration}"}
+            data = f"{meet.title} in {meet.room}, {time} for {duration}"
         else:
-            context = {'meeting': "Plus de rendez-vous de prévu"}
-        return Response(data=context["meeting"])
+            data = "Plus de rendez-vous de prévu"
+        # print("UserNextMeetingView, context :", context)
+        return Response(data=data)
 
 
 class MeetingView(APIView):

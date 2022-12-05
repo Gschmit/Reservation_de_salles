@@ -73,7 +73,7 @@ class FunctionsFileTests(TestCase):
         assert twenty_nine == 29
 
     @staticmethod
-    def test_shift_date():
+    def test_shift_date_positive_shift():
         year, month, day, hour, minute = func.shift_date(2022, 4, 29, 23, 45, 15)
         assert year == 2022
         assert month == 4
@@ -86,6 +86,33 @@ class FunctionsFileTests(TestCase):
         assert day == 2
         assert hour == 1
         assert minute == 5
+        year, month, day, hour, minute = func.shift_date(2022, 12, 31, 23, 45, 20)
+        assert year == 2023
+        assert month == 1
+        assert day == 1
+        assert hour == 0
+        assert minute == 5
+
+    @staticmethod
+    def test_shift_date_negative_shift():
+        year, month, day, hour, minute = func.shift_date(2022, 4, 29, 23, 5, -15)
+        assert year == 2022
+        assert month == 4
+        assert day == 29
+        assert hour == 22
+        assert minute == 50
+        year, month, day, hour, minute = func.shift_date(2022, 4, 1, 1, 5, - 10 - 60 - 60 * 24 * 2)
+        assert year == 2022
+        assert month == 3
+        assert day == 29
+        assert hour == 23
+        assert minute == 55
+        year, month, day, hour, minute = func.shift_date(2022, 1, 1, 0, 5, - 10)
+        assert year == 2021
+        assert month == 12
+        assert day == 31
+        assert hour == 23
+        assert minute == 55
 
     @staticmethod
     def test_create_a_new_meeting_default():
@@ -420,7 +447,6 @@ class MeetingViewTests(TestCase):
         assert f'"room_id": {room.id}' in response.data["meeting"]
         assert f'"user_id": {user.id}' in response.data["meeting"]
         assert f'"duration": {meeting.duration}' in response.data["meeting"]
-        print("ligne 423 :", response.data["meeting"])
         assert '"start_timestamps": "2022-09-23T02:45:00.000000Z"' in response.data["meeting"]
 
 
@@ -499,7 +525,6 @@ class MeetingListViewTests(TestCase):
         assert '"title": "first meeting"' in response.data["meeting 1"]
         assert '"title": "second meeting"' in response.data["meeting 2"]
         assert f'"title": "{meeting3.title}"' in response.data["meeting 3"]
-        print("ligne 502 :", response.data["meeting 0"])
         assert '"start_timestamps": "2022-09-14T10:45:00.000000Z"' in response.data["meeting 0"]
         assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
         assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]
@@ -535,7 +560,6 @@ class RoomMeetingsViewTests(TestCase):
     def test_nonexistent_room_id(self):
         response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
         self.assertEqual(response.status_code, 200)
-        print("ligne 538", response.data)
         self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_but_no_meeting(self):
@@ -543,7 +567,6 @@ class RoomMeetingsViewTests(TestCase):
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
-        print("ligne 546", response.data)
         self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_with_meetings(self):
@@ -572,7 +595,6 @@ class UserNextMeetingViewTests(TestCase):
         room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
-        user2 = create_user("another user", "staff")
         now = make_aware(datetime.datetime.now())
         end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
                                                               now.minute, 60)
@@ -584,7 +606,7 @@ class UserNextMeetingViewTests(TestCase):
                                                               now.minute, 3*60)
         now3h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
         meeting = create_meeting(room, user, now1h, 3, "a meeting")
-        meeting2 = create_meeting(room, user2, now1d, 4, "another meeting")
+        meeting2 = create_meeting(room, user, now1d, 4, "another meeting")
         meeting3 = create_meeting(room, user, now3h, 2, "second meeting")
         response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
                                            args=(user.id,)))
@@ -596,11 +618,35 @@ class UserNextMeetingViewTests(TestCase):
         assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
                in response.data
 
-"""    def test_with_past_and_futur_meeting(self):
+    def test_with_only_past_meeting(self):
         room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
                            False, True, False)
         user = create_user("a user", "staff")
-        user2 = create_user("another user", "staff")
+        now = make_aware(datetime.datetime.now())
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, -60)
+        now_m1h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, - 60 * 24)
+        now_m1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, - 3 * 60)
+        now_m3h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        meeting = create_meeting(room, user, now_m1h, 3, "a meeting")
+        meeting2 = create_meeting(room, user, now_m1d, 4, "another meeting")
+        meeting3 = create_meeting(room, user, now_m3h, 2, "second meeting")
+        response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
+                                           args=(user.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Plus de rendez-vous de prévu")
+        self.assertNotContains(response, meeting)
+        self.assertNotContains(response, meeting2)
+        self.assertNotContains(response, meeting3)
+
+    def test_with_past_and_futur_meeting(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        user = create_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
         end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
                                                               now.minute, 60)
@@ -610,7 +656,7 @@ class UserNextMeetingViewTests(TestCase):
         now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
         now_m1y = make_aware(datetime.datetime(now.year - 1, now.month, now.day, now.hour, now.minute))
         meeting = create_meeting(room, user, now1h, 3, "a meeting")
-        meeting2 = create_meeting(room, user2, now1d, 4, "another meeting")
+        meeting2 = create_meeting(room, user, now1d, 4, "another meeting")
         meeting3 = create_meeting(room, user, now_m1y, 2, "second meeting")
         response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
                                            args=(user.id,)))
@@ -621,4 +667,56 @@ class UserNextMeetingViewTests(TestCase):
         self.assertNotContains(response, meeting3.title)
         assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
                in response.data
-"""
+
+    def test_with_several_users(self):
+        room = create_room(2, "a room", "9eme etage", "an image", False, False, False, False, False,
+                           False, True, False)
+        room2 = create_room(2, "a second room", "9eme etage", "an image", False, False, False, False,
+                            False, False, True, False)
+        room3 = create_room(2, "a third room", "9eme etage", "an image", False, False, False, False,
+                            False, False, True, False)
+        user = create_user("a user", "staff")
+        user2 = create_user("another user", "staff")
+        user3 = create_user("a third user", "consultant")
+        now = make_aware(datetime.datetime.now())
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60)
+        now1h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, -60)
+        now_m1h = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        end_y, end_mo, end_d, end_h, end_mi = func.shift_date(now.year, now.month, now.day, now.hour,
+                                                              now.minute, 60*24)
+        now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
+        now_m1y = make_aware(datetime.datetime(now.year - 1, now.month, now.day, now.hour, now.minute))
+        # now1h now_m1h now1d now_m1y
+        meeting = create_meeting(room, user, now1h, 3, "a meeting")
+        meeting2 = create_meeting(room, user, now1d, 4, "second meeting")
+        meeting3 = create_meeting(room, user, now_m1y, 2, "third meeting")
+        meeting4 = create_meeting(room, user, now_m1h, 1, "fourth meeting")
+        meeting5 = create_meeting(room2, user2, now1h, 4, "another meeting")
+        meeting6 = create_meeting(room2, user2, now_m1h, 2, "new user meeting")
+        meeting7 = create_meeting(room2, user2, now1d, 3, "a meeting for user 2")
+        meeting8 = create_meeting(room2, user2, now_m1y, 4, "last second user meeting")
+        meeting9 = create_meeting(room3, user3, now1h, 4, "third user meeting")
+        meeting10 = create_meeting(room3, user3, now_m1h, 2, "meeting for user 3")
+        meeting11 = create_meeting(room3, user3, now1d, 3, "a user3 meeting")
+        meeting12 = create_meeting(room3, user3, now_m1y, 4, "last meeting")
+        response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
+                                           args=(user.id,)))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "a meeting")
+        self.assertContains(response, meeting.duration)
+        self.assertNotContains(response, meeting2.title)
+        self.assertNotContains(response, meeting3.title)
+        self.assertNotContains(response, meeting4.title)
+        self.assertNotContains(response, meeting5.title)
+        self.assertNotContains(response, meeting6.title)
+        self.assertNotContains(response, meeting7.title)
+        self.assertNotContains(response, meeting8.title)
+        self.assertNotContains(response, meeting9.title)
+        self.assertNotContains(response, meeting10.title)
+        self.assertNotContains(response, meeting11.title)
+        self.assertNotContains(response, meeting12.title)
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
+               in response.data

@@ -33,10 +33,10 @@ def shift_date(year: int, month: int, day: int, hour: int, minute: int, duration
     end_month = month
     end_year = year
     max_day = days_in_a_months(year, month)
-    if end_minute >= 60:
+    if end_minute >= 60 or end_minute < 0:
         end_hour += end_minute // 60
         end_minute %= 60
-    if end_hour >= 24:
+    if end_hour >= 24 or end_hour < 0:
         end_day += end_hour // 24
         end_hour %= 24
     while end_day >= max_day + 1:
@@ -46,6 +46,13 @@ def shift_date(year: int, month: int, day: int, hour: int, minute: int, duration
             end_year += 1                   # here.
             end_month = 1
         max_day = days_in_a_months(end_year, end_month)
+    while end_day <= 0:
+        end_month -= 1
+        if end_month == 0:
+            end_year -= 1
+            end_month = 12
+        max_day = days_in_a_months(end_year, end_month)
+        end_day += max_day
     return end_year, end_month, end_day, end_hour, end_minute
 
 
