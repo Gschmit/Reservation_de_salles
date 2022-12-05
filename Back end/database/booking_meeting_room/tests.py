@@ -421,11 +421,7 @@ class MeetingViewTests(TestCase):
         assert f'"user_id": {user.id}' in response.data["meeting"]
         assert f'"duration": {meeting.duration}' in response.data["meeting"]
         print("ligne 423 :", response.data["meeting"])
-        # assert '"year": 2022' in response.data["meeting"]
-        # assert '"day": 23' in response.data["meeting"]
-        # assert '"month": 9' in response.data["meeting"]
-        # assert '"hour": 2' in response.data["meeting"]
-        # assert '"minute": 45' in response.data["meeting"]
+        assert '"start_timestamps": "2022-09-23T02:45:00.000000Z"' in response.data["meeting"]
 
 
 class HandleMeetingViewTests(TestCase):
@@ -503,10 +499,8 @@ class MeetingListViewTests(TestCase):
         assert '"title": "first meeting"' in response.data["meeting 1"]
         assert '"title": "second meeting"' in response.data["meeting 2"]
         assert f'"title": "{meeting3.title}"' in response.data["meeting 3"]
-        print("ligne 506 :", response.data["meeting 0"])
-        # assert '"start_timestamps": {\n        "day": 14,\n        "hour": 10,\n' \
-        #        '        "minute": 45,\n        "month": 9,\n' \
-        #        '        "year": 2022\n    }' in response.data["meeting 0"]
+        print("ligne 502 :", response.data["meeting 0"])
+        assert '"start_timestamps": "2022-09-14T10:45:00.000000Z"' in response.data["meeting 0"]
         assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
         assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]
 
@@ -541,14 +535,16 @@ class RoomMeetingsViewTests(TestCase):
     def test_nonexistent_room_id(self):
         response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {})
+        print("ligne 538", response.data)
+        self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_but_no_meeting(self):
         room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
                            False, True)
         response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {})
+        print("ligne 546", response.data)
+        self.assertEqual(response.data, {"next_meeting": None})
 
     def test_existent_room_id_with_meetings(self):
         room = create_room(3, "a room", "8eme etage", "a picture", True, False, False, False, True,
