@@ -170,6 +170,7 @@ class HandleMeetingView(APIView):
         """
         data = request.data
         if data["user"] == "":
+            print("user rejected")
             context = {"rejected": True, "error": "No user fill in", "warning": None}
         else:
             context = {"rejected": False, "error": None, "warning": None}

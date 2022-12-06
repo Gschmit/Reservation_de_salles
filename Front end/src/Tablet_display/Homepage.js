@@ -50,6 +50,7 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
 
 function startOfTheMeeting(nextMeeting, popupRoot){
   if (nextMeeting){
+    console.log(nextMeeting)
     let now = new Date()
     console.log(nextMeeting.start_timestamps, new Date(nextMeeting.start_timestamps)) // on a un décalage d'une heure !
     let start = new Date(

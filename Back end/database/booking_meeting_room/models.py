@@ -1,7 +1,7 @@
 """ Models """
 
 from django.db import models
-from django.utils.timezone import make_aware
+from django.utils.timezone import make_aware, is_aware
 from json import dumps
 import datetime
 
@@ -82,12 +82,12 @@ class Meeting(models.Model):
     """
     room = models.ForeignKey(Room, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    start_timestamps = models.DateTimeField()                   # or DateField ??
+    start_timestamps = models.DateTimeField()
     duration = models.IntegerField(default=1)
     title = models.CharField(max_length=200)
     physically_present_person = models.IntegerField(blank=True, null=True)             # optional
     other_persons = models.CharField(max_length=300, blank=True, null=True)            # optional
-    finished = False
+    finished = False        # in order to set free a room without deleting the meeting
 
     def __str__(self):
         return f"{self.title} in {self.room}, by {self.user}"
@@ -120,7 +120,9 @@ class Meeting(models.Model):
             self.save()
 
     def delete_meeting(self):
-        """ Delete the instance of Meeting """
+        """
+        Delete the instance of Meeting
+        """
         self.delete()
 
     def remove_attribute(self, physically_present_person=False, other_persons=False):
@@ -133,19 +135,31 @@ class Meeting(models.Model):
             self.__setattr__("other_persons", None)
         self.save()
 
-    def slot(self):
+    def slot(self):         # Uses : for check_overlapping and for the put method of HandleMeetingView
         """
         To know from when to when is the meeting
         """
-        try:
+        # ne garder que le try, en remplaçant le str par json_default ?
+        # ou alors juste supprimer start, et mettre self.start_timestamps à la place
+        # (supprimer la vérification de typo dans ce cas-là)
+        if isinstance(self.start_timestamps, str):
+            # print(f"{self.start_timestamps} est un string. Son format doit être '%Y-%m-%dT%H:%M:%S.%fZ'")
             start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
                                                           '%Y-%m-%dT%H:%M:%S.%fZ'))
+        else:
+            # print(self.start_timestamps, "is aware :", is_aware(self.start_timestamps))
+            start = self.start_timestamps
+        """try:
+            start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
+                                                          '%Y-%m-%dT%H:%M:%S.%fZ'))
+            print("try", self.start_timestamps)
         except ValueError:
-            # print("value error", self.title)
             start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
                                                           '%Y-%m-%d %H:%M:%S+%f:00'))
+            print("except", self.start_timestamps)"""
         duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
         end = start + duration
+        # print(self.start_timestamps + duration, end)
         return start, end
 
     def check_overlapping(self, other):
@@ -153,7 +167,7 @@ class Meeting(models.Model):
         Check if the two meetings are compatible
         Return False if the two meetings are in the same room, at the same moment
         """
-        if self.room != other.room:
+        if self.room != other.room:     # Does this really work ? It seems ...
             return False
         else:
             self_start, self_end = self.slot()
