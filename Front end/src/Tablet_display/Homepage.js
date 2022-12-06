@@ -152,6 +152,7 @@ class HomepageRoomCalendar extends React.Component{
         currently = true
         currentMeetingId = meet.id
       }
+      return("end")
     });
     return(currently, currentMeetingId)
   };
