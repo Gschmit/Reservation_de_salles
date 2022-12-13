@@ -216,7 +216,7 @@ XMLHttpRequest */
       console.log("Warning :", response.warning)
     } else if (response.error === "No user fill in") {
       // this if is never executed (in the room view) (because of the form validation?)
-      console.log("Error :", response.error,)
+      console.log("Error :", response.error)
       console.log("Warning :", response.warning)
       alert(`${response.error}, ${response.warning}`)
       event.preventDefault() // this statement seems to have no effect then
@@ -568,6 +568,16 @@ class Informations extends React.Component {
       onChange= {this.props.onChangePresent}
       required={false}
       />
+    if (this.props.formKind === "room"){
+      reservingNameData = <CriteriaText name= "Personne qui réserve" // better name ?
+        data= {this.props.nameOfWhoSReserving}
+        type= "text"
+        onChange= {this.props.onChangeName}
+        required={true}
+        />
+    } else { // if (this.props.formKind === "user") // maybe something else, if we need several 'formKind' for users
+      reservingNameData = <></>
+    } // we want to change the tests under this
     if (this.props.criteria.includes("room id")){
       console.log("497, ai je le droit de m'afficher :", this.props.formKind !== "room")
       roomNameData = <CriteriaSelect name= "salle"
@@ -593,27 +603,17 @@ class Informations extends React.Component {
       console.log("518, ai je le droit de m'afficher :", this.props.formKind === "room")
       videoConferenceData = <></>
     }
-    if (this.props.formKind === "room"){
-      reservingNameData = <CriteriaText name= "Personne qui réserve" // better name ?
-        data= {this.props.nameOfWhoSReserving}
-        type= "text"
-        onChange= {this.props.onChangeName}
-        required={true}
-        />
-    } else { // if (this.props.formKind === "user") // maybe something else, if we need several 'formKind' for users
-      reservingNameData = <></>
-    }
     /*make a sort :
-      - things always displayed :
+      - things always displayed : (done)
         * present person
         * meeting title	
         * end time 
         * start time 
         * date
         * duration
-      - things displayed only for room :
+      - things displayed only for room : (done)
         * name of who is reserving
-      - things displayed only for user (maybe several 'formKind' for users)
+      - things displayed only for user (maybe several 'formKind' for users) (TO DO)
     */
     return(
       <div className='center'>
