@@ -45,7 +45,8 @@ alert("hello world !")
 
 const homepage = ReactDOM.createRoot(document.getElementById('tablet_homepage'));
 const homepagePopup = ReactDOM.createRoot(document.getElementById('tablet_homepage_popup'));
-const tabletForm = ReactDOM.createRoot(document.getElementById("tablet_reservation_page")); // no more displayed "alone"
+const tabletForm = ReactDOM.createRoot(document.getElementById("tablet_reservation_page")); // no more displayed 
+// "alone", but still used
 const userHomepage = ReactDOM.createRoot(document.getElementById("reservation page in website"));
 const userCalendar = ReactDOM.createRoot(document.getElementById("user calendar"));
 const userInterface = ReactDOM.createRoot(document.getElementById("user interface"));
