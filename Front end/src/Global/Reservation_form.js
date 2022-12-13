@@ -384,7 +384,8 @@ class UserForm extends React.Component{
       if (!this.state.numberOfPresentPerson === ""){
         present = this.state.numberOfPresentPerson
       }
-      let response = await axios.put(
+      console.log("ici", present)
+      let response = await axios.put( // this cause an error 500 ...
         url + "meeting",
         {
           room: this.state.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
@@ -400,7 +401,6 @@ class UserForm extends React.Component{
       this.props.root.render(<></>)
       console.log("Warning :", response.warning)
     } else if (response.error === "No user fill in") {
-      // this if is never executed (in the room view) (because of the form validation?)
       console.log("Error :", response.error,)
       console.log("Warning :", response.warning)
       alert(`${response.error}, ${response.warning}`)

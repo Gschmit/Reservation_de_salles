@@ -29,7 +29,8 @@ class TabUser extends React.Component{
     render(){
         let tabDisplay
         if (this.props.typeDisplay === "form"){
-            tabDisplay = <UserForm criteria={this.props.criteria} name={this.props.user.name} buttons={this.props.buttons}/>
+            console.log("form display", this.props.user.name)
+            tabDisplay = <UserForm criteria={this.props.criteria} user={this.props.user.name} buttons={this.props.buttons}/>
         } else if (this.props.typeDisplay === "homepage"){
             tabDisplay = <UserHomepage nextMeeting={this.props.nextMeeting} user={this.props.user}/>
         } else if (this.props.typeDisplay === "user calendar"){
