@@ -68,7 +68,7 @@ class FunctionsFileTests(TestCase):
         assert hour == 23
         assert minute == 55
 
-    @staticmethod  # TO DO
+    @staticmethod
     def test_create_a_new_user():
         user = func.create_a_new_user("a user", "staff")
         assert user is not None
@@ -76,7 +76,7 @@ class FunctionsFileTests(TestCase):
         assert user.status == "staff"
         assert user.name == "a user"
 
-    @staticmethod  # TO DO
+    @staticmethod
     def test_create_a_new_room():
         room1 = func.create_a_new_room("name", "location", "picture", videoconference=False,
                                        television_screen=False, projector=False, paperboard=False,
@@ -234,7 +234,6 @@ class UserModelTests(TestCase):
 
 
 class MeetingModelTests(TestCase):
-    # TO DO : slot
     @staticmethod
     def test_str():
         room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
@@ -336,7 +335,15 @@ class MeetingModelTests(TestCase):
 
     @staticmethod
     def test_slot():
-        pass
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
+        user = func.create_a_new_user("a user", "staff")
+        meeting = func.create_a_new_meeting(room, user,
+                                            make_aware(datetime.datetime(2022, 3, 10, 10, 30)),
+                                            "a meeting", 2)
+        start, end = meeting.slot()
+        assert start == make_aware(datetime.datetime(2022, 3, 10, 10, 30))
+        assert end == make_aware(datetime.datetime(2022, 3, 10, 11, 30))
 
     @staticmethod
     def test_check_overlapping_slots():

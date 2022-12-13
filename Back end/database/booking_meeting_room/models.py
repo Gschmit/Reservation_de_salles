@@ -1,7 +1,7 @@
 """ Models """
 
 from django.db import models
-from django.utils.timezone import make_aware, is_aware
+from django.utils.timezone import make_aware
 from json import dumps
 import datetime
 
@@ -139,27 +139,13 @@ class Meeting(models.Model):
         """
         To know from when to when is the meeting
         """
-        # ne garder que le try, en remplaçant le str par json_default ?
-        # ou alors juste supprimer start, et mettre self.start_timestamps à la place
-        # (supprimer la vérification de typo dans ce cas-là)
         if isinstance(self.start_timestamps, str):
-            # print(f"{self.start_timestamps} est un string. Son format doit être '%Y-%m-%dT%H:%M:%S.%fZ'")
             start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
                                                           '%Y-%m-%dT%H:%M:%S.%fZ'))
         else:
-            # print(self.start_timestamps, "is aware :", is_aware(self.start_timestamps))
             start = self.start_timestamps
-        """try:
-            start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
-                                                          '%Y-%m-%dT%H:%M:%S.%fZ'))
-            print("try", self.start_timestamps)
-        except ValueError:
-            start = make_aware(datetime.datetime.strptime(str(self.start_timestamps),
-                                                          '%Y-%m-%d %H:%M:%S+%f:00'))
-            print("except", self.start_timestamps)"""
         duration = datetime.timedelta(minutes=int(str(self.duration)) * 30)
         end = start + duration
-        # print(self.start_timestamps + duration, end)
         return start, end
 
     def check_overlapping(self, other):
@@ -167,7 +153,7 @@ class Meeting(models.Model):
         Check if the two meetings are compatible
         Return False if the two meetings are in the same room, at the same moment
         """
-        if self.room != other.room:     # Does this really work ? It seems ...
+        if self.room != other.room:
             return False
         else:
             self_start, self_end = self.slot()

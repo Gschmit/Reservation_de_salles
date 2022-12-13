@@ -46,7 +46,7 @@ class RoomView(APIView):
         return Response(data=context)
 
     @staticmethod
-    def post(request, room_id):
+    def post(request, room_id):     # What this function is used for ?
         """
         View for knowing if a room is free or not at the date wanted
         """
