@@ -134,8 +134,9 @@ class UserNextMeetingView(APIView):
                 index += 1
                 meet = meeting_list[index]
             time = meet.start_timestamps.strftime("on %A %d of %B %Y, at %H:%M")
-            duration = f"{meet.duration // 2} hour(s)"
-            # print("UserNextMeetingView, meet :", meet)
+            duration = f"{meet.duration // 2} hour"
+            if meet.duration // 2 > 1:
+                duration += "s"
             if meet.duration % 2 == 1:
                 duration += " and 30 minutes"
             data = f"{meet.title} in {meet.room}, {time} for {duration}"
@@ -164,7 +165,7 @@ class HandleMeetingView(APIView):
     Meeting handler
     """
     @staticmethod
-    def put(request):
+    def put(request):       # Test to complete
         """
         to create a meeting
         """
@@ -271,7 +272,6 @@ class MeetingListView(APIView):
         For getting the view
         """
         meeting_list: list[Meeting] = list(Meeting.objects.order_by('start_timestamps')[:])
-        # meeting_list.reverse()
         context = {
             f"meeting {index}": meet.toJSON() for index, meet in enumerate(meeting_list)
         }
@@ -288,7 +288,7 @@ class RoomListView(APIView):
         """
         For getting the view
         """
-        room_list: list[Room] = list(Room.objects.order_by('-name')[:])
+        room_list: list[Room] = list(Room.objects.order_by('name')[:])
         context = {
             f"room {index}": room.toJSON() for index, room in enumerate(room_list)
         }

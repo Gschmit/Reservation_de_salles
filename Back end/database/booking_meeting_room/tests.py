@@ -430,7 +430,7 @@ class RoomViewTests(TestCase):
         self.assertEqual(response.status_code, 404)
 
     def test_get_existent_room_id(self):
-        room = func.create_a_new_room("a room", "8eme etage", "a picture", True, False, False, False,
+        room = func.create_a_new_room("a room", "8th floor", "a picture", True, False, False, False,
                                       True, False, True, 3)
         response = self.client.get(reverse(f"booking_meeting_room:room_view", args=(room.pk, )))
         self.assertEqual(response.status_code, 200)
@@ -446,6 +446,7 @@ class RoomViewTests(TestCase):
         self.assertContains(response, room.capacity)
         self.assertContains(response, room.location)
 
+# Is post function really used ?
     def test_post_no_meeting(self):
         room = func.create_a_new_room("a room", "8ème étage", "a picture", True, False, False, False,
                                       True, False, True, 3)
@@ -499,168 +500,6 @@ class UserViewTests(TestCase):
         assert f'"status": "{user.status}"' in response.data["user"]
 
 
-class MeetingViewTests(TestCase):
-    def test_nonexistent_meeting_id(self):
-        response = self.client.get(reverse("booking_meeting_room:meeting_view", args=(1,)))
-        self.assertEqual(response.status_code, 404)
-
-    def test_existent_meeting_id(self):
-        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
-                                      False, False, True, 2, False)
-        user = func.create_a_new_user("a user", "staff")
-        meeting = func.create_a_new_meeting(room, user,
-                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
-                                            "a meeting", 2)
-        response = self.client.get(reverse(f"booking_meeting_room:meeting_view", args=(meeting.id,)))
-        self.assertEqual(response.status_code, 200)
-        assert f'"title": "{meeting.title}"' in response.data["meeting"]
-        assert f'"room_id": {room.id}' in response.data["meeting"]
-        assert f'"user_id": {user.id}' in response.data["meeting"]
-        assert f'"duration": {meeting.duration}' in response.data["meeting"]
-        assert '"start_timestamps": "2022-09-23T02:45:00.000000Z"' in response.data["meeting"]
-
-
-class HandleMeetingViewTests(TestCase):
-    def test_create_a_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
-                                      False, False, True, 2)
-        user = func.create_a_new_user("a user", "staff")
-        title = "a title"
-        assert not Meeting.objects.all()
-        response = self.client.put(reverse("booking_meeting_room:handle_meeting_view"),
-                                   {"room": room.id, "user": user.name, "duration": 2,
-                                    "title": title, "physically_present_person": None,
-                                    "date": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
-                                    "other_persons": None}, content_type="application/json")
-        self.assertEqual(response.status_code, 200)
-        assert Meeting.objects.all()
-        assert type(Meeting.objects.all()[0]) == Meeting
-        assert str(Meeting.objects.all()[0]) == f"{title} in {room.name}, by {user.name}"
-
-    def test_delete_a_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
-                                      False, False, True, 2)
-        user = func.create_a_new_user("a user", "staff")
-        meeting = func.create_a_new_meeting(room, user,
-                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
-                                            "a meeting", 2)
-        response = self.client.delete(reverse("booking_meeting_room:handle_meeting_view"),
-                                      {"meeting": meeting.id}, content_type="application/json")
-        self.assertEqual(response.status_code, 200)
-        assert not Meeting.objects.all()
-
-    def test_patch_a_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
-                                      False, False, True, 2)
-        user = func.create_a_new_user("a user", "staff")
-        title = "new title"
-        meeting = func.create_a_new_meeting(room, user,
-                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
-                                            "a meeting", 2)
-        response = self.client.patch(reverse("booking_meeting_room:handle_meeting_view"),
-                                     {"duration": 3, "title": title, "physically_present_person": 2,
-                                      "start_timestamps": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
-                                      "other_persons": "Jean", "meeting": meeting.id},
-                                     content_type="application/json")
-        self.assertEqual(response.status_code, 200)
-        new_meeting: Meeting = Meeting.objects.all()[0]
-        assert str(new_meeting) == f"{title} in {room.name}, by {user.name}"
-        assert new_meeting.room.id == room.id
-        assert new_meeting.user.id == user.id
-        assert new_meeting.duration == 3
-        assert new_meeting.start_timestamps == make_aware(datetime.datetime(2022, 10, 15, 9, 30))
-        assert new_meeting.other_persons == "Jean"
-        assert new_meeting.physically_present_person == 2
-
-
-class MeetingListViewTests(TestCase):
-    def test_no_meeting_existent(self):
-        response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
-        self.assertEqual(response.status_code, 200)
-        assert len(response.data) == 0
-
-    def test_with_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
-                                      False, False, True, 2)
-        user = func.create_a_new_user("a user", "staff")
-        meeting1 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
-                                             "first meeting", 2)
-        meeting2 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 9, 23, 5, 45)),
-                                             "second meeting", 1)
-        meeting3 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 9, 23, 6, 45)),
-                                             "third meeting", 2)
-        meeting4 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 9, 14, 10, 45)),
-                                             "fourth meeting", 3)
-        response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
-        self.assertEqual(response.status_code, 200)
-        assert f'"title": "{meeting4.title}"' in response.data["meeting 0"]
-        assert '"title": "first meeting"' in response.data["meeting 1"]
-        assert '"title": "second meeting"' in response.data["meeting 2"]
-        assert f'"title": "{meeting3.title}"' in response.data["meeting 3"]
-        assert '"start_timestamps": "2022-09-14T10:45:00.000000Z"' in response.data["meeting 0"]
-        assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
-        assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]
-
-
-class RoomListViewTests(TestCase):
-    def test_no_room_existent(self):
-        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
-        self.assertEqual(response.status_code, 200)
-        assert len(response.data) == 0
-
-    def test_with_room(self):
-        room1 = func.create_a_new_room("a room", "9eme etage", "an image 1", False, False, False, False,
-                                       False, False, True, 2)
-        room2 = func.create_a_new_room("another room", "9eme etage", "an image 2", False, False, True,
-                                       False, False, False, True, 2)
-        room3 = func.create_a_new_room("a third room", "8eme etage", "an image 3", False, True, False,
-                                       True, False, True, False, 6)
-        room4 = func.create_a_new_room("huge room", "9eme etage", "an image 4", True, True, False,
-                                       False, False, False, False, 8, True)
-        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
-        self.assertEqual(response.status_code, 200)
-        assert f'"name": "{room4.name}"' in response.data["room 0"]
-        assert '"name": "another room"' in response.data["room 1"]
-        assert '"name": "a third room"' in response.data["room 2"]
-        assert f'"name": "{room1.name}"' in response.data["room 3"]
-        assert '"location": "9eme etage"' in response.data["room 0"]
-        assert f'"computer": {str(room2.computer).lower()}' in response.data["room 1"]
-        assert f'"paperboard": {str(room3.paperboard).lower()}' in response.data["room 2"]
-
-
-class RoomMeetingsViewTests(TestCase):
-    def test_nonexistent_room_id(self):
-        response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {"next_meeting": None})
-
-    def test_existent_room_id_but_no_meeting(self):
-        room = func.create_a_new_room("a room", "8eme etage", "a picture", True, False, False, False,
-                                      True, False, True, 3)
-        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data, {"next_meeting": None})
-
-    def test_existent_room_id_with_meetings(self):
-        room = func.create_a_new_room("a room", "8eme etage", "a picture", True, False, False, False,
-                                      True, False, True, 3)
-        user = func.create_a_new_user("a user", "staff")
-        meeting0 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
-                                             "a meeting", 2)
-        meeting1 = func.create_a_new_meeting(room, user,
-                                             make_aware(datetime.datetime(2022, 12, 30, 2, 45)),
-                                             "another meeting", 2)
-        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, meeting0.duration)
-        self.assertContains(response, meeting1.title)
-
-
 class UserNextMeetingViewTests(TestCase):
     def test_no_futur_meeting(self):
         user = func.create_a_new_user("a user", "staff")
@@ -670,7 +509,7 @@ class UserNextMeetingViewTests(TestCase):
         self.assertContains(response, "Plus de rendez-vous de prévu")
 
     def test_with_only_futur_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
                                       False, False, True, 2)
         user = func.create_a_new_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -693,11 +532,11 @@ class UserNextMeetingViewTests(TestCase):
         self.assertContains(response, meeting.duration)
         self.assertNotContains(response, meeting2.title)
         self.assertNotContains(response, meeting3.title)
-        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour and 30 minutes' \
                in response.data
 
     def test_with_only_past_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
                                       False, False, True, 2)
         user = func.create_a_new_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -722,7 +561,7 @@ class UserNextMeetingViewTests(TestCase):
         self.assertNotContains(response, meeting3)
 
     def test_with_past_and_futur_meeting(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
                                       False, False, True, 2)
         user = func.create_a_new_user("a user", "staff")
         now = make_aware(datetime.datetime.now())
@@ -733,25 +572,23 @@ class UserNextMeetingViewTests(TestCase):
                                                               now.minute, 60*24)
         now1d = make_aware(datetime.datetime(end_y, end_mo, end_d, end_h, end_mi))
         now_m1y = make_aware(datetime.datetime(now.year - 1, now.month, now.day, now.hour, now.minute))
-        meeting = func.create_a_new_meeting(room, user, now1h, "a meeting", 3)
+        meeting = func.create_a_new_meeting(room, user, now1h, "a meeting", 4)
         meeting2 = func.create_a_new_meeting(room, user, now1d, "another meeting", 4)
         meeting3 = func.create_a_new_meeting(room, user, now_m1y, "second meeting", 2)
         response = self.client.get(reverse("booking_meeting_room:user_next_meeting_view",
                                            args=(user.id,)))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "a meeting")
-        self.assertContains(response, meeting.duration)
+        self.assertContains(response, meeting.title)
         self.assertNotContains(response, meeting2.title)
         self.assertNotContains(response, meeting3.title)
-        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
-               in response.data
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 2 hours' in response.data
 
     def test_with_several_users(self):
-        room = func.create_a_new_room("a room", "9eme etage", "an image", False, False, False, False,
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
                                       False, False, True, 2)
-        room2 = func.create_a_new_room("a second room", "9eme etage", "an image", False, False, False,
+        room2 = func.create_a_new_room("a second room", "9th floor", "an image", False, False, False,
                                        False, False, False, True, 2)
-        room3 = func.create_a_new_room("a third room", "9eme etage", "an image", False, False, False,
+        room3 = func.create_a_new_room("a third room", "9th floor", "an image", False, False, False,
                                        False, False, False, True, 2)
         user = func.create_a_new_user("a user", "staff")
         user2 = func.create_a_new_user("another user", "staff")
@@ -795,5 +632,170 @@ class UserNextMeetingViewTests(TestCase):
         self.assertNotContains(response, meeting10.title)
         self.assertNotContains(response, meeting11.title)
         self.assertNotContains(response, meeting12.title)
-        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour(s) and 30 minutes' \
+        assert f'{now1h.strftime("on %A %d of %B %Y, at %H:%M")} for 1 hour and 30 minutes' \
                in response.data
+
+
+class MeetingViewTests(TestCase):
+    def test_nonexistent_meeting_id(self):
+        response = self.client.get(reverse("booking_meeting_room:meeting_view", args=(1,)))
+        self.assertEqual(response.status_code, 404)
+
+    def test_existent_meeting_id(self):
+        room = func.create_a_new_room("a room", "9ème étage", "an image", False, False, False, False,
+                                      False, False, True, 2, False)
+        user = func.create_a_new_user("a user", "staff")
+        meeting = func.create_a_new_meeting(room, user,
+                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
+                                            "a meeting", 2)
+        response = self.client.get(reverse(f"booking_meeting_room:meeting_view", args=(meeting.id,)))
+        self.assertEqual(response.status_code, 200)
+        assert f'"title": "{meeting.title}"' in response.data["meeting"]
+        assert f'"room_id": {room.id}' in response.data["meeting"]
+        assert f'"user_id": {user.id}' in response.data["meeting"]
+        assert f'"duration": {meeting.duration}' in response.data["meeting"]
+        assert '"start_timestamps": "2022-09-23T02:45:00.000000Z"' in response.data["meeting"]
+
+
+class HandleMeetingViewTests(TestCase):
+    def test_put_a_valid_meeting(self):
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
+                                      False, False, True, 2)
+        user = func.create_a_new_user("a user", "staff")
+        title = "a title"
+        assert not Meeting.objects.all()
+        response = self.client.put(reverse("booking_meeting_room:handle_meeting_view"),
+                                   {"room": room.id, "user": user.name, "duration": 2,
+                                    "title": title, "physically_present_person": None,
+                                    "date": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
+                                    "other_persons": None}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        assert Meeting.objects.all()
+        meeting = Meeting.objects.all()[0]
+        assert isinstance(meeting, Meeting)
+        assert str(meeting) == f"{title} in {room.name}, by {user.name}"
+        assert meeting.duration == 2
+        assert meeting.start_timestamps == make_aware(datetime.datetime(2022, 10, 15, 9, 30))
+
+    def test_delete_a_meeting(self):
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
+                                      False, False, True, 2)
+        user = func.create_a_new_user("a user", "staff")
+        meeting = func.create_a_new_meeting(room, user,
+                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
+                                            "a meeting", 2)
+        response = self.client.delete(reverse("booking_meeting_room:handle_meeting_view"),
+                                      {"meeting": meeting.id}, content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        assert not Meeting.objects.all()
+
+    def test_patch_a_meeting(self):
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
+                                      False, False, True, 2)
+        user = func.create_a_new_user("a user", "staff")
+        title = "new title"
+        meeting = func.create_a_new_meeting(room, user,
+                                            make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
+                                            "a meeting", 2)
+        response = self.client.patch(reverse("booking_meeting_room:handle_meeting_view"),
+                                     {"duration": 3, "title": title, "physically_present_person": 2,
+                                      "start_timestamps": make_aware(datetime.datetime(2022, 10, 15, 9, 30)),
+                                      "other_persons": "Jean", "meeting": meeting.id},
+                                     content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        new_meeting: Meeting = Meeting.objects.all()[0]
+        assert str(new_meeting) == f"{title} in {room.name}, by {user.name}"
+        assert new_meeting.room.id == room.id
+        assert new_meeting.user.id == user.id
+        assert new_meeting.duration == 3
+        assert new_meeting.start_timestamps == make_aware(datetime.datetime(2022, 10, 15, 9, 30))
+        assert new_meeting.other_persons == "Jean"
+        assert new_meeting.physically_present_person == 2
+
+
+class MeetingListViewTests(TestCase):
+    def test_no_meeting_existent(self):
+        response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert len(response.data) == 0
+
+    def test_with_meeting(self):
+        room = func.create_a_new_room("a room", "9th floor", "an image", False, False, False, False,
+                                      False, False, True, 2)
+        user = func.create_a_new_user("a user", "staff")
+        meeting1 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
+                                             "first meeting", 2)
+        meeting2 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 9, 23, 5, 45)),
+                                             "second meeting", 1)
+        meeting3 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 9, 23, 6, 45)),
+                                             "third meeting", 2)
+        meeting4 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 9, 14, 10, 45)),
+                                             "fourth meeting", 3)
+        response = self.client.get(reverse("booking_meeting_room:meeting_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert f'"title": "{meeting4.title}"' in response.data["meeting 0"]
+        assert '"title": "first meeting"' in response.data["meeting 1"]
+        assert '"title": "second meeting"' in response.data["meeting 2"]
+        assert f'"title": "{meeting3.title}"' in response.data["meeting 3"]
+        assert '"start_timestamps": "2022-09-14T10:45:00.000000Z"' in response.data["meeting 0"]
+        assert f'"user_id": {meeting1.user.id}' in response.data["meeting 1"]
+        assert f'"room_id": {meeting2.room.id}' in response.data["meeting 2"]
+
+
+class RoomListViewTests(TestCase):
+    def test_no_room_existent(self):
+        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert len(response.data) == 0
+
+    def test_with_room(self):
+        room1 = func.create_a_new_room("a room", "9th floor", "an image 1", False, False, False, False,
+                                       False, False, True, 2)
+        room2 = func.create_a_new_room("another room", "9th floor", "an image 2", False, False, True,
+                                       False, False, False, True, 2)
+        room3 = func.create_a_new_room("a third room", "8th floor", "an image 3", False, True, False,
+                                       True, False, True, False, 6)
+        room4 = func.create_a_new_room("huge room", "9th floor", "an image 4", True, True, False,
+                                       False, False, False, False, 8, True)
+        response = self.client.get(reverse("booking_meeting_room:room_list_view"))
+        self.assertEqual(response.status_code, 200)
+        assert f'"name": "{room1.name}"' in response.data["room 0"]
+        assert '"name": "a third room"' in response.data["room 1"]
+        assert '"name": "another room"' in response.data["room 2"]
+        assert f'"name": "{room4.name}"' in response.data["room 3"]
+        assert '"location": "9th floor"' in response.data["room 0"]
+        assert f'"paperboard": {str(room3.paperboard).lower()}' in response.data["room 1"]
+        assert f'"computer": {str(room2.computer).lower()}' in response.data["room 2"]
+
+
+class RoomMeetingsViewTests(TestCase):
+    def test_nonexistent_room_id(self):
+        response = self.client.get(reverse("booking_meeting_room:room_meetings", args=(1, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {"next_meeting": None})
+
+    def test_existent_room_id_but_no_meeting(self):
+        room = func.create_a_new_room("a room", "8th floor", "a picture", True, False, False, False,
+                                      True, False, True, 3)
+        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data, {"next_meeting": None})
+
+    def test_existent_room_id_with_meetings(self):
+        room = func.create_a_new_room("a room", "8th floor", "a picture", True, False, False, False,
+                                      True, False, True, 3)
+        user = func.create_a_new_user("a user", "staff")
+        meeting0 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 9, 23, 2, 45)),
+                                             "a meeting", 2)
+        meeting1 = func.create_a_new_meeting(room, user,
+                                             make_aware(datetime.datetime(2022, 12, 30, 2, 45)),
+                                             "another meeting", 2)
+        response = self.client.get(reverse(f"booking_meeting_room:room_meetings", args=(room.pk, )))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, meeting0.duration)
+        self.assertContains(response, meeting1.title)
