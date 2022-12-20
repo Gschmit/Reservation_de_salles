@@ -265,7 +265,7 @@ XMLHttpRequest */
   render(){
     return(
       <div>
-        <form onSubmit={this.handleSubmit} >
+        <form onSubmit={this.handleSubmit} className='testForm'>
         <Informations date= {this.state.date}
           onChangeDate= {this.handleDateValueChange}
           duration= {this.state.duration}
@@ -509,7 +509,7 @@ class ButtonArea extends React.Component{
 class ActionButton extends React.Component {
   render(){
     return(
-        <button type= {this.props.type} onClick= {this.props.callback}> {this.props.name} </button>
+        <button className='formButton' type= {this.props.type} onClick= {this.props.callback}> {this.props.name} </button>
     );
   };
 };
@@ -653,7 +653,7 @@ class CriteriaDate extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
-        className='shift'
+        className='test'
         type= "date"
         value= {this.props.data}
         onChange= {this.handleDataChange}
@@ -684,7 +684,7 @@ class CriteriaTime extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
-        className='shift'
+        className='test'
         type= "time"
         value= {this.props.data}
         onChange= {this.handleDataChange}
@@ -716,6 +716,7 @@ class CriteriaDuration extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
+        className='test'
         type= "number"
         value= {this.props.data}
         onChange= {this.handleDataChange}
@@ -743,7 +744,7 @@ class CriteriaSelect extends React.Component{
     return(
       <span>
         <span>{this.props.name}{mandatory} : </span>
-        <select required={this.props.required} onChange={this.handleDataChange}>
+        <select className='test' required={this.props.required} onChange={this.handleDataChange}>
           <option key={-1} value={"empty"}>-- Select one --</option>
           {this.props.list.map(
             (arrayItem, index) => <option key={index} value={arrayItem.id}>{arrayItem.name}</option>
@@ -770,6 +771,7 @@ class CriteriaText extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
+        className='test'
         type= "text"
         value= {this.props.data}
         onChange= {this.handleDataChange}
@@ -796,6 +798,7 @@ class CriteriaRadio extends React.Component{
       <div>
         <span>{this.props.name}{mandatory} : </span>
         <input
+        className='test'
         type= "radio"
         checked= {this.props.data}
         value= {true}
@@ -830,6 +833,7 @@ class CriteriaNumber extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
+        className='test'
         type= "number"
         value= {this.props.data}
         onChange= {this.handleDataChange}
