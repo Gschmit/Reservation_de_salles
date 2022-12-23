@@ -90,6 +90,7 @@ class TabletForm extends React.Component {
       present = this.state.numberOfPresentPerson
     }
     alert("before axios")
+    console.log("je suis une room", this.props.room)
     let response = await axios.put(
       url + "meeting",
       {
