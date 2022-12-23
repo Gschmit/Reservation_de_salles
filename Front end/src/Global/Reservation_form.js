@@ -90,11 +90,10 @@ class TabletForm extends React.Component {
       present = this.state.numberOfPresentPerson
     }
     alert("before axios")
-    console.log("je suis une room", this.props.room)
     let response = await axios.put(
       url + "meeting",
       {
-        room: this.props.room, user: this.state.nameOfWhoSReserving, date: this.state.date, 
+        room: this.props.room.id, user: this.state.nameOfWhoSReserving, date: this.state.date, 
         duration: this.state.duration, title: this.state.titleMeeting, 
         physically_present_person: present
       }
@@ -238,30 +237,16 @@ XMLHttpRequest */
     console.log(response.rejected);
   };
 
-  componentDidMount(){
+  /*componentDidMount(){
     // Il faudrait limiter la durée de la réunion ainsi que les horaires disponibles.
-    /* axios.get(url + `{partie à voir}/${roomId à récupérer qqpart}/`)
+    axios.get(url + `{partie à voir}/${roomId à récupérer qqpart}/`)
     .then(res => {
       // set here the max value of duration depending on the start time value.
       //                                                !!!!!!!!!!!!!!!!!!!!
       // and set first and last start time possible. => !!! TO REALLY DO !!!
       //                                                !!!!!!!!!!!!!!!!!!!!
-    }); */
-    axios.get(url + `room/${this.props.room}/`)
-    .then(res => {
-      this.setState({name : JSON.parse(res.data["room"]).name})
-    })
-
-    /* axios.get(url + "meeting_list")
-    .then(res => {
-      let meet = {}
-      for (const meeting in res.data) {
-        meet[meeting] = JSON.parse(res.data[meeting])
-      };
-      console.log("meet :", meet)
-      this.setState({meetings : meet})
-    });*/ // why this get call ? le state meetings n'existe plus
-  };
+    }); 
+  }; //*/
 
   render(){
     return(
@@ -272,13 +257,12 @@ XMLHttpRequest */
           duration= {this.state.duration}
           onChangeDuration= {this.handleDurationValueChange}
           nameOfWhoSReserving= {this.state.nameOfWhoSReserving}
-          roomName= {this.props.room}
           onChangeName= {this.handleNameReservingTextChange}
           titleMeeting= {this.state.titleMeeting}
           onChangeTitle= {this.handleTitleMeetingTextChange}
           numberOfPresentPerson= {this.state.numberOfPresentPerson}
           onChangePresent= {this.handlePresentPersonValueChange}
-          criteria= {this.props.criteria} // could disapear ? => or may be changed for formKind = "room"
+          criteria= {this.props.criteria} // could disapear ? => or may be replaced by formKind = "room"
           formKind= "room"
           /> <br/>
           <ButtonArea
@@ -582,8 +566,6 @@ class Informations extends React.Component {
     if (this.props.criteria.includes("room id")){
       console.log("497, ai je le droit de m'afficher :", this.props.formKind !== "room")
       roomNameData = <CriteriaSelect name= "salle"
-        data= {this.props.roomName}
-        type= "select"
         onChange= {this.props.onChangeName}
         list= {this.props.roomList}
         required={true}

@@ -8,25 +8,13 @@
   --short-stroke-red: rgb(246,0,33);
   --short-stroke-contrast-salmon: rgb(255,157,130);
 }
-
-#tablet_reservation_page{
- height: 100%;
- background-color:cyan;
-}
-
-.testForm{
-  background-color: blue;
-  height: 100%;
-}
-/* testForm and tablet_reservation_page are useless indeed */
 /* Setting a static size could be problematic */
 .test{
-  background-color:blanchedalmond;
+  /* background-color:blanchedalmond; */
   height:50px; 
 }
 /* Setting a static size could be problematic, but I don't understand how % work for height */
 .formButton{
-  background-color: brown;
   width: 15%;
   height:50px;
 }
@@ -85,7 +73,13 @@
 
 .rbc-allday-cell{
   display:none;
-} /* only props with !important work for rbc-current-time-indicator. The other are already applied */
+}
+/*.rbc-btn-group > button{
+  background-color: antiquewhite !important;
+  width: min-content !important;
+  padding: 0.375rem 0.75rem;
+} */
+/* only props with !important work for rbc-current-time-indicator. The other are already applied */
 .rbc-current-time-indicator{
   position: absolute;
   z-index: 3;
@@ -94,6 +88,10 @@
   height: 1px;
   background-color: var(--short-stroke-red) !important;
   pointer-events: none;
+}
+.rbc-event{
+  border: var(--main-dark-blue) !important;
+  background-color: var(--main-colour) !important;
 }
 .rbc-time-view .rbc-header {
   border-bottom: none;

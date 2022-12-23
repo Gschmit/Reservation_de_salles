@@ -31,16 +31,16 @@ const width = window.innerWidth * 90/100
             event, this.props.formRoot, this.props.root, this.props.roomId
           )}//*/
 
-function tabletOnSelectSlot(slot, nextRoot, currentRoot, roomId, popupRoot){
+function tabletOnSelectSlot(slot, nextRoot, currentRoot, room, popupRoot){
   let start = new Date(slot.start)
   let end = new Date(slot.end)
   if (`${start.getDate()}/${start.getMonth()}/${start.getFullYear()}` === `${end.getDate()}/${end.getMonth()}/${end.getFullYear()}`){
     let duration = parseInt((end.getTime() - start.getTime()) / 1000 / 60 / 30)
     nextRoot.render(
-      <TabletForm criteria= {criteriaTablet} room={roomId} root={nextRoot} date={start} duration={duration} 
+      <TabletForm criteria= {criteriaTablet} room={room} root={nextRoot} date={start} duration={duration} 
         previousPage={{
           root: currentRoot, 
-          toRender: <HomepageScreen roomId={roomId} root={currentRoot} formRoot={nextRoot} popupRoot={popupRoot}/>
+          toRender: <HomepageScreen roomId={room.id} root={currentRoot} formRoot={nextRoot} popupRoot={popupRoot}/>
         }}
       />
     )
@@ -79,8 +79,8 @@ class HomepageScreen extends React.Component{
     room : {capacity:0, name:""}
   };
 
-  componentDidMount(){
-    axios.get(url + `room/${this.props.roomId}/`)
+  async componentDidMount(){
+    await axios.get(url + `room/${this.props.roomId}/`)
     .then(res => {
       this.setState({room : JSON.parse(res.data.room)})
     });
@@ -91,11 +91,11 @@ class HomepageScreen extends React.Component{
     return( //<h1> Homepage </h1> <br/>
       <div>
           <HomepageRoomNameDisplay roomName={name} /> <br/>
-          <HomepageRoomCalendar roomId={this.props.roomId} root={this.props.root} 
+          <HomepageRoomCalendar room={this.state.room} root={this.props.root} roomId={this.props.roomId}
             formRoot={this.props.formRoot} popupRoot={this.props.popupRoot}
           />
       </div>
-    )
+    ) // the roomId props seems to be mandatory for avoiding bugs at creation
   };
 };
   
@@ -168,7 +168,7 @@ class HomepageRoomCalendar extends React.Component{
       <div>
         <MyCalendar eventsList={this.state.meetings} height={height} width={width} 
           onSelectSlot={(slot) => tabletOnSelectSlot(
-            slot, this.props.formRoot, this.props.root, this.props.roomId, this.props.popupRoot
+            slot, this.props.formRoot, this.props.root, this.props.room, this.props.popupRoot
           )}
         />
         {endTheMeeting}
