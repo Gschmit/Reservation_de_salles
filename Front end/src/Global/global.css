@@ -11,7 +11,8 @@
 /* Setting a static size could be problematic */
 .test{
   /* background-color:blanchedalmond; */
-  height:50px; 
+  height:50px;
+  margin: 0.2%;
 }
 /* Setting a static size could be problematic, but I don't understand how % work for height */
 .formButton{
