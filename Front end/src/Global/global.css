@@ -72,6 +72,8 @@
 
 /* For the calendar : */
 
+/* To delete the keyword !important => put precisely the kind of selector used */
+
 .rbc-allday-cell{
   display:none;
 }
@@ -80,25 +82,22 @@
   width: min-content !important;
   padding: 0.375rem 0.75rem;
 } */
-/* only props with !important work for rbc-current-time-indicator. The other are already applied */
-.rbc-current-time-indicator{
-  position: absolute;
-  z-index: 3;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background-color: var(--short-stroke-red) !important;
-  pointer-events: none;
+div .rbc-current-time-indicator{
+  background-color: var(--short-stroke-red);
 }
-.rbc-event{
-  border: var(--main-dark-blue) !important;
-  background-color: var(--main-colour) !important;
+
+div .rbc-day-slot .rbc-event{
+  border: var(--main-dark-blue);
+}
+div .rbc-event{  
+  background-color: var(--main-colour);
 }
 .rbc-time-view .rbc-header {
   border-bottom: none;
 }
-.rbc-toolbar{/* Need to find a way to delete the keyword !important */
-  flex-wrap: nowrap !important;
+div .rbc-toolbar{
+  flex-wrap: nowrap;
+  justify-content: flex-start;
 }
 
 /* à retravailler !! 
