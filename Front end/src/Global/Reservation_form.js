@@ -640,6 +640,7 @@ class CriteriaDate extends React.Component{
         type= "date"
         value= {this.props.data}
         onChange= {this.handleDataChange}
+        style= {{width: "109px"}}   // if needed a percentage : 15% is fine // size may be better than style ?
         required={this.props.required}
         />
       </span>
@@ -672,6 +673,7 @@ class CriteriaTime extends React.Component{
         value= {this.props.data}
         onChange= {this.handleDataChange}
         step= {this.props.step}
+        style= {{width: "70px"}}  // if needed a percentage : 10% is fine // size may be better than style ?
         required={this.props.required}
         /> 
       </span>
@@ -781,7 +783,6 @@ class CriteriaRadio extends React.Component{
       <div>
         <span>{this.props.name}{mandatory} : </span>
         <input
-        className='test'
         type= "radio"
         checked= {this.props.data}
         value= {true}
@@ -816,7 +817,7 @@ class CriteriaNumber extends React.Component{
       <span>
         <span>{this.props.name}{mandatory} : </span>
         <input
-        className='test'
+        className= 'test'
         type= "number"
         value= {this.props.data}
         onChange= {this.handleDataChange}

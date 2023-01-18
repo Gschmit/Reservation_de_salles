@@ -10,8 +10,9 @@
 }
 /* Setting a static size could be problematic */
 .test{
-  /* background-color:blanchedalmond; */
+  background-color:blanchedalmond;
   height:50px;
+  width: 15%;
   margin: 0.2%;
 }
 /* Setting a static size could be problematic, but I don't understand how % work for height */

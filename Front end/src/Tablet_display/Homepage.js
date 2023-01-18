@@ -50,11 +50,13 @@ function tabletOnSelectSlot(slot, nextRoot, currentRoot, room, popupRoot){
 
 function startOfTheMeeting(nextMeeting, popupRoot){
   if (nextMeeting){
+    console.log('variables', nextMeeting, popupRoot)
     let now = new Date()
-    console.log(nextMeeting.start_timestamps, new Date(nextMeeting.start_timestamps)) // on a un décalage d'une heure !
+    console.log(nextMeeting.start_timestamps, new Date(nextMeeting.start_timestamps)) // on a un décalage 
+    // d'une heure ! (tout fonctionne correctement cependant)
     let start = new Date(nextMeeting.start_timestamps);
     console.log("startOfTheMeeting, start",start)
-    console.log(start, now, start < now)
+    console.log(start, now, start < now)    // Pas le bon test, nextMeeting peut être à revoir
     if (start < now){
       console.log("start < now est ok")
       popupRoot.render(<h1> Are you there ? </h1>)
@@ -131,10 +133,14 @@ class HomepageRoomCalendar extends React.Component{
       this.setState({currentMeetingId: currentMeetingId})
       return(meetingList[meetingList.length - 1])
     });
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 60, nextMeeting) // toutes les 60 secondes (toutes 
+    console.log(nextMeeting)
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting, this.props.popupRoot) // toutes les 6 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
     this.endMeeting = setInterval(() => {
-      let boolean, id = this.meetingToEnd(this.state.meetings)
+      let result = this.meetingToEnd(this.state.meetings)
+      let boolean = result.currently
+      let id = result.currentMeetingId
+      console.log("endMeeting", boolean, id)
       this.setState({meetingCurrently : boolean, currentMeetingId : id})
     }, 1000 * 60)
   };
@@ -152,9 +158,8 @@ class HomepageRoomCalendar extends React.Component{
         currently = true
         currentMeetingId = meet.id
       }
-      return("end")
     });
-    return(currently, currentMeetingId)
+    return({currently, currentMeetingId})
   };
 
   render(){

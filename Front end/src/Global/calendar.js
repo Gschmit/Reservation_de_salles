@@ -1,4 +1,5 @@
 import React from 'react';
+import { Children, cloneElement } from 'react';
 import './global.css';
 
 import { Calendar, momentLocalizer } from 'react-big-calendar';
@@ -59,11 +60,12 @@ class MyCalendar extends React.Component{
 
     render(){
         let events = meetingsToEventsForRooms(this.props.eventsList)
-        let hour = new Date()
-        hour.setHours(7)
+        let displayTime = new Date()
+        displayTime.setHours(7)
         return( //Views ('month'|'week'|'work_week'|'day'|'agenda')
             <div>
                 <Calendar
+                    longPressThreshold={1}     // for handling mobile touch, see below for more info
                     localizer={localizer}
                     culture={window.navigator.language}
                     views={["day", "work_week", "week"]}
@@ -72,7 +74,7 @@ class MyCalendar extends React.Component{
                     events={events}
                     startAccessor="start"
                     endAccessor="end"
-                    scrollToTime={hour}
+                    scrollToTime={displayTime}
                     style={{ height: this.props.height, width: this.props.width}}
                     selectable={true} // modifiable ? doit être à true pour 'onSelectSlot' et 'onSelecting'
                     onSelectSlot={this.props.onSelectSlot}
@@ -83,5 +85,12 @@ class MyCalendar extends React.Component{
         )
     }
 };
+/* From the React-Big-Calendar documentation:
+
+longPressThreshold Specifies the number of milliseconds the user must press and hold on the screen for a 
+touch to be considered a "long press." Long presses are used for time slot selection on touch devices.
+
+type: number default: 250
+*/
 
 export {MyCalendar, meetingsToEventsForRooms};
