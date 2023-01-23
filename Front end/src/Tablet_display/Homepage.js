@@ -134,12 +134,13 @@ class HomepageRoomCalendar extends React.Component{
       return(meetingList[meetingList.length - 1])
     });
     console.log(nextMeeting)
-    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 6, nextMeeting, this.props.popupRoot) // toutes les 6 secondes (toutes 
+    this.startMeeting = setInterval(startOfTheMeeting, 1000 * 60, nextMeeting, this.props.popupRoot) // toutes les 6 secondes (toutes 
     // les minutes/30 secondes serait bien ?)
     this.endMeeting = setInterval(() => {
       let result = this.meetingToEnd(this.state.meetings)
       let boolean = result.currently
       let id = result.currentMeetingId
+      console.log("comparaison avec les state", this.state.meetingCurrently, this.state.currentMeetingId)
       console.log("endMeeting", boolean, id)
       this.setState({meetingCurrently : boolean, currentMeetingId : id})
     }, 1000 * 60)
@@ -158,6 +159,7 @@ class HomepageRoomCalendar extends React.Component{
         currently = true
         currentMeetingId = meet.id
       }
+      return("semantic useless return")
     });
     return({currently, currentMeetingId})
   };
